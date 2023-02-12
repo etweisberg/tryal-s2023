@@ -1,10 +1,13 @@
 /**
- * Defines the User model for the database and also the interface to
+ * Defines the Researcher model for the database and also the interface to
  * access the model in TypeScript.
+ * has a many-to-many relationship with the Trial model
+ * has a first name, last name, email, password, verified, verification token, reset password token, reset password token expiry date, trials, institution, and address.
  */
+
 import mongoose from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
+const ResearcherSchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: true,
@@ -48,45 +51,31 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: [],
   },
-  age: {
-    type: Number,
-    required: true,
-    default: null,
-  },
-  medConditions: {
-    type: Array<string>(),
-    required: true,
-    default: [],
-  },
-  homeAddress: {
+  institution: {
     type: String,
     required: true,
-    default: '',
   },
-  seekingCompensation: {
-    type: Boolean,
+  address: {
+    type: String,
     required: true,
-    default: false,
   },
 });
 
-interface IUser extends mongoose.Document {
+interface IResearcher extends mongoose.Document {
   _id: string;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
   verified: boolean;
-  verificationToken: string | null | undefined;
-  resetPasswordToken: string | null | undefined;
-  resetPasswordTokenExpiryDate: Date | null | undefined;
-  trials: Array<string>;
-  age: number | null;
-  medConditions: Array<string>;
-  homeAddress: string;
-  seekingCompensation: boolean;
+  verificationToken: string;
+  resetPasswordToken: string;
+  resetPasswordTokenExpiryDate: Date;
+  trials: string[];
+  institution: string;
+  address: string;
 }
 
-const User = mongoose.model<IUser>('User', UserSchema);
+const Researcher = mongoose.model<IResearcher>('Researcher', ResearcherSchema);
 
-export { IUser, User };
+export { IResearcher, Researcher };
