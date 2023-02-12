@@ -1,2 +1,4 @@
 .env
 node_modules
+mobile/.expo/packager-info.json
+mobile/.expo/settings.json
