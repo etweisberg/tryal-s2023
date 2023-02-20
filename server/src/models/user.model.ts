@@ -68,6 +68,11 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  admin: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
 
 interface IUser extends mongoose.Document {
@@ -85,6 +90,7 @@ interface IUser extends mongoose.Document {
   medConditions: Array<string>;
   homeAddress: string;
   seekingCompensation: boolean;
+  admin: boolean;
 }
 
 const User = mongoose.model<IUser>('User', UserSchema);

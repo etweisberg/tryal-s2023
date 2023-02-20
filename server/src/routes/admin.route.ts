@@ -10,6 +10,7 @@ import {
   deleteUser,
   inviteUser,
   verifyToken,
+  approveResearcherRequest,
 } from '../controllers/admin.controller';
 import { isAuthenticated } from '../controllers/auth.middleware';
 import { approve } from '../controllers/auth.controller';
@@ -36,6 +37,14 @@ router.get('/adminstatus', isAuthenticated, isAdmin, approve);
  * - email (string) - The email of the user to be promoted
  */
 router.put('/promote', isAuthenticated, isAdmin, upgradePrivilege);
+
+/**
+ * A PUT route to upgrade approve a researcher request
+ * is a authenticated and is an admin.
+ * Expects a JSON body with the following fields:
+ * - email (string) - The email of the researcher to be approved
+ */
+router.put('/approve', isAuthenticated, isAdmin, approveResearcherRequest);
 
 /**
  * A PUT route to upgrade a user's privilege

@@ -116,6 +116,15 @@ const deleteUser = async (
     });
 };
 
+const approveResearcherRequest = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const { email } = req.params;
+  // implement approving research request
+};
+
 const verifyToken = async (
   req: express.Request,
   res: express.Response,
@@ -174,4 +183,11 @@ const inviteUser = async (
   }
 };
 
-export { getAllUsers, upgradePrivilege, deleteUser, verifyToken, inviteUser };
+export {
+  getAllUsers,
+  upgradePrivilege,
+  deleteUser,
+  verifyToken,
+  inviteUser,
+  approveResearcherRequest,
+};
