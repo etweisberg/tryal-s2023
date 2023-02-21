@@ -53,7 +53,6 @@ router.put('/approve', isAuthenticated, isAdmin, approveResearcherRequest);
  */
 // delete during deployment
 router.put('/autopromote', upgradePrivilege);
-
 /**
  * A PUT route to delete a user. Checks first if the requestor
  * is a authenticated and is an admin.

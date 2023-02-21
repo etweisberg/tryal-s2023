@@ -34,11 +34,11 @@ const getAllResearcherRequests = async () => {
   const researcherRequests = await ResearcherRequest.find({})
     .select(removeSensitiveDataQuery)
     .exec();
-  console.log(researcherRequests);
   return researcherRequests;
 };
 
 const getResearcherRequest = async (email: string) => {
+  console.log(email);
   const researcherRequest = await ResearcherRequest.findOne({ email })
     .select(removeSensitiveDataQuery)
     .exec();

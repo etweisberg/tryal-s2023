@@ -21,6 +21,9 @@ import {
 } from '../services/invite.service';
 import { IInvite } from '../models/invite.model';
 import { emailInviteLink } from '../services/mail.service';
+import { getResearcherRequest } from '../services/researcherRequest.service';
+import { createResearcher } from '../services/researcher.service';
+import { IResearcherRequest } from '../models/researcherRequest.model';
 
 /**
  * Get all users from the database. Upon success, send the a list of all users in the res body with 200 OK status code.
@@ -121,8 +124,34 @@ const approveResearcherRequest = async (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  const { email } = req.params;
+  const { email } = req.body;
   // implement approving research request
+  const researcherRequest: IResearcherRequest | null =
+    await getResearcherRequest(email);
+  if (!researcherRequest) {
+    next(ApiError.notFound('Unable to retrieve researcher request'));
+  } else {
+    if (researcherRequest.verified === false) {
+      next(ApiError.badRequest('Researcher request is not verified'));
+    }
+    createResearcher(
+      researcherRequest.firstName,
+      researcherRequest.lastName,
+      researcherRequest.email,
+      researcherRequest.password,
+      researcherRequest.institution,
+      researcherRequest.address,
+    )
+      .then((researcher) => {
+        if (researcher) {
+          researcher!.verificationToken = researcherRequest.verificationToken;
+          researcher!.verified = true;
+          researcherRequest.approved = true;
+          res.status(StatusCode.OK).send(researcher);
+        }
+      })
+      .catch(() => next(ApiError.internal('Error creating researcher')));
+  }
 };
 
 const verifyToken = async (

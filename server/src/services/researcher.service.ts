@@ -2,7 +2,7 @@
  * All the functions for interacting with user data in the MongoDB database
  */
 import { hash } from 'bcrypt';
-import { User } from '../models/user.model';
+import { Researcher } from '../models/researcher.model';
 
 const passwordHashSaltRounds = 10;
 const removeSensitiveDataQuery = [
@@ -18,37 +18,28 @@ const removeSensitiveDataQueryKeepPassword = [
   '-resetPasswordTokenExpiryDate',
 ];
 
-/**
- * Creates a new user in the database.
- * @param firstName - string representing the first name of the user
- * @param lastName - string representing the last name of the user
- * @param email - string representing the email of the user
- * @param password - string representing the password of the user
- * @returns The created {@link User}
- */
-const createUser = async (
+const createResearcher = async (
   firstName: string,
   lastName: string,
   email: string,
   password: string,
-  age: number,
-  homeAddress: string,
+  institution: string,
+  address: string,
 ) => {
   const hashedPassword = await hash(password, passwordHashSaltRounds);
   if (!hashedPassword) {
     return null;
   }
-  const newUser = new User({
+  const newResearcher = new Researcher({
     firstName,
     lastName,
     email,
     password: hashedPassword,
-    age,
-    homeAddress,
-    admin: false,
+    institution,
+    address,
   });
-  const user = await newUser.save();
-  return user;
+  const researcher = await newResearcher.save();
+  return researcher;
 };
 
 /**
@@ -57,11 +48,11 @@ const createUser = async (
  * @param email The email of the user to get
  * @returns The {@link User} or null if the user was not found.
  */
-const getUserByEmail = async (email: string) => {
-  const user = await User.findOne({ email })
+const getResearcherByEmail = async (email: string) => {
+  const researcher = await Researcher.findOne({ email })
     .select(removeSensitiveDataQuery)
     .exec();
-  return user;
+  return researcher;
 };
 
 /**
@@ -70,11 +61,11 @@ const getUserByEmail = async (email: string) => {
  * @param email The email of the user to get
  * @returns The {@link User} or null if the user was not found.
  */
-const getUserByEmailWithPassword = async (email: string) => {
-  const user = await User.findOne({ email })
+const getResearcherByEmailWithPassword = async (email: string) => {
+  const researcher = await Researcher.findOne({ email })
     .select(removeSensitiveDataQueryKeepPassword)
     .exec();
-  return user;
+  return researcher;
 };
 
 /**
@@ -83,11 +74,11 @@ const getUserByEmailWithPassword = async (email: string) => {
  * @param verificationToken The {@link string} representing the verification token
  * @returns The {@link User} or null if the user was not found.
  */
-const getUserByVerificationToken = async (verificationToken: string) => {
-  const user = await User.findOne({ verificationToken })
+const getResearcherByVerificationToken = async (verificationToken: string) => {
+  const researcher = await Researcher.findOne({ verificationToken })
     .select(removeSensitiveDataQuery)
     .exec();
-  return user;
+  return researcher;
 };
 
 /**
@@ -96,9 +87,11 @@ const getUserByVerificationToken = async (verificationToken: string) => {
  * @param id The id of the user to get.
  * @returns The {@link User} or null if the user was not found.
  */
-const getUserById = async (id: string) => {
-  const user = await User.findById(id).select(removeSensitiveDataQuery).exec();
-  return user;
+const getResearcherById = async (id: string) => {
+  const researcher = await Researcher.findById(id)
+    .select(removeSensitiveDataQuery)
+    .exec();
+  return researcher;
 };
 
 /**
@@ -107,32 +100,24 @@ const getUserById = async (id: string) => {
  * @param verificationToken The {@link string} representing the verification token
  * @returns The {@link User} or null if such a user was not found.
  */
-const getUserByResetPasswordToken = async (resetPasswordToken: string) => {
-  const user = await User.findOne({
+const getResearcherByResetPasswordToken = async (
+  resetPasswordToken: string,
+) => {
+  const researcher = await Researcher.findOne({
     resetPasswordToken,
     resetPasswordTokenExpiryDate: { $gt: Date.now() },
   }).exec();
-  return user;
+  return researcher;
 };
 
 /**
  * @returns All the {@link User}s in the database without their passwords.
  */
-const getAllUsersFromDB = async () => {
-  const userList = await User.find({}).select(removeSensitiveDataQuery).exec();
-  return userList;
-};
-
-/**
- * A function that upgrades a certain user to an admin.
- * @param id The id of the user to upgrade.
- * @returns The upgraded {@link User}
- */
-const upgradeUserToAdmin = async (id: string) => {
-  const user = await User.findByIdAndUpdate(id, [
-    { $set: { admin: { $eq: [false, '$admin'] } } },
-  ]).exec();
-  return user;
+const getAllResearchersFromDB = async () => {
+  const researcherList = await Researcher.find({})
+    .select(removeSensitiveDataQuery)
+    .exec();
+  return researcherList;
 };
 
 /**
@@ -140,20 +125,19 @@ const upgradeUserToAdmin = async (id: string) => {
  * @param id The id of the user to delete.
  * @returns The deleted {@link User}
  */
-const deleteUserById = async (id: string) => {
-  const user = await User.findByIdAndDelete(id).exec();
-  return user;
+const deleteResearcherById = async (id: string) => {
+  const researcher = await Researcher.findByIdAndDelete(id).exec();
+  return researcher;
 };
 
 export {
   passwordHashSaltRounds,
-  createUser,
-  getUserByEmail,
-  getUserByVerificationToken,
-  getUserById,
-  getUserByEmailWithPassword,
-  getUserByResetPasswordToken,
-  getAllUsersFromDB,
-  upgradeUserToAdmin,
-  deleteUserById,
+  createResearcher,
+  getResearcherByEmail,
+  getResearcherByVerificationToken,
+  getResearcherById,
+  getResearcherByEmailWithPassword,
+  getResearcherByResetPasswordToken,
+  getAllResearchersFromDB,
+  deleteResearcherById,
 };

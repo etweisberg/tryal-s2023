@@ -68,7 +68,7 @@ interface IResearcher extends mongoose.Document {
   email: string;
   password: string;
   verified: boolean;
-  verificationToken: string;
+  verificationToken: string | null | undefined;
   resetPasswordToken: string;
   resetPasswordTokenExpiryDate: Date;
   trials: string[];
