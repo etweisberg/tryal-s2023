@@ -7,7 +7,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Open up App.tsx to start working on your app!</Text>
-      <Icon name="rocket" size={30} color="900"/>
+      <Icon name="rocket" size={30} color="#900"/>
       <StatusBar style="auto" />
     </View>
   );
