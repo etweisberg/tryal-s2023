@@ -9,6 +9,7 @@ import StatusCode from '../util/statusCode';
 import { IUser } from '../models/user.model';
 import {
   upgradeUserToAdmin,
+  upgradeUserToResearcher,
   getUserByEmail,
   getAllUsersFromDB,
   deleteUserById,
@@ -21,8 +22,10 @@ import {
 } from '../services/invite.service';
 import { IInvite } from '../models/invite.model';
 import { emailInviteLink } from '../services/mail.service';
-import { getResearcherRequest } from '../services/researcherRequest.service';
-import { createResearcher } from '../services/researcher.service';
+import {
+  getResearcherRequest,
+  approveRequest,
+} from '../services/researcherRequest.service';
 import { IResearcherRequest } from '../models/researcherRequest.model';
 
 /**
@@ -59,10 +62,10 @@ const upgradePrivilege = async (
     next(ApiError.missingFields(['email']));
     return;
   }
-
-  const user: IUser | null = await getUserByEmail(email);
+  const lowercaseEmail = email.toLowerCase();
+  const user: IUser | null = await getUserByEmail(lowercaseEmail);
   if (!user) {
-    next(ApiError.notFound(`User with email ${email} does not exist`));
+    next(ApiError.notFound(`User with email ${lowercaseEmail} does not exist`));
     return;
   }
   if (user.admin) {
@@ -125,32 +128,32 @@ const approveResearcherRequest = async (
   next: express.NextFunction,
 ) => {
   const { email } = req.body;
+  const lowercaseEmail = email.toLowerCase();
   // implement approving research request
   const researcherRequest: IResearcherRequest | null =
-    await getResearcherRequest(email);
+    await getResearcherRequest(lowercaseEmail);
+  console.log(researcherRequest);
   if (!researcherRequest) {
     next(ApiError.notFound('Unable to retrieve researcher request'));
   } else {
-    if (researcherRequest.verified === false) {
-      next(ApiError.badRequest('Researcher request is not verified'));
+    const user: IUser | null = await getUserByEmail(lowercaseEmail);
+    if (!user) {
+      next(ApiError.notFound('Unable to retrieve user'));
+    } else {
+      upgradeUserToResearcher(user._id)
+        .then(() => {
+          approveRequest(researcherRequest._id)
+            .then(() => {
+              res.sendStatus(StatusCode.OK);
+            })
+            .catch(() => {
+              next(ApiError.internal('Error approving researcher request'));
+            });
+        })
+        .catch(() => {
+          next(ApiError.internal('Error approving researcher request'));
+        });
     }
-    createResearcher(
-      researcherRequest.firstName,
-      researcherRequest.lastName,
-      researcherRequest.email,
-      researcherRequest.password,
-      researcherRequest.institution,
-      researcherRequest.address,
-    )
-      .then((researcher) => {
-        if (researcher) {
-          researcher!.verificationToken = researcherRequest.verificationToken;
-          researcher!.verified = true;
-          researcherRequest.approved = true;
-          res.status(StatusCode.OK).send(researcher);
-        }
-      })
-      .catch(() => next(ApiError.internal('Error creating researcher')));
   }
 };
 

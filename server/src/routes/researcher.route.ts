@@ -1,17 +1,11 @@
 import express from 'express';
 
-import {
-  registerResearcherRequest,
-  verifyResearcherRequest,
-  getAllRequests,
-} from '../controllers/researcher.controller';
+import registerResearcherRequest from '../controllers/researcher.controller';
+
+import { isAuthenticated } from '../controllers/auth.middleware';
 
 const router = express.Router();
 
-router.get('/all-requests', getAllRequests);
-
-router.post('/researcher-request', registerResearcherRequest);
-
-router.post('/verify-researcher-request', verifyResearcherRequest);
+router.post('/researcher-request', isAuthenticated, registerResearcherRequest);
 
 export default router;

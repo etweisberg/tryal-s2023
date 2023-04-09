@@ -1,58 +1,36 @@
-import { hash } from 'bcrypt';
 import { ResearcherRequest } from '../models/researcherRequest.model';
-
-const passwordHashSaltRounds = 10;
-const removeSensitiveDataQuery = [
-  '-password',
-  '-verificationToken',
-  '-resetPasswordToken',
-  '-resetPasswordTokenExpiryDate',
-];
 
 const createResearcherRequest = async (
   firstName: string,
   lastName: string,
   email: string,
-  password: string,
   institution: string,
-  address: string,
 ) => {
-  const hashedPassword = await hash(password, passwordHashSaltRounds);
   const newResearcherRequest = new ResearcherRequest({
     firstName,
     lastName,
-    password: hashedPassword,
     email,
     institution,
-    address,
   });
   const researcherRequest = await newResearcherRequest.save();
   return researcherRequest;
 };
 
 const getAllResearcherRequests = async () => {
-  const researcherRequests = await ResearcherRequest.find({})
-    .select(removeSensitiveDataQuery)
-    .exec();
+  const researcherRequests = await ResearcherRequest.find({}).exec();
   return researcherRequests;
 };
 
 const getResearcherRequest = async (email: string) => {
   console.log(email);
-  const researcherRequest = await ResearcherRequest.findOne({ email })
-    .select(removeSensitiveDataQuery)
-    .exec();
+  const researcherRequest = await ResearcherRequest.findOne({ email }).exec();
   return researcherRequest;
 };
 
-const getResearcherRequestByVerificationToken = async (
-  verificationToken: string,
-) => {
-  const researcherRequest = await ResearcherRequest.findOne({
-    verificationToken,
-  })
-    .select(removeSensitiveDataQuery)
-    .exec();
+const approveRequest = async (id: string) => {
+  const researcherRequest = await ResearcherRequest.findByIdAndUpdate(id, [
+    { $set: { approved: { $eq: [false, '$approved'] } } },
+  ]).exec();
   return researcherRequest;
 };
 
@@ -60,5 +38,5 @@ export {
   createResearcherRequest,
   getAllResearcherRequests,
   getResearcherRequest,
-  getResearcherRequestByVerificationToken,
+  approveRequest,
 };

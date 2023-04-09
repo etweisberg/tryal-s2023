@@ -73,6 +73,16 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  researcher: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  institution: {
+    type: String,
+    required: false,
+    default: '',
+  },
 });
 
 interface IUser extends mongoose.Document {
@@ -90,6 +100,8 @@ interface IUser extends mongoose.Document {
   medConditions: Array<string>;
   homeAddress: string;
   seekingCompensation: boolean;
+  researcher: boolean;
+  institution: string;
   admin: boolean;
 }
 

@@ -18,31 +18,12 @@ const ResearcherRequestSchema = new mongoose.Schema({
     match:
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/g,
   },
-  password: {
-    type: String,
-    required: true,
-  },
-  verified: {
-    type: Boolean,
-    default: false,
-    required: true,
-  },
   approved: {
     type: Boolean,
     default: false,
     required: true,
   },
-  verificationToken: {
-    type: String,
-    required: false,
-    unique: true,
-    sparse: true,
-  },
   institution: {
-    type: String,
-    required: true,
-  },
-  address: {
     type: String,
     required: true,
   },
@@ -58,7 +39,6 @@ interface IResearcherRequest extends mongoose.Document {
   approved: boolean;
   verificationToken: string | null | undefined;
   institution: string;
-  address: string;
 }
 
 const ResearcherRequest = mongoose.model<IResearcherRequest>(
