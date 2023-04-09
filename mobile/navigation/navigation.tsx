@@ -16,56 +16,97 @@ import ResearcherProfileScreen from '../screens/researcher/ResearcherProfileScre
 import MessagesScreen from '../screens/general/MessageScreen';
 import NotificationsScreen from '../screens/general/NotificationScreen';
 
+import RegisterScreen from '../screens/authentication/RegisterScreen';
+import LoginScreen from '../screens/authentication/LoginScreen';
+
 type InboxStackParamList = {
-  Messages: undefined;
-  Notifications: undefined;
+    Messages: undefined;
+    Notifications: undefined;
 };
 
-type MainTabsParamList = {
-  Explore: undefined;
-  Saved: undefined;
-  MyStudies: undefined;
-  ParticipantInbox: undefined;
-  ParticipantProfile: undefined;
-
-  Studies: undefined;
-  Upcoming: undefined;
-  Create: undefined;
-  ResearcherInbox: undefined;
-  ResearcherProfile: undefined;
+type AuthStackParamList = {
+    Register: undefined;
+    Login: undefined;
 };
 
-const Tab = createBottomTabNavigator<MainTabsParamList>();
-const Stack = createStackNavigator<InboxStackParamList>();
+type MainStackParamList = {
+    Auth: undefined;
+    ParticipantTabs: undefined;
+    ResearcherTabs: undefined;
+};
 
-const InboxStack = () => {
+type ParticipantTabParamList = {
+    Explore: undefined;
+    Saved: undefined;
+    MyStudies: undefined;
+    ParticipantInbox: undefined;
+    ParticipantProfile: undefined;
+}
+type ResearcherTabParamList = {
+    Studies: undefined;
+    Upcoming: undefined;
+    Create: undefined;
+    ResearcherInbox: undefined;
+    ResearcherProfile: undefined;
+};
+
+const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
+const ResearcherTab = createBottomTabNavigator<ResearcherTabParamList>();
+const InboxStack = createStackNavigator<InboxStackParamList>();
+const AuthStack = createStackNavigator<AuthStackParamList>();
+const MainStack = createStackNavigator<MainStackParamList>();
+
+
+const InboxStackScreen = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Messages" component={MessagesScreen} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} />
-    </Stack.Navigator>
+    <InboxStack.Navigator>
+      <InboxStack.Screen name="Messages" component={MessagesScreen} />
+      <InboxStack.Screen name="Notifications" component={NotificationsScreen} />
+    </InboxStack.Navigator>
   );
 };
+
+const AuthStackScreen = () => {
+    return (
+    <AuthStack.Navigator>
+      <AuthStack.Screen name="Register" component={RegisterScreen} />
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+    </AuthStack.Navigator>
+    )
+}
+
+const ResearcherTabScreen = () => {
+    return (
+        <ResearcherTab.Navigator>
+            <ResearcherTab.Screen name="Studies" component={StudiesScreen} />
+            <ResearcherTab.Screen name="Upcoming" component={UpcomingScreen} />
+            <ResearcherTab.Screen name="Create" component={CreateScreen} />
+            <ResearcherTab.Screen name="ResearcherInbox" component={InboxStackScreen} />
+            <ResearcherTab.Screen name="ResearcherProfile" component={ResearcherProfileScreen} />
+        </ResearcherTab.Navigator>
+    )
+}
+
+const ParticipantTabScreen = () => {
+    return (
+        <ParticipantTab.Navigator>
+            <ParticipantTab.Screen name="Explore" component={ExploreScreen} />
+            <ParticipantTab.Screen name="Saved" component={SavedScreen} />
+            <ParticipantTab.Screen name="MyStudies" component={MyStudiesScreen} />
+            <ParticipantTab.Screen name="ParticipantInbox" component={InboxStackScreen} />
+            <ParticipantTab.Screen name="ParticipantProfile" component={ParticipantProfileScreen} />
+        </ParticipantTab.Navigator>
+    )
+}
 
 const Navigation = () => {
   return (
     <NavigationContainer>
-        <Stack.Navigator>
-            <Tab.Navigator>
-                <Tab.Screen name="Explore" component={ExploreScreen} />
-                <Tab.Screen name="Saved" component={SavedScreen} />
-                <Tab.Screen name="MyStudies" component={MyStudiesScreen} />
-                <Tab.Screen name="ParticipantInbox" component={InboxStack} />
-                <Tab.Screen name="ParticipantProfile" component={ParticipantProfileScreen} />
-            </Tab.Navigator>
-            <Tab.Navigator>
-                <Tab.Screen name="Studies" component={StudiesScreen} />
-                <Tab.Screen name="Upcoming" component={UpcomingScreen} />
-                <Tab.Screen name="Create" component={CreateScreen} />
-                <Tab.Screen name="ResearcherInbox" component={InboxStack} />
-                <Tab.Screen name="ResearcherProfile" component={ResearcherProfileScreen} />
-            </Tab.Navigator>
-        </Stack.Navigator>
+        <MainStack.Navigator>
+            <MainStack.Screen name="Auth" component={AuthStackScreen} />
+            <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
+            <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
+        </MainStack.Navigator>
     </NavigationContainer>
   );
 };
