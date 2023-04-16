@@ -4,8 +4,8 @@
 import 'dotenv/config';
 import SGmail, { MailDataRequired } from '@sendgrid/mail';
 
-const appName = 'Boilerplate'; // Replace with a relevant project name
-const senderName = 'Hack4Impact UPenn'; // Replace with a relevant project sender
+const appName = 'Tryal'; // Replace with a relevant project name
+const senderName = 'Tryal Verification'; // Replace with a relevant project sender
 const baseUrl = 'http://localhost:3000'; // TODO: figure out better place to put this
 
 // eslint-disable-next-line no-useless-concat
@@ -46,6 +46,7 @@ const emailResetPasswordLink = async (email: string, token: string) => {
  */
 const emailVerificationLink = async (email: string, token: string) => {
   const resetLink = `${baseUrl}/verify-account/${token}`;
+  console.log(process.env);
   const mailSettings: MailDataRequired = {
     from: {
       email: process.env.SENDGRID_EMAIL_ADDRESS || 'missing@mail.com',
@@ -60,6 +61,7 @@ const emailVerificationLink = async (email: string, token: string) => {
       `<p>If you did not attempt to register an account with this email address, ` +
       `please ignore this message.</p>`,
   };
+  console.log(mailSettings);
   // Send the email and propogate the error up if one exists
   await SGmail.send(mailSettings);
 };

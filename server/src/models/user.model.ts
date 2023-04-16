@@ -48,6 +48,11 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: [],
   },
+  trialsOwned: {
+    type: Array<string>(),
+    required: true,
+    default: [],
+  },
   age: {
     type: Number,
     required: true,
@@ -96,6 +101,7 @@ interface IUser extends mongoose.Document {
   resetPasswordToken: string | null | undefined;
   resetPasswordTokenExpiryDate: Date | null | undefined;
   trials: Array<string>;
+  trialsOwned: Array<string>;
   age: number | null;
   medConditions: Array<string>;
   homeAddress: string;

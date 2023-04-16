@@ -132,7 +132,6 @@ const approveResearcherRequest = async (
   // implement approving research request
   const researcherRequest: IResearcherRequest | null =
     await getResearcherRequest(lowercaseEmail);
-  console.log(researcherRequest);
   if (!researcherRequest) {
     next(ApiError.notFound('Unable to retrieve researcher request'));
   } else {
