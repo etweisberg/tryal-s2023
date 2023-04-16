@@ -46,7 +46,6 @@ const emailResetPasswordLink = async (email: string, token: string) => {
  */
 const emailVerificationLink = async (email: string, token: string) => {
   const resetLink = `${baseUrl}/verify-account/${token}`;
-  console.log(process.env);
   const mailSettings: MailDataRequired = {
     from: {
       email: process.env.SENDGRID_EMAIL_ADDRESS || 'missing@mail.com',
@@ -61,7 +60,6 @@ const emailVerificationLink = async (email: string, token: string) => {
       `<p>If you did not attempt to register an account with this email address, ` +
       `please ignore this message.</p>`,
   };
-  console.log(mailSettings);
   // Send the email and propogate the error up if one exists
   await SGmail.send(mailSettings);
 };

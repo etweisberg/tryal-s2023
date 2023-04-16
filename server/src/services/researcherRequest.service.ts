@@ -22,7 +22,6 @@ const getAllResearcherRequests = async () => {
 };
 
 const getResearcherRequest = async (email: string) => {
-  console.log(email);
   const researcherRequest = await ResearcherRequest.findOne({ email }).exec();
   return researcherRequest;
 };

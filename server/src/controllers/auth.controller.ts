@@ -171,6 +171,7 @@ const register = async (
     } else {
       const verificationToken = crypto.randomBytes(32).toString('hex');
       user!.verificationToken = verificationToken;
+      console.log(verificationToken);
       await user!.save();
       await emailVerificationLink(lowercaseEmail, verificationToken);
     }
