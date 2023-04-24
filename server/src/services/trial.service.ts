@@ -33,10 +33,10 @@ const getTrialByName = async (name: string) => {
 };
 
 const addTrialToUser = async (userId: string, trialId: string) => {
-  const trial = await User.findByIdAndUpdate(userId, {
+  const user = await User.findByIdAndUpdate(userId, {
     $push: { trials: trialId },
   }).exec();
-  return trial;
+  return user;
 };
 
 const addResearcherToTrial = async (trialId: string, researcherId: string) => {
