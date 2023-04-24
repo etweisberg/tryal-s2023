@@ -1,6 +1,13 @@
 import { Trial } from '../models/trial.model';
 import { User } from '../models/user.model';
 
+interface TrialFilter {
+  date?: Date;
+  location?: string;
+  eligibleConditions?: string[];
+  acceptingParticipants?: boolean;
+}
+
 const createNewTrial = async (
   name: string,
   description: string,
@@ -81,6 +88,46 @@ const updateTrialConditions = async (trialId: string, conditions: string[]) => {
   return trial;
 };
 
+const addUserToRequests = async (userId: string, trialId: string) => {
+  const trial = await Trial.findByIdAndUpdate(trialId, {
+    $push: { participantRequests: userId },
+  }).exec();
+  return trial;
+};
+
+const addUserToAccepted = async (userId: string, trialId: string) => {
+  const trial = await Trial.findByIdAndUpdate(trialId, {
+    $push: { participantAccepted: userId },
+    $remove: { participantRequests: userId },
+  }).exec();
+  return trial;
+};
+
+const toggleAccept = async (trialId: string) => {
+  const trial = await Trial.findById(trialId).exec();
+  const accepting = trial?.acceptingParticipants;
+  if (accepting) {
+    await Trial.findByIdAndUpdate(trialId, {
+      $set: { acceptingParticipants: false },
+    }).exec();
+  } else {
+    await Trial.findByIdAndUpdate(trialId, {
+      $set: { acceptingParticipants: true },
+    }).exec();
+  }
+  return trial;
+};
+
+const getTrials = async (filter: TrialFilter) => {
+  const trials = await Trial.find(filter).exec();
+  return trials;
+};
+
+const getAll = async () => {
+  const trials = await Trial.find({}).exec();
+  return trials;
+};
+
 // eslint-disable-next-line import/prefer-default-export
 export {
   createNewTrial,
@@ -93,4 +140,9 @@ export {
   updateTrialDescription,
   updateTrialLocation,
   updateTrialConditions,
+  addUserToRequests,
+  addUserToAccepted,
+  toggleAccept,
+  getTrials,
+  getAll,
 };
