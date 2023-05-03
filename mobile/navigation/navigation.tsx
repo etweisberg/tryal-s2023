@@ -27,6 +27,7 @@ import { InboxStackParamList,
   ProfileStackParamList } from './types';
 import SettingsScreen from '../screens/general/SettingsScreen';
 import PushNotifsScreen from '../screens/general/PushNotifsScreen';
+import EditProfileScreen from '../screens/general/EditProfileScreen';
 
 const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
 const ResearcherTab = createBottomTabNavigator<ResearcherTabParamList>();
@@ -58,7 +59,7 @@ function ProfileStackScreen(userType: string) {
         )}
         <ProfileStack.Screen name="Settings" component={SettingsScreen} />
         <ProfileStack.Screen name="PushNotifs" component={PushNotifsScreen} />
-        <ProfileStack.Screen name="EditProfile" component={NotificationsScreen} />
+        <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
       </ProfileStack.Navigator>
     );
   };

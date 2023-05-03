@@ -1,5 +1,6 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
+import { Component, ReactNode } from "react";
 
 export type InboxStackParamList = {
     Messages: undefined;
@@ -46,4 +47,3 @@ export type ResearcherTabParamList = {
 };
 
 export type RootTabNavigationProp = RouteProp<ResearcherTabParamList, keyof ResearcherTabParamList>;
-// export type AuthStackScreenProps = StackScreenProps<MainStackParamList, 'Auth'>;

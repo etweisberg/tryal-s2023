@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native'
 import React from 'react'
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../../navigation/types';
@@ -17,7 +17,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
   }
 
   return (
-    <View>
+    <SafeAreaView>
       <Text>RegisterScreen</Text>
 
       <TouchableOpacity onPress={toLogin} >
@@ -27,7 +27,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
       <TouchableOpacity onPress={toParticipantTabs} >
         <Text>Continue as Guest</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
     
   )
 }

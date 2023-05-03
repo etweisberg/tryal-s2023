@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native'
 import React from 'react'
 import { StackScreenProps } from '@react-navigation/stack';
 import { InboxStackParamList } from '../../../navigation/types';
@@ -11,11 +11,11 @@ export default function MessageScreen({ navigation }: MessageScreenProps) {
   }
 
   return (
-    <View>
+    <SafeAreaView>
       <Text>MessageScreen</Text>
       <TouchableOpacity onPress={toNotifications} >
         <Text>Switch to Notifications</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   )
 }

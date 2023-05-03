@@ -1,10 +1,10 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native'
 import React from 'react'
 import { StackScreenProps } from '@react-navigation/stack';
-import { SettingsStackParamList } from '../../../navigation/types';
+import { ProfileStackParamList } from '../../../navigation/types';
 
 
-type PushNotifsScreenProps = StackScreenProps<SettingsStackParamList, 'PushNotifs'>;
+type PushNotifsScreenProps = StackScreenProps<ProfileStackParamList, 'PushNotifs'>;
 
 export default function PushNotifsScreen({ navigation }: PushNotifsScreenProps) {
   
@@ -13,13 +13,13 @@ export default function PushNotifsScreen({ navigation }: PushNotifsScreenProps) 
   }
 
   return (
-    <View>
+    <SafeAreaView>
       <Text>PushNotifsScreen</Text>
 
       <TouchableOpacity onPress={toSettings} >
         <Text>Back</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
     
   )
 }

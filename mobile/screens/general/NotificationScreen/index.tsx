@@ -1,10 +1,10 @@
-import { View, Text } from 'react-native'
+import { View, Text, SafeAreaView } from 'react-native'
 import React from 'react'
 
 export default function NotificationScreen() {
   return (
-    <View>
+    <SafeAreaView>
       <Text>NotificationScreen</Text>
-    </View>
+    </SafeAreaView>
   )
 }

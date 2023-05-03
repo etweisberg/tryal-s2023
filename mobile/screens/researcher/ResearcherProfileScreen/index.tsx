@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native'
 import React from 'react'
 import { ProfileStackParamList } from '../../../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -12,11 +12,11 @@ export default function ResearcherProfileScreen({ navigation }: ProfileScreenPro
   }
 
   return (
-    <View>
+    <SafeAreaView>
       <Text>ResearcherProfileScreen</Text>
       <TouchableOpacity onPress={toSettings} >
         <Text>Settings</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   )
 }

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native'
 import React from 'react'
 import { StackScreenProps } from '@react-navigation/stack';
 import { ProfileStackParamList } from '../../../navigation/types';
@@ -16,8 +16,16 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
     navigation.navigate('EditProfile')
   }
 
+  const switchTabs = (userType: string) => {
+    if (userType === 'researcher') {
+      navigation.navigate('ParticipantTabs')
+    } else {
+      navigation.navigate('ResearcherTabs')
+    }
+  }
+
   return (
-    <View>
+    <SafeAreaView>
       <Text>SettingsScreen</Text>
 
       <TouchableOpacity onPress={toPushNotifs} >
@@ -27,7 +35,11 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
       <TouchableOpacity onPress={toEditProfile} >
         <Text>Edit Profile</Text>
       </TouchableOpacity>
-    </View>
+
+      <TouchableOpacity onPress={toEditProfile} >
+        <Text>Edit Profile</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
     
   )
 }
