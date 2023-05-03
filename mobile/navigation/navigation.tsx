@@ -20,107 +20,129 @@ import RegisterScreen from '../screens/authentication/RegisterScreen';
 import LoginScreen from '../screens/authentication/LoginScreen';
 
 import Icon from "react-native-vector-icons/Ionicons";
-import { InboxStackParamList, MainStackParamList, ParticipantTabParamList, ResearcherTabParamList, SettingsStackParamList } from './types';
-import SettingsScreen from '../screens/authentication/SettingsScreen';
-import PushNotifsScreen from '../screens/authentication/PushNotifsScreen';
+import { InboxStackParamList, 
+  MainStackParamList, 
+  ParticipantTabParamList, 
+  ResearcherTabParamList, 
+  ProfileStackParamList } from './types';
+import SettingsScreen from '../screens/general/SettingsScreen';
+import PushNotifsScreen from '../screens/general/PushNotifsScreen';
 
 const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
 const ResearcherTab = createBottomTabNavigator<ResearcherTabParamList>();
 const InboxStack = createStackNavigator<InboxStackParamList>();
-const SettingsStack = createStackNavigator<SettingsStackParamList>();
+const ProfileStack = createStackNavigator<ProfileStackParamList>();
 const MainStack = createStackNavigator<MainStackParamList>();
 
 function InboxStackScreen() {
   return (
-    <InboxStack.Navigator>
+    <InboxStack.Navigator screenOptions={{
+      headerShown: false
+    }}>
       <InboxStack.Screen name="Messages" component={MessageScreen} />
       <InboxStack.Screen name="Notifications" component={NotificationsScreen} />
     </InboxStack.Navigator>
   );
 };
 
-function SettingsStackScreen() {
+function ProfileStackScreen(userType: string) {
     return (
-      <SettingsStack.Navigator>
-        <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-        <SettingsStack.Screen name="PushNotifs" component={PushNotifsScreen} />
-        <SettingsStack.Screen name="EditProfile" component={NotificationsScreen} />
-      </SettingsStack.Navigator>
+      <ProfileStack.Navigator screenOptions={{
+        headerShown: false
+      }}>
+        {/* Show Participant Profile if participant, Researcher Profile otherwise */}
+        {userType === "participant" ? (
+          <ProfileStack.Screen name="MainProfile" component={ParticipantProfileScreen} />
+        ) : (
+          <ProfileStack.Screen name="MainProfile" component={ResearcherProfileScreen} />
+        )}
+        <ProfileStack.Screen name="Settings" component={SettingsScreen} />
+        <ProfileStack.Screen name="PushNotifs" component={PushNotifsScreen} />
+        <ProfileStack.Screen name="EditProfile" component={NotificationsScreen} />
+      </ProfileStack.Navigator>
     );
   };
   
 
 function ResearcherTabScreen() {
     return (
-        <ResearcherTab.Navigator
-        initialRouteName="Studies"
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ color, size }) => {
-            let iconName = '';
-            if (route.name === 'Studies') {
-              iconName = "search-circle-outline";
-            } else if (route.name === "Upcoming") {
-              iconName = "calendar-outline";
-            } else if (route.name === "Create") {
-              iconName = "add-circle-outline";
-            } else if (route.name === "ResearcherInbox") {
-              iconName = "chatbox-outline";
-            } else if (route.name === "ResearcherProfile") {
-              iconName = "person-outline";
-            }
-            return <Icon name={iconName} size={size} color={color} />;
-          },
-        })}
-        >
-            <ResearcherTab.Screen name="Studies" component={StudiesScreen} />
-            <ResearcherTab.Screen name="Upcoming" component={UpcomingScreen} />
-            <ResearcherTab.Screen name="Create" component={CreateScreen} />
-            <ResearcherTab.Screen name="ResearcherInbox" component={InboxStackScreen} />
-            <ResearcherTab.Screen name="ResearcherProfile" component={ResearcherProfileScreen} />
-        </ResearcherTab.Navigator>
+      <ResearcherTab.Navigator
+      initialRouteName="Studies"
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ color, size }) => {
+          let iconName = '';
+          if (route.name === 'Studies') {
+            iconName = "search-circle-outline";
+          } else if (route.name === "Upcoming") {
+            iconName = "calendar-outline";
+          } else if (route.name === "Create") {
+            iconName = "add-circle-outline";
+          } else if (route.name === "Inbox") {
+            iconName = "chatbox-outline";
+          } else if (route.name === "Profile") {
+            iconName = "person-outline";
+          }
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+      })}
+      >
+        <ResearcherTab.Screen name="Studies" component={StudiesScreen} />
+        <ResearcherTab.Screen name="Upcoming" component={UpcomingScreen} />
+        <ResearcherTab.Screen name="Create" component={CreateScreen} />
+        <ResearcherTab.Screen name="Inbox" component={InboxStackScreen} />
+        <ResearcherTab.Screen name="Profile">
+          {() => ProfileStackScreen("researcher")}
+        </ResearcherTab.Screen>
+      </ResearcherTab.Navigator>
     )
 }
 
 function ParticipantTabScreen() {
     return (
-        <ParticipantTab.Navigator
-        initialRouteName="Explore"
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ color, size }) => {
-            let iconName = '';
-            if (route.name === 'Explore') {
-              iconName = "search-circle-outline";
-            } else if (route.name === "Saved") {
-              iconName = "bookmark-outline";
-            } else if (route.name === "MyStudies") {
-              iconName = "book-outline";
-            } else if (route.name === "ParticipantInbox") {
-              iconName = "chatbox-outline";
-            } else if (route.name === "ParticipantProfile") {
-              iconName = "person-outline";
-            }
-            return <Icon name={iconName} size={size} color={color} />;
-          },
-        })}
-        >
-            <ParticipantTab.Screen name="Explore" component={ExploreScreen} />
-            <ParticipantTab.Screen name="Saved" component={SavedScreen} />
-            <ParticipantTab.Screen name="MyStudies" component={MyStudiesScreen} />
-            <ParticipantTab.Screen name="ParticipantInbox" component={InboxStackScreen} />
-            <ParticipantTab.Screen name="ParticipantProfile" component={ParticipantProfileScreen} />
-        </ParticipantTab.Navigator>
+      <ParticipantTab.Navigator
+      initialRouteName="Explore"
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ color, size }) => {
+          let iconName = '';
+          if (route.name === 'Explore') {
+            iconName = "search-circle-outline";
+          } else if (route.name === "Saved") {
+            iconName = "bookmark-outline";
+          } else if (route.name === "My Studies") {
+            iconName = "book-outline";
+          } else if (route.name === "Inbox") {
+            iconName = "chatbox-outline";
+          } else if (route.name === "Profile") {
+            iconName = "person-outline";
+          }
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+      })}
+      >
+        <ParticipantTab.Screen name="Explore" component={ExploreScreen} />
+        <ParticipantTab.Screen name="Saved" component={SavedScreen} />
+        <ParticipantTab.Screen name="My Studies" component={MyStudiesScreen} />
+        <ParticipantTab.Screen name="Inbox" component={InboxStackScreen} />
+        <ParticipantTab.Screen name="Profile">
+          {() => ProfileStackScreen("participant")}
+        </ParticipantTab.Screen>        
+      </ParticipantTab.Navigator>
     )
 }
 
 export default function Navigation() {
   return (
     <NavigationContainer>
-        <MainStack.Navigator>
-            <MainStack.Screen name="Register" component={RegisterScreen} />
-            <MainStack.Screen name="Login" component={LoginScreen} />
-            <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
-            <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
-        </MainStack.Navigator>
+      <MainStack.Navigator screenOptions={{
+      headerShown: false
+    }}>
+        <MainStack.Screen name="Register" component={RegisterScreen} />
+        <MainStack.Screen name="Login" component={LoginScreen} />
+        <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
+        <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
+      </MainStack.Navigator>
     </NavigationContainer>
   );
 };

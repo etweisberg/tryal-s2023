@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { StackScreenProps } from '@react-navigation/stack';
-import { SettingsStackParamList } from '../../../navigation/types';
+import { ProfileStackParamList } from '../../../navigation/types';
 
 
-type SettingsScreenProps = StackScreenProps<SettingsStackParamList, 'Settings'>;
+type SettingsScreenProps = StackScreenProps<ProfileStackParamList, 'Settings'>;
 
 export default function SettingsScreen({ navigation }: SettingsScreenProps) {
   
@@ -13,7 +13,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
   }
 
   const toEditProfile = () => {
-    navigation.navigate('PushNotifs')
+    navigation.navigate('EditProfile')
   }
 
   return (
@@ -21,7 +21,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
       <Text>SettingsScreen</Text>
 
       <TouchableOpacity onPress={toPushNotifs} >
-        <Text>Notification</Text>
+        <Text>Notifications</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={toEditProfile} >

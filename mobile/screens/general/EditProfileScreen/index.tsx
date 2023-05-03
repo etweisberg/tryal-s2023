@@ -1,10 +1,9 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { StackScreenProps } from '@react-navigation/stack';
-import { SettingsStackParamList } from '../../../navigation/types';
+import { ProfileStackParamList } from '../../../navigation/types';
 
-
-type EditProfileScreenProps = StackScreenProps<SettingsStackParamList, 'EditProfile'>;
+type EditProfileScreenProps = StackScreenProps<ProfileStackParamList, 'EditProfile'>;
 
 export default function EditProfileScreen({ navigation }: EditProfileScreenProps) {
   

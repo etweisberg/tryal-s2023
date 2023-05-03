@@ -6,7 +6,10 @@ export type InboxStackParamList = {
     Notifications: undefined;
 };
 
-export type SettingsStackParamList = {
+export type ProfileStackParamList = {
+    ParticipantTabs: undefined;
+    ResearcherTabs: undefined;
+    MainProfile: undefined;
     Settings: undefined;
     PushNotifs: undefined;
     EditProfile: undefined;
@@ -27,9 +30,9 @@ export type MainStackParamList = {
 export type ParticipantTabParamList = {
     Explore: undefined;
     Saved: undefined;
-    MyStudies: undefined;
-    ParticipantInbox: undefined;
-    ParticipantProfile: undefined;
+    "My Studies": undefined;
+    Inbox: undefined;
+    Profile: undefined;
     ResearcherTabs: undefined;
 };
 
@@ -37,8 +40,8 @@ export type ResearcherTabParamList = {
     Studies: undefined;
     Upcoming: undefined;
     Create: undefined;
-    ResearcherInbox: undefined;
-    ResearcherProfile: undefined;
+    Inbox: undefined;
+    Profile: undefined;
     ParticipantTabs: undefined;
 };
 
