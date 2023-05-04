@@ -48,6 +48,11 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: [],
   },
+  trialsOwned: {
+    type: Array<string>(),
+    required: true,
+    default: [],
+  },
   age: {
     type: Number,
     required: true,
@@ -68,6 +73,21 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  admin: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  researcher: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  institution: {
+    type: String,
+    required: false,
+    default: '',
+  },
 });
 
 interface IUser extends mongoose.Document {
@@ -81,10 +101,14 @@ interface IUser extends mongoose.Document {
   resetPasswordToken: string | null | undefined;
   resetPasswordTokenExpiryDate: Date | null | undefined;
   trials: Array<string>;
+  trialsOwned: Array<string>;
   age: number | null;
   medConditions: Array<string>;
   homeAddress: string;
   seekingCompensation: boolean;
+  researcher: boolean;
+  institution: string;
+  admin: boolean;
 }
 
 const User = mongoose.model<IUser>('User', UserSchema);
