@@ -31,10 +31,14 @@ export default function LoginScreen() {
         resetPasswordToken: result.data.resetPasswordToken,
         resetPasswordTokenExpiryDate: result.data.resetPasswordTokenExpiryDate,
         trials: result.data.trials,
+        trialsOwned: result.data.trialsOwned,
         age: result.data.age,
         medConditions: result.data.medConditions,
         homeAddress: result.data.homeAddress,
         seekingCompensation: result.data.seekingCompensation,
+        researcher: result.data.researcher,
+        institution: result.data.institution,
+        admin: result.data.admin,
       }
       dispatch(loginUser(user));
     } catch (error) {

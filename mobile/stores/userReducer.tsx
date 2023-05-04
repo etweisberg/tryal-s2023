@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './index';
 
 // Define a type for the slice state
-export interface User {
-  _id: string | null;
+export type User = {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -13,11 +13,14 @@ export interface User {
   resetPasswordToken: string | null | undefined;
   resetPasswordTokenExpiryDate: Date | null | undefined;
   trials: Array<string>;
+  trialsOwned: Array<string>;
   age: number | null;
   medConditions: Array<string>;
   homeAddress: string;
   seekingCompensation: boolean;
-  // other user properties
+  researcher: boolean;
+  institution: string;
+  admin: boolean;
 }
 
 // Define the state type and initial value

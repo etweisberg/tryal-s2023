@@ -35,6 +35,7 @@ import { RootState } from '../stores';
 import { getCurrentUser } from '../stores/userReducer';
 import LoadingScreen from '../screens/general/LoadingScreen';
 
+
 const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
 const ResearcherTab = createBottomTabNavigator<ResearcherTabParamList>();
 const InboxStack = createStackNavigator<InboxStackParamList>();
@@ -158,19 +159,20 @@ export default function Navigation() {
   return (
     <NavigationContainer>
       <MainStack.Navigator screenOptions={{
-      headerShown: false
-    }}>
-        {loading ? (
-                // This screen is only visible while the app is loading
-                <MainStack.Screen name="Loading" component={LoadingScreen} />
-            ) : userState ? (
-                // This screen is only visible when a user has been authenticated
-                <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
-            ) : userState ? (
-                <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
-            ) : (
-                <MainStack.Screen name="Auth" component={AuthStackScreen} />
-            )}
+          headerShown: false
+        }}>
+      {loading ? (
+          // This screen is only visible while the app is loading
+          <MainStack.Screen name="Loading" component={LoadingScreen} />
+        ) : userState ? (
+          // This screen is only visible when a user has been authenticated as a general user
+          <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
+        ) : userState && userState["admin"] ? (
+          // This screen is only visible when a user has been authenticated as a researcher
+          <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
+        ) : (
+            <MainStack.Screen name="Auth" component={AuthStackScreen} />
+        )}
       </MainStack.Navigator>
     </NavigationContainer>
   );
