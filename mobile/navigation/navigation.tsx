@@ -154,24 +154,25 @@ function ParticipantTabScreen() {
 
 export default function Navigation() {
   const [loading, setLoading] = useState(false)
-  const userState = useSelector((state: RootState) => getCurrentUser(state));
+  const user = useSelector((state: RootState) => getCurrentUser(state));
+  console.log(user);
 
   return (
     <NavigationContainer>
       <MainStack.Navigator screenOptions={{
-          headerShown: false
-        }}>
-      {loading ? (
+        headerShown: false
+      }}>
+        {loading ? (
           // This screen is only visible while the app is loading
           <MainStack.Screen name="Loading" component={LoadingScreen} />
-        ) : userState ? (
+        ) : user ? (
           // This screen is only visible when a user has been authenticated as a general user
           <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
-        ) : userState && userState["admin"] ? (
+        ) : user && user["admin"] ? (
           // This screen is only visible when a user has been authenticated as a researcher
           <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
         ) : (
-            <MainStack.Screen name="Auth" component={AuthStackScreen} />
+          <MainStack.Screen name="Auth" component={AuthStackScreen} />
         )}
       </MainStack.Navigator>
     </NavigationContainer>

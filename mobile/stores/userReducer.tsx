@@ -63,10 +63,10 @@ const userSlice = createSlice({
 
 export const { loginUser, logoutUser, setLoading, setError } = userSlice.actions;
 
-export const getCurrentUser = (state: RootState): UserState | null => state.user;
+export const getCurrentUser = (state: RootState): User | null => state.user.user;
 
 export const userReducer = userSlice.reducer;
 
-export const currentUserSelector = (state: RootState): UserState | null => state.user && (state.user as UserState);
+export const currentUserSelector = (state: RootState): User | null => state.user.user && (state.user.user as User);
 
 export type CurrentUserSelectorReturnType = ReturnType<typeof currentUserSelector>;
