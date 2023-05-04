@@ -22,7 +22,12 @@ const TrialSchema = new mongoose.Schema({
     required: true,
     default: [],
   },
-  participants: {
+  participantRequests: {
+    type: Array<string>(),
+    required: true,
+    default: [],
+  },
+  participantAccepted: {
     type: Array<string>(),
     required: true,
     default: [],
@@ -52,7 +57,8 @@ interface ITrial extends mongoose.Document {
   name: string;
   description: string;
   researchers: string[];
-  participants: string[];
+  participantRequests: string[];
+  participantAccepted: string[];
   acceptingParticipants: boolean;
   date: Date;
   location: string;

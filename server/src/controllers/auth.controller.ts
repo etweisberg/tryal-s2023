@@ -107,10 +107,17 @@ const register = async (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  const { firstName, lastName, email, password } = req.body;
-  if (!firstName || !lastName || !email || !password) {
+  const { firstName, lastName, email, age, homeAddress, password } = req.body;
+  if (!firstName || !lastName || !email || !password || !age || !homeAddress) {
     next(
-      ApiError.missingFields(['firstName', 'lastName', 'email', 'password']),
+      ApiError.missingFields([
+        'firstName',
+        'lastName',
+        'email',
+        'age',
+        'homeAddress',
+        'password',
+      ]),
     );
     return;
   }
@@ -154,6 +161,8 @@ const register = async (
       lastName,
       lowercaseEmail,
       password,
+      age,
+      homeAddress,
     );
     // Don't need verification email if testing
     if (process.env.NODE_ENV === 'test') {
@@ -162,6 +171,7 @@ const register = async (
     } else {
       const verificationToken = crypto.randomBytes(32).toString('hex');
       user!.verificationToken = verificationToken;
+      console.log(verificationToken);
       await user!.save();
       await emailVerificationLink(lowercaseEmail, verificationToken);
     }
@@ -300,14 +310,32 @@ const registerInvite = async (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  const { firstName, lastName, email, password, inviteToken } = req.body;
-  if (!firstName || !lastName || !email || !password) {
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    age,
+    homeAddress,
+    inviteToken,
+  } = req.body;
+  if (
+    !firstName ||
+    !lastName ||
+    !email ||
+    !password ||
+    !age ||
+    !homeAddress ||
+    !inviteToken
+  ) {
     next(
       ApiError.missingFields([
         'firstName',
         'lastName',
         'email',
         'password',
+        'age',
+        'homeAddress',
         'inviteToken',
       ]),
     );
@@ -361,6 +389,8 @@ const registerInvite = async (
       lastName,
       lowercaseEmail,
       password,
+      age,
+      homeAddress,
     );
     user!.verified = true;
     await user?.save();

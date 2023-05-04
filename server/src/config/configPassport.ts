@@ -14,6 +14,7 @@ interface IUserWithPassword {
   password?: string;
   verified: boolean;
   admin: boolean;
+  researcher: boolean;
 }
 
 /**
