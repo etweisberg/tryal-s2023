@@ -1,6 +1,4 @@
 import { RouteProp } from "@react-navigation/native";
-import { StackScreenProps } from "@react-navigation/stack";
-import { Component, ReactNode } from "react";
 
 export type InboxStackParamList = {
     Messages: undefined;
@@ -24,8 +22,10 @@ export type AuthStackParamList = {
 export type MainStackParamList = {
     Register: undefined;
     Login: undefined;
+    Auth: undefined;
     ParticipantTabs: undefined;
     ResearcherTabs: undefined;
+    Loading: undefined
 };
 
 export type ParticipantTabParamList = {

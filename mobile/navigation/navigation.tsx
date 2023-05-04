@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -24,16 +24,23 @@ import { InboxStackParamList,
   MainStackParamList, 
   ParticipantTabParamList, 
   ResearcherTabParamList, 
-  ProfileStackParamList } from './types';
+  ProfileStackParamList, 
+  AuthStackParamList} from './types';
 import SettingsScreen from '../screens/general/SettingsScreen';
 import PushNotifsScreen from '../screens/general/PushNotifsScreen';
 import EditProfileScreen from '../screens/general/EditProfileScreen';
+
+import { useSelector } from 'react-redux';
+import { RootState } from '../stores';
+import { getCurrentUser } from '../stores/userReducer';
+import LoadingScreen from '../screens/general/LoadingScreen';
 
 const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
 const ResearcherTab = createBottomTabNavigator<ResearcherTabParamList>();
 const InboxStack = createStackNavigator<InboxStackParamList>();
 const ProfileStack = createStackNavigator<ProfileStackParamList>();
 const MainStack = createStackNavigator<MainStackParamList>();
+const AuthStack = createStackNavigator<AuthStackParamList>();
 
 function InboxStackScreen() {
   return (
@@ -63,6 +70,17 @@ function ProfileStackScreen(userType: string) {
       </ProfileStack.Navigator>
     );
   };
+
+function AuthStackScreen() {
+  return (
+    <AuthStack.Navigator screenOptions={{
+      headerShown: false
+    }}>
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+      <AuthStack.Screen name="Register" component={RegisterScreen} />
+    </AuthStack.Navigator>
+  );
+};
   
 
 function ResearcherTabScreen() {
@@ -134,15 +152,25 @@ function ParticipantTabScreen() {
 }
 
 export default function Navigation() {
+  const [loading, setLoading] = useState(false)
+  const userState = useSelector((state: RootState) => getCurrentUser(state));
+
   return (
     <NavigationContainer>
       <MainStack.Navigator screenOptions={{
       headerShown: false
     }}>
-        <MainStack.Screen name="Register" component={RegisterScreen} />
-        <MainStack.Screen name="Login" component={LoginScreen} />
-        <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
-        <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
+        {loading ? (
+                // This screen is only visible while the app is loading
+                <MainStack.Screen name="Loading" component={LoadingScreen} />
+            ) : userState ? (
+                // This screen is only visible when a user has been authenticated
+                <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
+            ) : userState ? (
+                <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
+            ) : (
+                <MainStack.Screen name="Auth" component={AuthStackScreen} />
+            )}
       </MainStack.Navigator>
     </NavigationContainer>
   );
