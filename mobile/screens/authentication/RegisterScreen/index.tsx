@@ -31,6 +31,8 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
   const [index, setIndex] = useState(0);
   const [checkboxSelected, setCheckboxSelection] = useState(false);
 
+  const dispatch = useDispatch();
+
   const pages = [
     {
       header: 'First, we need you to enter your email.',
@@ -46,21 +48,21 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
       ]
     },
     {
-      header: 'To match you with appropriate studies, we need to know a little bit more about you.',
+      header: 'Next, we need your name.',
       data: [
         {id: 0, name: 'First Name', state: firstName, setState: setFirstName},
         {id: 1, name: 'Last Name', state: lastName, setState: setLastName},
       ]
     },
     {
-      header: 'Just a couple more questions!',
+      header: 'JTo match you with appropriate studies, it helps to know a little bit more about you. (Optional)',
       data: [
         {id: 0, name: 'Sex', state: sex, setState: setSex},
         {id: 1, name: 'Gender', state: gender, setState: setGender},
       ]
     },
     {
-      header: 'Last ones!',
+      header: 'Last ones! (Optional)',
       data: [
         {id: 0, name: 'Race', state: race, setState: setRace},
         {id: 1, name: 'Ethnicity', state: ethnicity, setState: setEthnicity},
@@ -77,7 +79,18 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
   };
 
   const handleRegister = async () => {
-    
+    try {
+      const response = await fetch('http://localhost:3000/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ firstName: firstName, lastName: lastName, email: email, password: password }),
+      });
+    } catch (error) {
+      console.error(error);
+      // TODO: handle the error
+    }
   }
 
   const toNext = () => {
