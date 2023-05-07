@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Pressable, StyleSheet } from 'react-native';
 import { View, Text } from 'react-native';
-// import { TextInput, Stack, Button } from "@react-native-material/core";
-import { TextInput, Button } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { User, loginUser } from '../../../stores/userReducer';
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
@@ -74,7 +72,6 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
           onRightPress={toRegister}
         />
         <Form
-          // header='Enter your username and password.'
           data={[
             {
               id: 1,
@@ -94,9 +91,6 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
               </TouchableOpacity>
             }
         />
-        {/* <TouchableOpacity onPress={toRegister} style={styles.textButton}>
-          <Text style={{ color: '#195064' }}>Forgot your password?</Text>
-        </TouchableOpacity> */}
         <TouchableHighlight onPress={handleLogin} containerStyle={styles.button}>
           <Text style={{ color: 'white' }}>Log In</Text>
         </TouchableHighlight>
@@ -135,11 +129,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    // flex: 3,
     textAlign: 'center',
     fontSize: 24,
     fontWeight: 'bold',
-    // marginVertical: 32,
     // backgroundColor: 'green'
   },
   textInput: {
