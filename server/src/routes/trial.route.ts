@@ -37,7 +37,7 @@ requesting user must be a researcher on the trial
 router.put('/accept', isAuthenticated, isResearcher, acceptUserForTrial);
 
 /*
-put for togglign acceptingParticipants
+put for toggling acceptingParticipants
 */
 router.put(
   '/accepting',
