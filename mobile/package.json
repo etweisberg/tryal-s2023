@@ -15,6 +15,7 @@
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
     "@reduxjs/toolkit": "^1.9.3",
+    "@rneui/themed": "^4.0.0-rc.7",
     "@types/react-native-check-box": "^2.1.2",
     "@types/react-native-elements": "^0.18.0",
     "@types/react-native-material-ui": "^1.32.3",

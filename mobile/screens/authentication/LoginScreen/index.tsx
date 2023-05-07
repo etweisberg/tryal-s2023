@@ -115,35 +115,6 @@ const styles = StyleSheet.create({
     margin: 24,
     // backgroundColor: 'black',
   },
-  headerContainer: {
-    width: '100%',
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    // backgroundColor: 'green',
-    marginVertical: 16
-  },  
-  inputContainer: {
-    width: '100%',
-    marginBottom: 16,
-  },
-  title: {
-    textAlign: 'center',
-    fontSize: 24,
-    fontWeight: 'bold',
-    // backgroundColor: 'green'
-  },
-  textInput: {
-    width: '100%',
-    height: 48,
-    padding: 16,
-    marginVertical: 8,
-    borderWidth: 0.25,
-    borderRadius: 15,
-    borderColor: '#bdbdbd',
-    backgroundColor: '#e8e8e8'
-  },
   button: {
     width: '100%',
     alignItems: 'center',

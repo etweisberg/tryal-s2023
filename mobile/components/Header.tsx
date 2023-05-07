@@ -80,9 +80,7 @@ export default function Header(
             }
             </View>
         </View>
-        <View style={{width: '100%'}}>
-            {children}
-        </View>
+        {children}
     </View>
   )
 }
@@ -97,7 +95,8 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row',
-      marginVertical: 16,
+      marginTop: 24,
+      marginBottom: 16,
     //   backgroundColor: 'black'
     },
     title: {

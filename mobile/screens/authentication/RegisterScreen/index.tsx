@@ -35,7 +35,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
 
   const pages = [
     {
-      header: 'First, we need you to enter your email.',
+      header: 'First, we need your email.',
       data: [
         {id: 0, name: 'Email', state: email, setState: setEmail},
       ]
@@ -55,7 +55,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
       ]
     },
     {
-      header: 'JTo match you with appropriate studies, it helps to know a little bit more about you. (Optional)',
+      header: 'To match you with appropriate studies, it helps to know a little bit more about you. (Optional)',
       data: [
         {id: 0, name: 'Sex', state: sex, setState: setSex},
         {id: 1, name: 'Gender', state: gender, setState: setGender},
@@ -121,7 +121,13 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
           rightText='Log In'
           onRightPress={toLogin}
           children={
-            <Progress.Bar progress={(index + 1)/(pages.length + 1)} style={{flex: 1}} height={6} width={null} color='#195064' unfilledColor='green' borderWidth={0} />
+            <Progress.Bar 
+              progress={(index + 1)/pages.length} 
+              height={6} 
+              width={null} 
+              color='#195064' 
+              unfilledColor='#e8e8e8' 
+              borderWidth={0} />
           }
         />
         <Form 
