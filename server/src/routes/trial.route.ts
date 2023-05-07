@@ -57,7 +57,7 @@ get all trials
 router.get('/all', isAuthenticated, getAllTrials);
 
 /*
-get  rial by ID
+get trial by ID
 */
 router.get('/all', isAuthenticated, getTrialById);
 export default router;
