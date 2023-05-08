@@ -21,6 +21,7 @@
     "heroku-postbuild": "cd mobile && yarn install && yarn build && cd ../server && yarn install --production=false && yarn build"
   },
   "dependencies": {
+    "@expo/webpack-config": "^0.17.2",
     "expo": "^47.0.13",
     "react": "18.1.0",
     "react-native": "0.70.5"
