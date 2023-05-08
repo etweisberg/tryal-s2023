@@ -3,13 +3,7 @@ import React, { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import Header from '../../../components/Header'
 import { Searchbar, Card, Divider } from 'react-native-paper'
-// import { Divider } from '@rneui/themed';
-
-type DataItem = {
-  id: string;
-  title: string;
-  description: string;
-};
+import StudyList, { DataItem } from '../../../components/StudyList'
 
 const DATA: DataItem[] = [
   { id: '1', title: 'Card 1', description: 'This is the first card' },
@@ -30,18 +24,6 @@ const renderItem1 = ({ item }: RenderItemProps) => (
   </Card>
 );
 
-const renderItem2 = ({ item }: RenderItemProps) => (
-  <View>
-    <Card style={styles.card2} mode='contained'>
-      <Card.Title title={item.title} />
-      <Card.Content>
-        <Text>{item.description}</Text>
-      </Card.Content>
-    </Card>
-    <Divider />
-  </View>
-);
-
 export default function ExploreScreen() {
   const [search, setSearch] = useState<string>('');
 
@@ -57,11 +39,10 @@ export default function ExploreScreen() {
           placeholder="Search"
           onChangeText={updateSearch}
           value={search}
-          style={{height: 50, width: '100%', backgroundColor: '#e8e8e8', paddingHorizontal: 16}}
+          style={{height: 50, backgroundColor: '#e8e8e8', marginHorizontal: 16}}
         />
-        <View style={{width: '100%', padding: 16}}>
-          <Text style={{fontSize: 20, fontWeight: 'bold'}}>Your Recents</Text>
-        </View>
+
+        <Text style={{fontSize: 20, fontWeight: 'bold', padding: 16}}>Your Recents</Text>
         <FlatList<DataItem>
         showsVerticalScrollIndicator={false}
         horizontal
@@ -71,16 +52,9 @@ export default function ExploreScreen() {
         scrollEnabled={true}
         style={{paddingHorizontal: 16}}
         />
-        <View style={{width: '100%', padding: 16}}>
-          <Text style={{fontSize: 20, fontWeight: 'bold'}}>Suggested Studies</Text>
-        </View>
-        <FlatList<DataItem>
-        data={DATA}
-        renderItem={renderItem2}
-        keyExtractor={(item) => item.id}
-        scrollEnabled={false}
-        style={{paddingHorizontal: 16}}
-        />
+
+        <Text style={{fontSize: 20, fontWeight: 'bold', padding: 16}}>Suggested Studies</Text>
+        <StudyList data={DATA} />        
       </ScrollView>
     </View>
   )
@@ -96,7 +70,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'black',
   },
   card1: {
-    width: 100,
+    width: 115,
     height: 150,
     margin: 4,
   },

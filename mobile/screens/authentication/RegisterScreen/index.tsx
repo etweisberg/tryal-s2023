@@ -151,11 +151,11 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
           />
         </View>
         
-        <TouchableHighlight onPress={toNext} containerStyle={styles.button}>
+        <Pressable onPress={toNext} style={styles.button}>
           <View style={{ flex: 1, justifyContent: 'center'}}>
             <Text style={{ color: 'white' }}>{index !== pages.length - 1 ? 'Next' : 'Submit'}</Text>
           </View>
-        </TouchableHighlight>
+        </Pressable>
       </Pressable>
     </KeyboardAvoidingView>
   );

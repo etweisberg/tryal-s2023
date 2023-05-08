@@ -91,9 +91,9 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
               </TouchableOpacity>
             }
         />
-        <TouchableHighlight onPress={handleLogin} containerStyle={styles.button}>
+        <Pressable onPress={handleLogin} style={styles.button}>
           <Text style={{ color: 'white' }}>Log In</Text>
-        </TouchableHighlight>
+        </Pressable>
 
         <View style={styles.textButton}>
           <Text style={{ fontWeight: 'bold', color: '#195064'}}>OR</Text>
