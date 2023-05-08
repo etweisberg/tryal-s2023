@@ -1956,12 +1956,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express-session@npm:^1.17.4":
-  version: 1.17.5
-  resolution: "@types/express-session@npm:1.17.5"
+"@types/express-session@npm:^1.17.7":
+  version: 1.17.7
+  resolution: "@types/express-session@npm:1.17.7"
   dependencies:
     "@types/express": "*"
-  checksum: f6995f7720a18546bcb10cc707cf8c9c92455eb4319c0c50c57e9b9b10ed20dc379d74d5e4c3323fe4e924238b75e13c97822c9d81a80fa064ddc71654c1059d
+  checksum: 4764eafaf4e26842e891e83fa9fee30b92cc3724d91987aac3a658322f9a69fb544dae24fc3aba6e15fe9575ed862760ebecd7ff97a947afb695284967434a65
   languageName: node
   linkType: hard
 
@@ -4138,7 +4138,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-session@npm:^1.17.2":
+"express-session@npm:^1.17.3":
   version: 1.17.3
   resolution: "express-session@npm:1.17.3"
   dependencies:
@@ -7512,7 +7512,7 @@ __metadata:
     "@types/cookie-parser": ^1.4.2
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
-    "@types/express-session": ^1.17.4
+    "@types/express-session": ^1.17.7
     "@types/jest": ^29.1.2
     "@types/jsonwebtoken": ^8.5.8
     "@types/node": ^18.8.3
@@ -7525,13 +7525,14 @@ __metadata:
     cookie-parser: ^1.4.6
     cors: ^2.8.5
     cross-env: ^7.0.3
+    cross-spawn: ^7.0.3
     dotenv: ^16.0.1
     eslint: ^8.8.0
     eslint-config-airbnb: ^19.0.4
     eslint-config-airbnb-typescript-prettier: ^5.0.0
     express: ^4.17.2
     express-flash: ^0.0.2
-    express-session: ^1.17.2
+    express-session: ^1.17.3
     googleapis: ^108.0.0
     jest: ^29.1.2
     jsonwebtoken: ^8.5.1
