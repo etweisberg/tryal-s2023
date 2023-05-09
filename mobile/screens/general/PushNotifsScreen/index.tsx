@@ -10,6 +10,7 @@ export default function PushNotifsScreen({ navigation }: PushNotifsScreenProps) 
   
   const toSettings = () => {
     navigation.navigate('Settings')
+    //try: navigation.navigate({key: 'Settings'})
   }
 
   return (
@@ -20,6 +21,6 @@ export default function PushNotifsScreen({ navigation }: PushNotifsScreenProps) 
         <Text>Back</Text>
       </TouchableOpacity>
     </SafeAreaView>
-    
+
   )
 }
