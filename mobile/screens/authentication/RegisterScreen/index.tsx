@@ -9,6 +9,7 @@ import Header from '../../../components/Header';
 import Form from '../../../components/Form';
 import * as Progress from 'react-native-progress';
 import * as yup from 'yup';
+import { Snackbar } from 'react-native-paper';
 
 const pages = [
   {
@@ -78,17 +79,17 @@ type RegisterScreenProps = StackScreenProps<MainStackParamList, 'Register'>;
 
 export default function RegisterScreen({ navigation }: RegisterScreenProps) {
   // state for form inputs
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [sex, setSex] = useState('');
+  const [username, setUsername] = useState('c');
+  const [email, setEmail] = useState('a@a');
+  const [firstName, setFirstName] = useState('c');
+  const [lastName, setLastName] = useState('w');
+  const [sex, setSex] = useState('m');
   const [gender, setGender] = useState('');
-  const [age, setAge] = useState(0);
+  const [age, setAge] = useState(19);
   const [race, setRace] = useState('');
   const [ethnicity, setEthnicity] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [password, setPassword] = useState('password');
+  const [passwordConfirm, setPasswordConfirm] = useState('password');
 
   // state for error message
   const [error, setError] = useState(['']);
@@ -96,6 +97,11 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
   // state for page index
   const [index, setIndex] = useState(0);
   const [checkboxSelected, setCheckboxSelection] = useState(false);
+
+  // state for snackbar
+  const [visible, setVisible] = React.useState(false);
+  const [snackbarMsg, setSnackbarMsg] = React.useState('');
+  const onDismissSnackBar = () => setVisible(false);
 
   const DATA: MyObject = {
     'Email': [email, setEmail],
@@ -129,32 +135,44 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
         },
         body: JSON.stringify({ firstName, lastName, email, age, homeAddress, password }),
       });
-      const result = await response.json();
-      if (result.ok) {
-        toLogin();
+      
+      if (response.status === 201) {
+        setIndex(index + 1);
+      } else if (response.status === 400) {
+        console.log('response status 400');
+        console.log(response);
+        const result = await response.json();
+        console.log(result.message)
+        setSnackbarMsg(result.message);
+        setVisible(true);
       } else {
-        setError(result.message);
+        console.log(response);
       }
-    } catch (errors: any) {
-      console.log(errors.errors);
-      setError(errors.errors);
+
+    } catch (error: any) {
+      console.log(error)
     }
   }
 
   const toNext = async () => {
     try {
-      const pageInputs = pages[index].inputs.reduce((acc, val) => ({ ...acc, [val]: DATA[val][0] }), {});
-      await registerSchemas[index].validate(pageInputs, { abortEarly: false });
-
-      if (index !== pages.length - 1) {
+      if (index < pages.length) {
+        const pageInputs = pages[index].inputs.reduce((acc, val) => ({ ...acc, [val]: DATA[val][0] }), {});
+        await registerSchemas[index].validate(pageInputs, { abortEarly: false });
+      }
+      
+      if (index < pages.length - 1) {
         setIndex(index + 1);
         setError(['']);
-      } else {
+      } else if (index === pages.length - 1) {
         handleRegister();
+      } else {
+        toLogin();
       }
-    } catch (errors: any) {
-      console.log(errors.errors);
-      setError(errors.errors);
+    } catch (error: any) {
+      console.log(error);
+      console.log(error.errors);
+      setError(error.errors);
     }
     
   }
@@ -181,7 +199,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
           onRightPress={toLogin}
           children={
             <Progress.Bar 
-              progress={(index + 1)/pages.length} 
+              progress={(index + 1)/(pages.length + 1)} 
               height={6} 
               width={null} 
               color='#195064' 
@@ -189,20 +207,44 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
               borderWidth={0} />
           }
         />
-        <Form
-          header={pages[index].header}
-          data={pages[index].inputs.map((item: string) => {
-            console.log(item);
-            return {
-              name: item, 
-              state: DATA[item][0], 
-              setState: DATA[item][1], 
-              errors: errMsgs[item].filter(element => error.includes(element)),
-              red: errMsgs[item].some((item) => error.includes(item))
-            }
-          })}
-        />
 
+        { 
+          index < pages.length ? 
+            <Form
+              header={pages[index].header}
+              data={pages[index].inputs.map((item: string) => {
+                // console.log(item);
+                return {
+                  name: item, 
+                  state: DATA[item][0], 
+                  setState: DATA[item][1], 
+                  errors: errMsgs[item].filter(element => error.includes(element)),
+                  red: errMsgs[item].some((item) => error.includes(item))
+                }
+              })}
+              topChildren={
+                <Snackbar
+                wrapperStyle={{top: 0}}
+                style={styles.snackbar}
+                visible={visible}
+                onDismiss={onDismissSnackBar}
+                action={{
+                  label: 'Close',
+                  onPress: onDismissSnackBar,
+                  color: 'white'
+                }}>
+                {snackbarMsg}
+              </Snackbar>
+              }
+            /> : 
+            <View style={styles.inputContainer}>
+              <Text style={{fontSize: 24, fontWeight: 'bold'}}>Success!</Text>  
+              <Text>Thank you for signing up!</Text>
+            </View>
+        }
+
+        { 
+          index === pages.length - 1 ? 
         <View style={styles.checkboxContainer}>
           <CheckBox
             onPress={() => {setCheckboxSelection(!checkboxSelected)}}
@@ -217,13 +259,21 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
             containerStyle={{backgroundColor: 'transparent', borderColor: 'transparent', width: '100%', padding: 0, margin: 0}}
             textStyle={{fontWeight: 'normal', fontSize: 14}}
           />
-        </View>
+        </View> : null
+        }
         
         <Pressable onPress={toNext} style={styles.button}>
           <View style={{ flex: 1, justifyContent: 'center'}}>
-            <Text style={{ color: 'white' }}>{index !== pages.length - 1 ? 'Next' : 'Submit'}</Text>
+            <Text style={{ color: 'white' }}>
+              {
+                index < pages.length - 1 ? 'Next' : 
+                index === pages.length - 1 ? 'Submit' :
+                'To Login'
+              }
+            </Text>
           </View>
         </Pressable>
+        
       </Pressable>
     </KeyboardAvoidingView>
   );
@@ -234,7 +284,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 24,
+    padding: 24,
+    // backgroundColor: 'transparent',
+  },
+  inputContainer: {
+    flex: 1,
+    width: '100%',
+    // marginBottom: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+  //   backgroundColor: 'green'
+  },
+  snackbar: {
+    backgroundColor: 'white', // change the background color to white
+    color: 'red', // change the text color to black
+    borderRadius: 5, // add some border radius to the Snackbar
+    elevation: 3, // add some elevation to give a shadow effect
+    height: 70,
+    padding: 0,
   },
   button: {
     width: '100%',
@@ -243,13 +311,14 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 24,
     backgroundColor: '#195064',
-    marginVertical: 16,
+    marginBottom: 24,
   },
   textButton: {
     paddingVertical: 4,
   },
   checkboxContainer: {
     flexDirection: 'row',
+    marginBottom: 16,
   },
   checkbox: {
     alignSelf: 'center',

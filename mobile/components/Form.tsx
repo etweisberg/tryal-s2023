@@ -6,20 +6,23 @@ import PropTypes from 'prop-types';
 Form.defaultProps = {
     header: null,
     data: {},
-    children: null
+    topChildren: null,
+    bottomChildren: null
 };
 
 Form.propTypes = {
     header: PropTypes.string,
     data: PropTypes.array,
-    children: PropTypes.node
+    topChildren: PropTypes.node,
+    bottomChildren: PropTypes.node
 }
 
 export default function Form(
-  { header=null, data={}, children=null}: 
-  { header: string | null, data: any, children: ReactNode }) {
+  { header=null, data={}, topChildren=null, bottomChildren=null}: 
+  { header: string | null, data: any, topChildren: ReactNode, bottomChildren: ReactNode }) {
   return (
     <View style={styles.inputContainer}>
+        {topChildren}
         <View>
             {header ? <Text style={styles.header}>{header}</Text> : null}
         </View>
@@ -29,9 +32,12 @@ export default function Form(
               data={data}
               scrollEnabled={false}
               renderItem={({item}) => {
-                console.log(item.errors)
                 return (<View>
                   <TextInput
+                  autoCorrect={false}
+                  autoComplete='off'
+                  autoCapitalize='none'
+                  spellCheck={false}
                   placeholder={item.name}
                   value={item.state !== 0 ? item.state : ''}
                   onChangeText={item.setState}
@@ -46,9 +52,11 @@ export default function Form(
               }
             />
         </View>
-        <View style={{paddingVertical: 8, width: '100%'}}>
-            {children}
-        </View>
+        {bottomChildren ? 
+          <View style={{paddingVertical: 8, width: '100%'}}>
+            {bottomChildren}
+          </View> : null}
+        
     </View>
   )
 }
@@ -57,7 +65,7 @@ const styles = StyleSheet.create({
     inputContainer: {
       flex: 1,
       width: '100%',
-      marginBottom: 16,
+      // marginBottom: 16,
       justifyContent: 'center',
     //   backgroundColor: 'green'
     },

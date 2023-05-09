@@ -57,8 +57,8 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
         body: JSON.stringify({ email: email, password: password }),
       });
       const result = await response.json();
-      console.log(result);
-      if (response.ok) {
+      // console.log(result);
+      if (response.status === 200) {
         if (result !== null) {
           const user : User = {
             _id: result._id,
@@ -120,7 +120,7 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
               errors: errMsgs['Password'].filter(element => error.includes(element)),
               red: errMsgs['Password'].some((item) => error.includes(item)),
             }]}
-            children={
+            bottomChildren={
               <TouchableOpacity onPress={toRegister} style={styles.textButton}>
                 <Text style={{ color: '#195064' }}>Forgot your password?</Text>
               </TouchableOpacity>
@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 24,
-    // backgroundColor: 'black',
+    padding: 24,
+    // backgroundColor: 'white',
   },
   button: {
     width: '100%',

@@ -161,7 +161,8 @@ export default function Navigation() {
   return (
     <NavigationContainer>
       <MainStack.Navigator screenOptions={{
-        headerShown: false
+        headerShown: false,
+        cardStyle: { backgroundColor: 'white', flex: 1 },
         }}>
         
         {loading ? (
