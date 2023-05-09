@@ -126,17 +126,20 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
               </TouchableOpacity>
             }
         />
-        <Pressable onPress={handleLogin} style={styles.button}>
-          <Text style={{ color: 'white' }}>Log In</Text>
-        </Pressable>
+        <View style={{width: '100%', paddingVertical: 16}}>
+          <Pressable onPress={handleLogin} style={styles.button}>
+            <Text style={{ color: 'white' }}>Log In</Text>
+          </Pressable>
 
-        <View style={styles.textButton}>
-          <Text style={{ fontWeight: 'bold', color: '#195064'}}>OR</Text>
+          <View style={styles.textButton}>
+            <Text style={{ fontWeight: 'bold', color: '#195064'}}>OR</Text>
+          </View>
+
+          <TouchableOpacity onPress={toParticipantTabs} style={styles.textButton}>
+            <Text style={{ color: '#195064' }}>Continue as Guest</Text>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={toParticipantTabs} style={styles.textButton}>
-          <Text style={{ color: '#195064' }}>Continue as Guest</Text>
-        </TouchableOpacity>
       </Pressable>
     </KeyboardAvoidingView>
   );
