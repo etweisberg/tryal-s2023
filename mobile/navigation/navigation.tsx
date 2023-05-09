@@ -165,15 +165,15 @@ export default function Navigation() {
         {loading ? (
           // This screen is only visible while the app is loading
           <MainStack.Screen name="Loading" component={LoadingScreen} />
-        ) : user ? (
           // This screen is only visible when a user has been authenticated as a general user
-          <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
         ) : user && user["admin"] ? (
           // This screen is only visible when a user has been authenticated as a researcher
           <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
         ) : (
           <MainStack.Screen name="Auth" component={AuthStackScreen} />
         )}
+        <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
+
       </MainStack.Navigator>
     </NavigationContainer>
   );
