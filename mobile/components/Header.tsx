@@ -44,7 +44,7 @@ export default function Header(
     children: ReactNode}) {
 
   return (
-    <View>
+    <View style={{width: '100%'}}>
         <View style={styles.headerContainer}>
             {leftComponentType === 'touchable-text' 
                 ? 

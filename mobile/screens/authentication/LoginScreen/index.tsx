@@ -3,22 +3,42 @@ import { Keyboard, KeyboardAvoidingView, Pressable, StyleSheet } from 'react-nat
 import { View, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { User, loginUser } from '../../../stores/userReducer';
-import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../../components/Header';
 import Form from '../../../components/Form';
+import * as yup from 'yup';
+
+interface MyObject {
+  [key: string]: Array<any>;
+}
+
+const errMsgs : MyObject = {
+  'Email': ['Email required', 'Valid email required'],
+  "Password": ['Password required', 'Password must be at least 8 characters'],
+}
+
+const loginSchema = yup.object().shape({
+  email: yup.string().required("Email required").email("Valid email required"),
+  password: yup.string().required("Password required"),
+});
 
 export default function LoginScreen({ navigation }: { navigation: any}) {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  // state for error message
+  const [error, setError] = useState(['']);
 
   const dispatch = useDispatch();
 
   const toRegister = () => {
     navigation.navigate('Register')
+    setError(['']);
   }
 
   const toParticipantTabs = () => {
     navigation.navigate('ParticipantTabs')
+    setError(['']);
   }
 
   const dismissKeyboard = () => {
@@ -27,38 +47,49 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3000/auth/login', {
+      await loginSchema.validate({ email, password }, { abortEarly: false });
+
+      const response = await fetch('http://localhost:4000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: username, password: password }),
+        body: JSON.stringify({ email: email, password: password }),
       });
       const result = await response.json();
-      const user : User = {
-        _id: result.data._id,
-        firstName: result.data.firstName,
-        lastName: result.data.lastName,
-        email: result.data.email,
-        password: result.data.password,
-        verified: result.data.verified,
-        verificationToken: result.data.verificationToken,
-        resetPasswordToken: result.data.resetPasswordToken,
-        resetPasswordTokenExpiryDate: result.data.resetPasswordTokenExpiryDate,
-        trials: result.data.trials,
-        trialsOwned: result.data.trialsOwned,
-        age: result.data.age,
-        medConditions: result.data.medConditions,
-        homeAddress: result.data.homeAddress,
-        seekingCompensation: result.data.seekingCompensation,
-        researcher: result.data.researcher,
-        institution: result.data.institution,
-        admin: result.data.admin,
+      // console.log(result);
+      if (response.status === 200) {
+        if (result !== null) {
+          const user : User = {
+            _id: result._id,
+            firstName: result.firstName,
+            lastName: result.lastName,
+            email: result.email,
+            password: result.password,
+            verified: result.verified,
+            verificationToken: result.verificationToken,
+            resetPasswordToken: result.resetPasswordToken,
+            resetPasswordTokenExpiryDate: result.resetPasswordTokenExpiryDate,
+            trials: result.trials,
+            trialsOwned: result.trialsOwned,
+            age: result.age,
+            medConditions: result.medConditions,
+            homeAddress: result.homeAddress,
+            seekingCompensation: result.seekingCompensation,
+            researcher: result.researcher,
+            institution: result.institution,
+            admin: result.admin,
+          };
+          dispatch(loginUser(user));
+        }
+      } else if (response.status === 401) {
+        setError(['Invalid username or password']);
+      } else if (response.status === 500) {
+        setError(['Server error']);
       }
-      dispatch(loginUser(user));
-    } catch (error) {
-      console.error(error);
-      // TODO: handle the error
+    } catch (errors: any) {
+      console.error(errors);
+      setError(errors.errors);
     }
   };
 
@@ -76,32 +107,39 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
             {
               id: 1,
               name: 'Email',
-              state: username,
-              setState: setUsername,
+              state: email,
+              setState: setEmail,
+              errors: errMsgs['Email'].filter(element => error.includes(element)),
+              red: errMsgs['Email'].some((item) => error.includes(item)),
             },
             {
               id: 2,
               name: 'Password',
               state: password,
               setState: setPassword,
+              errors: errMsgs['Password'].filter(element => error.includes(element)),
+              red: errMsgs['Password'].some((item) => error.includes(item)),
             }]}
-            children={
+            bottomChildren={
               <TouchableOpacity onPress={toRegister} style={styles.textButton}>
                 <Text style={{ color: '#195064' }}>Forgot your password?</Text>
               </TouchableOpacity>
             }
         />
-        <Pressable onPress={handleLogin} style={styles.button}>
-          <Text style={{ color: 'white' }}>Log In</Text>
-        </Pressable>
+        <View style={{width: '100%', paddingVertical: 16}}>
+          <Pressable onPress={handleLogin} style={styles.button}>
+            <Text style={{ color: 'white' }}>Log In</Text>
+          </Pressable>
 
-        <View style={styles.textButton}>
-          <Text style={{ fontWeight: 'bold', color: '#195064'}}>OR</Text>
+          <View style={styles.textButton}>
+            <Text style={{ fontWeight: 'bold', color: '#195064'}}>OR</Text>
+          </View>
+
+          <TouchableOpacity onPress={toParticipantTabs} style={styles.textButton}>
+            <Text style={{ color: '#195064' }}>Continue as Guest</Text>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={toParticipantTabs} style={styles.textButton}>
-          <Text style={{ color: '#195064' }}>Continue as Guest</Text>
-        </TouchableOpacity>
       </Pressable>
     </KeyboardAvoidingView>
   );
@@ -112,8 +150,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 24,
-    // backgroundColor: 'black',
+    padding: 24,
+    // backgroundColor: 'white',
   },
   button: {
     width: '100%',

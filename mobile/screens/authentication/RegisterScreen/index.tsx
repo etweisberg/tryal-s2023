@@ -3,72 +3,119 @@ import { FlatList, Keyboard, KeyboardAvoidingView, Pressable, StyleSheet } from 
 // import CheckBox from 'react-native-check-box'
 import { CheckBox } from 'react-native-elements';
 import { View, Text } from 'react-native';
-// import { TextInput, Stack, Button } from "@react-native-material/core";
-import { TextInput, Button } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { User, loginUser } from '../../../stores/userReducer';
-import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../../navigation/types';
 import Header from '../../../components/Header';
 import Form from '../../../components/Form';
 import * as Progress from 'react-native-progress';
+import * as yup from 'yup';
+import { Snackbar } from 'react-native-paper';
 
+const pages = [
+  {
+    header: 'First, we need your email.',
+    inputs: ['Email'],
+  },
+  {
+    header: 'Now, create a username and password.',
+    inputs: ['Username', 'Password', 'Confirm Password'],
+  },
+  {
+    header: 'Next, we need your name.',
+    inputs: ['First Name', 'Last Name'],
+  },
+  {
+    header: 'To match you with appropriate studies, we need to know a little bit more about you.',
+    inputs: ['Sex', 'Age'],
+  },
+  {
+    header: 'Last ones! (Optional)',
+    inputs: ['Race', 'Ethnicity'],
+  },
+]
+
+interface MyObject {
+  [key: string]: Array<any>;
+}
+
+const errMsgs : MyObject = {
+  'Email': ['Email required', 'Valid email required'],
+  'Username': ['Username required'],
+  'Password': ['Password required', 'Password must be at least 8 characters'],
+  'Confirm Password': ['Confirm password required', 'Passwords must match'],
+  'First Name': ['First name required'],
+  'Last Name': ['Last name required'],
+  'Sex': [],
+  'Gender': [],
+  'Age': [],
+  'Race': [],
+  'Ethnicity': [],
+}
+
+const registerSchemas = [
+  yup.object().shape({
+    'Email': yup.string().email("Valid email required").required("Email required")
+  }),
+  yup.object().shape({
+    'Username': yup.string().required('Username required'),
+    'Password': yup.string().required('Password required').min(8, 'Password must be at least 8 characters'),
+    'Confirm Password': yup.string().required('Confirm password required').oneOf([yup.ref('Password'), ''], 'Passwords must match'),
+  }),
+  yup.object().shape({
+    'First Name': yup.string().required('First name required'),
+    'Last Name': yup.string().required('Last name required'),
+  }),
+  yup.object().shape({
+    'Sex': yup.string().required('Sex required'),
+    'Age': yup.number().required('Age required'),
+  }),
+  yup.object().shape({
+    'Race': yup.string(),
+    'Ethnicity': yup.string(),
+  }),
+]
 
 type RegisterScreenProps = StackScreenProps<MainStackParamList, 'Register'>;
 
 export default function RegisterScreen({ navigation }: RegisterScreenProps) {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [sex, setSex] = useState('');
+  // state for form inputs
+  const [username, setUsername] = useState('c');
+  const [email, setEmail] = useState('a@a');
+  const [firstName, setFirstName] = useState('c');
+  const [lastName, setLastName] = useState('w');
+  const [sex, setSex] = useState('m');
   const [gender, setGender] = useState('');
+  const [age, setAge] = useState(19);
   const [race, setRace] = useState('');
   const [ethnicity, setEthnicity] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('password');
+  const [passwordConfirm, setPasswordConfirm] = useState('password');
 
+  // state for error message
+  const [error, setError] = useState(['']);
+
+  // state for page index
   const [index, setIndex] = useState(0);
   const [checkboxSelected, setCheckboxSelection] = useState(false);
 
-  const dispatch = useDispatch();
+  // state for snackbar
+  const [visible, setVisible] = React.useState(false);
+  const [snackbarMsg, setSnackbarMsg] = React.useState('');
+  const onDismissSnackBar = () => setVisible(false);
 
-  const pages = [
-    {
-      header: 'First, we need your email.',
-      data: [
-        {id: 0, name: 'Email', state: email, setState: setEmail},
-      ]
-    },
-    {
-      header: 'Now, create a username and password.',
-      data: [
-        {id: 0, name: 'Username', state: username, setState: setUsername},
-        {id: 1, name: 'Password', state: password, setState: setPassword},
-      ]
-    },
-    {
-      header: 'Next, we need your name.',
-      data: [
-        {id: 0, name: 'First Name', state: firstName, setState: setFirstName},
-        {id: 1, name: 'Last Name', state: lastName, setState: setLastName},
-      ]
-    },
-    {
-      header: 'To match you with appropriate studies, it helps to know a little bit more about you. (Optional)',
-      data: [
-        {id: 0, name: 'Sex', state: sex, setState: setSex},
-        {id: 1, name: 'Gender', state: gender, setState: setGender},
-      ]
-    },
-    {
-      header: 'Last ones! (Optional)',
-      data: [
-        {id: 0, name: 'Race', state: race, setState: setRace},
-        {id: 1, name: 'Ethnicity', state: ethnicity, setState: setEthnicity},
-      ]
-    },
-  ]
+  const DATA: MyObject = {
+    'Email': [email, setEmail],
+    'Username': [username, setUsername],
+    'Password': [password, setPassword],
+    'Confirm Password': [passwordConfirm, setPasswordConfirm],
+    'First Name': [firstName, setFirstName],
+    'Last Name': [lastName, setLastName],
+    'Sex': [sex, setSex],
+    'Age': [age, setAge],
+    'Gender': [gender, setGender],
+    'Race': [race, setRace],
+    'Ethnicity': [ethnicity, setEthnicity]
+  }
   
   const toLogin = () => {
     navigation.navigate('Login')
@@ -80,28 +127,58 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
 
   const handleRegister = async () => {
     try {
-      const response = await fetch('http://localhost:3000/auth/register', {
+      const homeAddress = '1234 Main St';
+      const response = await fetch('http://localhost:4000/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ firstName: firstName, lastName: lastName, email: email, password: password }),
+        body: JSON.stringify({ firstName, lastName, email, age, homeAddress, password }),
       });
-    } catch (error) {
-      console.error(error);
-      // TODO: handle the error
+      
+      if (response.status === 201) {
+        setIndex(index + 1);
+      } else if (response.status === 400) {
+        console.log('response status 400');
+        console.log(response);
+        const result = await response.json();
+        console.log(result.message)
+        setSnackbarMsg(result.message);
+        setVisible(true);
+      } else {
+        console.log(response);
+      }
+
+    } catch (error: any) {
+      console.log(error)
     }
   }
 
-  const toNext = () => {
-    if (index !== pages.length - 1) {
-      setIndex(index + 1);
-    } else {
-      handleRegister();
+  const toNext = async () => {
+    try {
+      if (index < pages.length) {
+        const pageInputs = pages[index].inputs.reduce((acc, val) => ({ ...acc, [val]: DATA[val][0] }), {});
+        await registerSchemas[index].validate(pageInputs, { abortEarly: false });
+      }
+      
+      if (index < pages.length - 1) {
+        setIndex(index + 1);
+        setError(['']);
+      } else if (index === pages.length - 1) {
+        handleRegister();
+      } else {
+        toLogin();
+      }
+    } catch (error: any) {
+      console.log(error);
+      console.log(error.errors);
+      setError(error.errors);
     }
+    
   }
 
   const toPrev = () => {
+    setError(['']);
     if (index !== 0) {
       setIndex(index - 1);
     } else {
@@ -122,7 +199,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
           onRightPress={toLogin}
           children={
             <Progress.Bar 
-              progress={(index + 1)/pages.length} 
+              progress={(index + 1)/(pages.length + 1)} 
               height={6} 
               width={null} 
               color='#195064' 
@@ -130,11 +207,44 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
               borderWidth={0} />
           }
         />
-        <Form 
-          header={pages[index].header}
-          data={pages[index].data}
-        />
 
+        { 
+          index < pages.length ? 
+            <Form
+              header={pages[index].header}
+              data={pages[index].inputs.map((item: string) => {
+                // console.log(item);
+                return {
+                  name: item, 
+                  state: DATA[item][0], 
+                  setState: DATA[item][1], 
+                  errors: errMsgs[item].filter(element => error.includes(element)),
+                  red: errMsgs[item].some((item) => error.includes(item))
+                }
+              })}
+              topChildren={
+                <Snackbar
+                wrapperStyle={{top: 0}}
+                style={styles.snackbar}
+                visible={visible}
+                onDismiss={onDismissSnackBar}
+                action={{
+                  label: 'Close',
+                  onPress: onDismissSnackBar,
+                  color: 'white'
+                }}>
+                {snackbarMsg}
+              </Snackbar>
+              }
+            /> : 
+            <View style={styles.inputContainer}>
+              <Text style={{fontSize: 24, fontWeight: 'bold'}}>Success!</Text>  
+              <Text>Thank you for signing up!</Text>
+            </View>
+        }
+
+        { 
+          index === pages.length - 1 ? 
         <View style={styles.checkboxContainer}>
           <CheckBox
             onPress={() => {setCheckboxSelection(!checkboxSelected)}}
@@ -149,13 +259,21 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
             containerStyle={{backgroundColor: 'transparent', borderColor: 'transparent', width: '100%', padding: 0, margin: 0}}
             textStyle={{fontWeight: 'normal', fontSize: 14}}
           />
-        </View>
+        </View> : null
+        }
         
         <Pressable onPress={toNext} style={styles.button}>
           <View style={{ flex: 1, justifyContent: 'center'}}>
-            <Text style={{ color: 'white' }}>{index !== pages.length - 1 ? 'Next' : 'Submit'}</Text>
+            <Text style={{ color: 'white' }}>
+              {
+                index < pages.length - 1 ? 'Next' : 
+                index === pages.length - 1 ? 'Submit' :
+                'To Login'
+              }
+            </Text>
           </View>
         </Pressable>
+        
       </Pressable>
     </KeyboardAvoidingView>
   );
@@ -166,7 +284,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 24,
+    padding: 24,
+    // backgroundColor: 'transparent',
+  },
+  inputContainer: {
+    flex: 1,
+    width: '100%',
+    // marginBottom: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+  //   backgroundColor: 'green'
+  },
+  snackbar: {
+    backgroundColor: 'white', // change the background color to white
+    color: 'red', // change the text color to black
+    borderRadius: 5, // add some border radius to the Snackbar
+    elevation: 3, // add some elevation to give a shadow effect
+    height: 70,
+    padding: 0,
   },
   button: {
     width: '100%',
@@ -175,13 +311,14 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 24,
     backgroundColor: '#195064',
-    marginVertical: 16,
+    marginBottom: 24,
   },
   textButton: {
     paddingVertical: 4,
   },
   checkboxContainer: {
     flexDirection: 'row',
+    marginBottom: 16,
   },
   checkbox: {
     alignSelf: 'center',

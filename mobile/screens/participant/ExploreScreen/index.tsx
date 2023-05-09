@@ -1,5 +1,6 @@
 import { View, Text, SafeAreaView, FlatList, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
+import { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import Header from '../../../components/Header'
 import { Searchbar, Card, Divider } from 'react-native-paper'

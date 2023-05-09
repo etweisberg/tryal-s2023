@@ -47,7 +47,9 @@ const createUser = async (
     homeAddress,
     admin: false,
   });
+  console.log('newUser')
   const user = await newUser.save();
+  console.log('user saved')
   return user;
 };
 
