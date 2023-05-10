@@ -29,13 +29,13 @@ router.post('/send', isAuthenticated, sendMessage);
 deletes message with given id
 checks to make sure user is sender or recipient
 */
-router.put('/delete', isAuthenticated, deleteMessage);
+router.put('/delete/:id', isAuthenticated, deleteMessage);
 
 /*
 marks message as read with current timestamp
 ensures user is recipient
 */
-router.put('/read', isAuthenticated, readMessage);
+router.put('/read/:id', isAuthenticated, readMessage);
 
 /*
 get messages with given sender id

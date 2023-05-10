@@ -1,10 +1,10 @@
 import express from 'express';
+import { Date } from 'mongoose';
 import ApiError from '../util/apiError';
 import { allMsg, createMsg } from '../services/message.service';
 import StatusCode from '../util/statusCode';
 import { IUser, User } from '../models/user.model';
 import { IMessage, Message } from '../models/message.model';
-import { Date } from 'mongoose';
 
 const getAllMessages = async (
   req: express.Request,
@@ -65,32 +65,45 @@ const deleteMessage = async (
   next: express.NextFunction,
 ) => {
   const user: IUser | null = req.user as IUser;
-  const { messageId } = req.body;
-  if (!messageId) {
-    next(ApiError.missingFields(['messageId']));
+  const { id } = req.params;
+  if (!id) {
+    next(ApiError.missingFields(['id']));
     return;
   }
-  const message: IMessage | null = await Message.findById(messageId).exec();
+  const message: IMessage | null = await Message.findById(id).exec();
   if (!message) {
     next(ApiError.notFound('Message does not exist'));
     return;
   }
-  if (message.sender !== user.id && message.recipient !== user.id) {
+  if (
+    message.sender.toString() !== user.id &&
+    message.recipient.toString() !== user.id
+  ) {
     next(ApiError.forbidden('Cannot delete message as another user'));
     return;
   }
   try {
-    if (message.sender === user.id) {
-      const updatedMessage = await Message.findByIdAndUpdate(messageId, {
+    if (message.sender.toString() === user.id) {
+      if (message.deletedForSender) {
+        next(ApiError.badRequest('Message already deleted'));
+        return;
+      }
+      const updatedMessage = await Message.findByIdAndUpdate(id, {
         deletedForSender: true,
       }).exec();
       await updatedMessage?.save();
+      res.sendStatus(StatusCode.OK);
     }
-    if (message.recipient === user.id) {
-      const updatedMessage = await Message.findByIdAndUpdate(messageId, {
+    if (message.recipient.toString() === user.id) {
+      if (message.deletedForRecipient) {
+        next(ApiError.badRequest('Message already deleted'));
+        return;
+      }
+      const updatedMessage = await Message.findByIdAndUpdate(id, {
         deletedForRecipient: true,
       }).exec();
       await updatedMessage?.save();
+      res.sendStatus(StatusCode.OK);
     }
   } catch (err) {
     next(ApiError.internal('Unable to delete message'));
@@ -103,25 +116,35 @@ const readMessage = async (
   next: express.NextFunction,
 ) => {
   const user: IUser | null = req.user as IUser;
-  const { messageId } = req.body;
-  if (!messageId) {
-    next(ApiError.missingFields(['messageId']));
+  const { id } = req.params;
+  if (!id) {
+    next(ApiError.missingFields(['id']));
     return;
   }
-  const message: IMessage | null = await Message.findById(messageId).exec();
+  const message: IMessage | null = await Message.findById(id).exec();
   if (!message) {
     next(ApiError.notFound('Message does not exist'));
     return;
   }
-  if (message.recipient !== user.id) {
+  if (message.recipient.toString() !== user.id) {
     next(ApiError.forbidden('Cannot read message as another user'));
     return;
   }
+  if (message.deletedForRecipient) {
+    next(ApiError.badRequest('Message already deleted'));
+    return;
+  }
+
+  if (message.read) {
+    next(ApiError.badRequest('Message already read'));
+    return;
+  }
   try {
-    const updatedMessage = await Message.findByIdAndUpdate(messageId, {
+    const updatedMessage = await Message.findByIdAndUpdate(id, {
       read: new Date(Date.now()),
     }).exec();
     await updatedMessage?.save();
+    res.sendStatus(StatusCode.OK);
   } catch (err) {
     next(ApiError.internal('Unable to read message'));
   }
