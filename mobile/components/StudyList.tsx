@@ -18,22 +18,19 @@ const renderItem = ({ item }: RenderItemProps) => (
 
 export default function StudyList({data, horizontal=false}: {data: DataItem[], horizontal?: boolean}) {
   return (
-    
     <View >
       {
         horizontal ? 
         <FlatList
-          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           horizontal
           data={data}
           renderItem={renderItem}
           keyExtractor={(item: DataItem) => item.id}
           scrollEnabled={true}
-          style={{paddingHorizontal: 16}}
         /> : 
-        <View style={{paddingHorizontal: 16}}>
-
-        {
+        <View>
+        { data ?
           data.map((item: DataItem)=> 
           <View key={item.id}>
             <Card style={styles.card} mode='contained'>
@@ -43,8 +40,10 @@ export default function StudyList({data, horizontal=false}: {data: DataItem[], h
               </Card.Content>
             </Card>
             <Divider />
-          </View>
-        )}
+          </View> 
+          ) :
+          <Text>No studies here!</Text>
+        }
         </View>
       }
     </View>
@@ -52,15 +51,15 @@ export default function StudyList({data, horizontal=false}: {data: DataItem[], h
 }
 
 const styles = StyleSheet.create({
-    card: {
-      width: '100%',
-      height: 80,
-      marginVertical: 4,
-    },
-    card1: {
-      width: 115,
-      height: 150,
-      margin: 4,
-    },
-  
-  });
+  card: {
+    width: '100%',
+    height: 80,
+    marginVertical: 4,
+  },
+  card1: {
+    width: 115,
+    height: 150,
+    margin: 4,
+  },
+
+});

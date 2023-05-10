@@ -25,19 +25,18 @@ export default function ExploreScreen() {
 
   return (
     <View style={styles.container}>
+      <Header title='Explore'/>
+      <Searchbar
+        placeholder="Search"
+        onChangeText={updateSearch}
+        value={search}
+        style={{height: 50, backgroundColor: '#e8e8e8', marginVertical: 4}}
+      />
       <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
-        <Header title='Explore'/>
-        <Searchbar
-          placeholder="Search"
-          onChangeText={updateSearch}
-          value={search}
-          style={{height: 50, backgroundColor: '#e8e8e8', marginHorizontal: 16}}
-        />
-
-        <Text style={{fontSize: 20, fontWeight: 'bold', padding: 16}}>Your Recents</Text>
+        <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Your Recents</Text>
         <StudyList data={DATA} horizontal />
 
-        <Text style={{fontSize: 20, fontWeight: 'bold', padding: 16}}>Suggested Studies</Text>
+        <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Suggested Studies</Text>
         <StudyList data={DATA} />        
       </ScrollView>
     </View>
@@ -48,9 +47,10 @@ export default function ExploreScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
     marginTop: 24,
+    paddingHorizontal: 16,
     // backgroundColor: 'black',
   },
 

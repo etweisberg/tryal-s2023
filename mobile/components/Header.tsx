@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     headerContainer: {
     //   flex: 1,
       width: '100%',
-      height: 70,
+      height: 50,
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row',
