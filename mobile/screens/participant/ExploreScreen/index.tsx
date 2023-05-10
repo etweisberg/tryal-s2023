@@ -4,26 +4,17 @@ import { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import Header from '../../../components/Header'
 import { Searchbar, Card, Divider } from 'react-native-paper'
-import StudyList, { DataItem } from '../../../components/StudyList'
+import StudyList from '../../../components/StudyList'
+import { DataItem } from '../../../components/types'
 
 const DATA: DataItem[] = [
   { id: '1', title: 'Card 1', description: 'This is the first card' },
   { id: '2', title: 'Card 2', description: 'This is the second card' },
   { id: '3', title: 'Card 3', description: 'This is the third card' },
+  { id: '4', title: 'Card 4', description: 'This is the fourth card' },
+  { id: '5', title: 'Card 5', description: 'This is the fifth card' },
+  { id: '6', title: 'Card 6', description: 'This is the sixth card' },
 ];
-
-type RenderItemProps = {
-  item: DataItem;
-};
-
-const renderItem1 = ({ item }: RenderItemProps) => (
-  <Card style={styles.card1} mode='contained'>
-    <Card.Title title={item.title} />
-    <Card.Content>
-      <Text>{item.description}</Text>
-    </Card.Content>
-  </Card>
-);
 
 export default function ExploreScreen() {
   const [search, setSearch] = useState<string>('');
@@ -44,15 +35,7 @@ export default function ExploreScreen() {
         />
 
         <Text style={{fontSize: 20, fontWeight: 'bold', padding: 16}}>Your Recents</Text>
-        <FlatList<DataItem>
-        showsVerticalScrollIndicator={false}
-        horizontal
-        data={DATA}
-        renderItem={renderItem1}
-        keyExtractor={(item) => item.id}
-        scrollEnabled={true}
-        style={{paddingHorizontal: 16}}
-        />
+        <StudyList data={DATA} horizontal />
 
         <Text style={{fontSize: 20, fontWeight: 'bold', padding: 16}}>Suggested Studies</Text>
         <StudyList data={DATA} />        
@@ -70,15 +53,5 @@ const styles = StyleSheet.create({
     marginTop: 24,
     // backgroundColor: 'black',
   },
-  card1: {
-    width: 115,
-    height: 150,
-    margin: 4,
-  },
-  card2: {
-    width: '100%',
-    height: 80,
-    marginVertical: 4,
-  }
 
 });

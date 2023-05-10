@@ -5,17 +5,16 @@ import { useDispatch } from 'react-redux';
 import { User, loginUser } from '../../../stores/userReducer';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../../components/Header';
-import Form from '../../../components/Form';
+import Form from '../../../components/auth/Form';
 import * as yup from 'yup';
+import { MyObject } from '../../../components/types';
+import { authErrors } from '../../../utils/errors';
 
-interface MyObject {
-  [key: string]: Array<any>;
-}
-
-const errMsgs : MyObject = {
-  'Email': ['Email required', 'Valid email required'],
-  "Password": ['Password required', 'Password must be at least 8 characters'],
-}
+const pages = [
+  {
+    inputs: ['Email', 'Password'],
+  },
+]
 
 const loginSchema = yup.object().shape({
   email: yup.string().required("Email required").email("Valid email required"),
@@ -25,6 +24,10 @@ const loginSchema = yup.object().shape({
 export default function LoginScreen({ navigation }: { navigation: any}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const DATA: MyObject = {
+    'Email': [email, setEmail],
+    'Password': [password, setPassword],
+  };
 
   // state for error message
   const [error, setError] = useState(['']);
@@ -96,36 +99,23 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <Pressable style={{flex: 1, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}} onPress={dismissKeyboard}>
-        <Header 
-          title='Log In' 
-          rightComponentType='touchable-text' 
-          rightText='Sign Up'
-          onRightPress={toRegister}
-        />
+        <Header title='Log In' rightComponentType='touchable-text' rightText='Sign Up' onRightPress={toRegister} />
         <Form
-          data={[
-            {
-              id: 1,
-              name: 'Email',
-              state: email,
-              setState: setEmail,
-              errors: errMsgs['Email'].filter(element => error.includes(element)),
-              red: errMsgs['Email'].some((item) => error.includes(item)),
-            },
-            {
-              id: 2,
-              name: 'Password',
-              state: password,
-              setState: setPassword,
-              errors: errMsgs['Password'].filter(element => error.includes(element)),
-              red: errMsgs['Password'].some((item) => error.includes(item)),
-            }]}
-            bottomChildren={
-              <TouchableOpacity onPress={toRegister} style={styles.textButton}>
-                <Text style={{ color: '#195064' }}>Forgot your password?</Text>
-              </TouchableOpacity>
-            }
-        />
+              data={pages[0].inputs.map((item: string) => {
+                return ({
+                  name: item, 
+                  state: DATA[item][0], 
+                  setState: DATA[item][1], 
+                  errors: authErrors[item].filter(element => error.includes(element)),
+                  red: authErrors[item].some((item) => error.includes(item))
+                })
+              })}
+              bottomChildren={
+                <TouchableOpacity onPress={toRegister} style={styles.textButton}>
+                  <Text style={{ color: '#195064' }}>Forgot your password?</Text>
+                </TouchableOpacity>
+              }
+            /> 
         <View style={{width: '100%', paddingVertical: 16}}>
           <Pressable onPress={handleLogin} style={styles.button}>
             <Text style={{ color: 'white' }}>Log In</Text>

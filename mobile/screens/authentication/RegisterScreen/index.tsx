@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { FlatList, Keyboard, KeyboardAvoidingView, Pressable, StyleSheet } from 'react-native';
-// import CheckBox from 'react-native-check-box'
+import { Keyboard, KeyboardAvoidingView, Pressable, StyleSheet } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { View, Text } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../../navigation/types';
 import Header from '../../../components/Header';
-import Form from '../../../components/Form';
+import Form from '../../../components/auth/Form';
 import * as Progress from 'react-native-progress';
 import * as yup from 'yup';
 import { Snackbar } from 'react-native-paper';
+import { MyObject } from '../../../components/types';
+import { authErrors } from '../../../utils/errors';
+import { registerSchemas } from '../../../utils/authSchema';
 
 const pages = [
   {
@@ -34,47 +36,6 @@ const pages = [
   },
 ]
 
-interface MyObject {
-  [key: string]: Array<any>;
-}
-
-const errMsgs : MyObject = {
-  'Email': ['Email required', 'Valid email required'],
-  'Username': ['Username required'],
-  'Password': ['Password required', 'Password must be at least 8 characters'],
-  'Confirm Password': ['Confirm password required', 'Passwords must match'],
-  'First Name': ['First name required'],
-  'Last Name': ['Last name required'],
-  'Sex': [],
-  'Gender': [],
-  'Age': [],
-  'Race': [],
-  'Ethnicity': [],
-}
-
-const registerSchemas = [
-  yup.object().shape({
-    'Email': yup.string().email("Valid email required").required("Email required")
-  }),
-  yup.object().shape({
-    'Username': yup.string().required('Username required'),
-    'Password': yup.string().required('Password required').min(8, 'Password must be at least 8 characters'),
-    'Confirm Password': yup.string().required('Confirm password required').oneOf([yup.ref('Password'), ''], 'Passwords must match'),
-  }),
-  yup.object().shape({
-    'First Name': yup.string().required('First name required'),
-    'Last Name': yup.string().required('Last name required'),
-  }),
-  yup.object().shape({
-    'Sex': yup.string().required('Sex required'),
-    'Age': yup.number().required('Age required'),
-  }),
-  yup.object().shape({
-    'Race': yup.string(),
-    'Ethnicity': yup.string(),
-  }),
-]
-
 type RegisterScreenProps = StackScreenProps<MainStackParamList, 'Register'>;
 
 export default function RegisterScreen({ navigation }: RegisterScreenProps) {
@@ -90,19 +51,6 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
   const [ethnicity, setEthnicity] = useState('');
   const [password, setPassword] = useState('password');
   const [passwordConfirm, setPasswordConfirm] = useState('password');
-
-  // state for error message
-  const [error, setError] = useState(['']);
-
-  // state for page index
-  const [index, setIndex] = useState(0);
-  const [checkboxSelected, setCheckboxSelection] = useState(false);
-
-  // state for snackbar
-  const [visible, setVisible] = React.useState(false);
-  const [snackbarMsg, setSnackbarMsg] = React.useState('');
-  const onDismissSnackBar = () => setVisible(false);
-
   const DATA: MyObject = {
     'Email': [email, setEmail],
     'Username': [username, setUsername],
@@ -116,15 +64,65 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
     'Race': [race, setRace],
     'Ethnicity': [ethnicity, setEthnicity]
   }
-  
+
+  // state for error message
+  const [error, setError] = useState(['']);
+
+  // state for page index
+  const [index, setIndex] = useState(0);
+
+  // state for checkbox
+  const [checkboxSelected, setCheckboxSelection] = useState(false);
+  function MyCheckbox() {
+    return (
+      <CheckBox
+        onPress={() => {setCheckboxSelection(!checkboxSelected)}}
+        checked={checkboxSelected}
+        checkedColor='#195064'
+        iconType="material-community"
+        checkedIcon="checkbox-marked"
+        uncheckedIcon="checkbox-blank-outline"
+        Component={Text}
+        size={20}
+        title='I would like to receive your newsletter and other promotional information.'
+        containerStyle={{backgroundColor: 'transparent', borderColor: 'transparent', width: '100%', padding: 0, margin: 0}}
+        textStyle={{fontWeight: 'normal', fontSize: 14}}
+      />
+    )
+  }
+
+  // Snackbar state and functions
+  const [visible, setVisible] = React.useState(false);
+  const [snackbarMsg, setSnackbarMsg] = React.useState('');
+  const onDismissSnackBar = () => setVisible(false);
+  function MySnackbar() {
+    return (
+      <Snackbar
+        style={styles.snackbar}
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: 'Close',
+          onPress: onDismissSnackBar,
+          color: 'white'
+        }}>
+        {snackbarMsg}
+      </Snackbar>
+    );
+  }
+
+
+  // navigation functions
   const toLogin = () => {
     navigation.navigate('Login')
   }
   
+  // function to dismiss keyboard
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
 
+  // function to handle register
   const handleRegister = async () => {
     try {
       const homeAddress = '1234 Main St';
@@ -154,13 +152,13 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
     }
   }
 
+  // function to go to next page, validate inputs, and handle register
   const toNext = async () => {
     try {
       if (index < pages.length) {
         const pageInputs = pages[index].inputs.reduce((acc, val) => ({ ...acc, [val]: DATA[val][0] }), {});
         await registerSchemas[index].validate(pageInputs, { abortEarly: false });
       }
-      
       if (index < pages.length - 1) {
         setIndex(index + 1);
         setError(['']);
@@ -177,6 +175,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
     
   }
 
+  // function to go to previous page
   const toPrev = () => {
     setError(['']);
     if (index !== 0) {
@@ -191,12 +190,8 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
       <Pressable style={{flex: 1, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}} onPress={dismissKeyboard}>
         <Header 
           title='Sign Up' 
-          leftComponentType='touchable-icon'
-          leftText='chevron-back-outline'
-          onLeftPress={toPrev}
-          rightComponentType='touchable-text' 
-          rightText='Log In'
-          onRightPress={toLogin}
+          leftComponentType='touchable-icon' leftText='chevron-back-outline' onLeftPress={toPrev}
+          rightComponentType='touchable-text' rightText='Log In'onRightPress={toLogin}
           children={
             <Progress.Bar 
               progress={(index + 1)/(pages.length + 1)} 
@@ -214,28 +209,15 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
               header={pages[index].header}
               data={pages[index].inputs.map((item: string) => {
                 // console.log(item);
-                return {
+                return ({
                   name: item, 
                   state: DATA[item][0], 
                   setState: DATA[item][1], 
-                  errors: errMsgs[item].filter(element => error.includes(element)),
-                  red: errMsgs[item].some((item) => error.includes(item))
-                }
+                  errors: authErrors[item].filter(element => error.includes(element)),
+                  red: authErrors[item].some((item) => error.includes(item))
+                })
               })}
-              topChildren={
-                <Snackbar
-                wrapperStyle={{top: 0}}
-                style={styles.snackbar}
-                visible={visible}
-                onDismiss={onDismissSnackBar}
-                action={{
-                  label: 'Close',
-                  onPress: onDismissSnackBar,
-                  color: 'white'
-                }}>
-                {snackbarMsg}
-              </Snackbar>
-              }
+              topChildren={<MySnackbar/>}
             /> : 
             <View style={styles.inputContainer}>
               <Text style={{fontSize: 24, fontWeight: 'bold'}}>Success!</Text>  
@@ -246,19 +228,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
         { 
           index === pages.length - 1 ? 
         <View style={styles.checkboxContainer}>
-          <CheckBox
-            onPress={() => {setCheckboxSelection(!checkboxSelected)}}
-            checked={checkboxSelected}
-            checkedColor='#195064'
-            iconType="material-community"
-            checkedIcon="checkbox-marked"
-            uncheckedIcon="checkbox-blank-outline"
-            Component={Text}
-            size={20}
-            title='I would like to receive your newsletter and other promotional information.'
-            containerStyle={{backgroundColor: 'transparent', borderColor: 'transparent', width: '100%', padding: 0, margin: 0}}
-            textStyle={{fontWeight: 'normal', fontSize: 14}}
-          />
+          <MyCheckbox />
         </View> : null
         }
         
@@ -285,16 +255,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
-    // backgroundColor: 'transparent',
   },
   inputContainer: {
     flex: 1,
     width: '100%',
-    // marginBottom: 16,
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
-  //   backgroundColor: 'green'
   },
   snackbar: {
     backgroundColor: 'white', // change the background color to white

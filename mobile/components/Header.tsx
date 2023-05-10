@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       flexDirection: 'row',
       marginTop: 24,
-      marginBottom: 16,
+      marginBottom: 8,
     //   backgroundColor: 'black'
     },
     title: {
