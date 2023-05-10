@@ -134,7 +134,6 @@ const readMessage = async (
     next(ApiError.badRequest('Message already deleted'));
     return;
   }
-
   if (message.read) {
     next(ApiError.badRequest('Message already read'));
     return;
