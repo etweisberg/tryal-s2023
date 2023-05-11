@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     midContainer: {
-        flex: 1, 
+        flex: 2, 
         width: '100%', 
         height: '100%', 
         justifyContent: 'center'
