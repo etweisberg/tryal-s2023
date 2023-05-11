@@ -34,6 +34,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../stores';
 import { getCurrentUser } from '../stores/userReducer';
 import LoadingScreen from '../screens/general/LoadingScreen';
+import InboxScreen from '../screens/general/InboxScreen';
 
 
 const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
@@ -110,7 +111,7 @@ function ResearcherTabScreen() {
         <ResearcherTab.Screen name="Studies" component={StudiesScreen} />
         <ResearcherTab.Screen name="Upcoming" component={UpcomingScreen} />
         <ResearcherTab.Screen name="Create" component={CreateScreen} />
-        <ResearcherTab.Screen name="Inbox" component={InboxStackScreen} />
+        <ResearcherTab.Screen name="Inbox" component={InboxScreen} />
         <ResearcherTab.Screen name="Profile">
           {() => ProfileStackScreen("researcher")}
         </ResearcherTab.Screen>
@@ -144,7 +145,7 @@ function ParticipantTabScreen() {
         <ParticipantTab.Screen name="Explore" component={ExploreScreen} />
         <ParticipantTab.Screen name="Saved" component={SavedScreen} />
         <ParticipantTab.Screen name="My Studies" component={MyStudiesScreen} />
-        <ParticipantTab.Screen name="Inbox" component={InboxStackScreen} />
+        <ParticipantTab.Screen name="Inbox" component={InboxScreen} />
         <ParticipantTab.Screen name="Profile">
           {() => ProfileStackScreen("participant")}
         </ParticipantTab.Screen>        

@@ -1,21 +1,35 @@
-import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native'
-import React from 'react'
-import { StackScreenProps } from '@react-navigation/stack';
-import { InboxStackParamList } from '../../../navigation/types';
+import { View, StyleSheet, ScrollView } from 'react-native'
+import React, { useState } from 'react'
+import { Searchbar } from 'react-native-paper';
 
-type MessageScreenProps = StackScreenProps<InboxStackParamList, 'Messages'>;
+export default function MessageScreen() {
+  const [search, setSearch] = useState<string>('');
 
-export default function MessageScreen({ navigation }: MessageScreenProps) {
-  const toNotifications = () => {
-    navigation.navigate('Notifications')
-  }
+  const updateSearch: (text: string) => void = (search: string) => {
+    setSearch(search);
+  };
 
   return (
-    <SafeAreaView>
-      <Text>MessageScreen</Text>
-      <TouchableOpacity onPress={toNotifications} >
-        <Text>Switch to Notifications</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+    <View style={styles.container}>
+      {/* <Header title='Messages'/> */}
+      <Searchbar
+        placeholder="Search Messages"
+        onChangeText={updateSearch}
+        value={search}
+        style={{height: 50, backgroundColor: '#e8e8e8', marginVertical: 4}}
+      />
+      <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
+      </ScrollView>
+    </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    marginTop: 24,
+  },
+
+});
