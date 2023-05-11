@@ -23,13 +23,13 @@ export default function TabSwitch(
       <Pressable 
       style={[styles.tabContainer, {backgroundColor: selected==='left'? 'white':'transparent'}]}
       onPress={leftPressed}>
-        <Text>{textLeft}</Text>
+        <Text style={{fontWeight: 'bold', color: selected==='left'? '#195064' : '#bdbdbd'}}>{textLeft}</Text>
       </Pressable>
 
       <Pressable 
       style={[styles.tabContainer, {backgroundColor: selected==='right'? 'white':'transparent'}]}
       onPress={rightPressed}>
-        <Text>{textRight}</Text>
+        <Text style={{fontWeight: 'bold', color: selected==='right'? '#195064' : '#bdbdbd'}}>{textRight}</Text>
       </Pressable>
 
     </View>

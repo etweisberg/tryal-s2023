@@ -7,7 +7,7 @@ import NotificationScreen from '../NotificationScreen';
 
 export default function InboxScreen() {
     const [currentScreen, setCurrentScreen] = React.useState<string>('messages');
-    
+
     return (
         <View style={styles.container}>
           <Header title='Inbox'/>
@@ -22,7 +22,6 @@ export default function InboxScreen() {
       )
     }
     
-    
 const styles = StyleSheet.create({
     container: {
     flex: 1,
@@ -30,7 +29,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 24,
     paddingHorizontal: 16,
-    // backgroundColor: 'black',
     },
 
 });
