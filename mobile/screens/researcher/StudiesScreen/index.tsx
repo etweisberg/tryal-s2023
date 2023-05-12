@@ -1,10 +1,10 @@
-import { View, Text } from 'react-native'
+import { View, Text, SafeAreaView } from 'react-native'
 import React from 'react'
 
 export default function StudiesScreen() {
   return (
-    <View>
+    <SafeAreaView>
       <Text>StudiesScreen</Text>
-    </View>
+    </SafeAreaView>
   )
 }

@@ -48,7 +48,7 @@ const login = async (
     },
     // Callback function defined by passport strategy in configPassport.ts
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (err, user, info) => {
+    (err: any, user: any, info: any) => {
       if (err) {
         next(ApiError.internal('Failed to authenticate user.'));
         return;
@@ -107,10 +107,19 @@ const register = async (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  const { firstName, lastName, email, password } = req.body;
-  if (!firstName || !lastName || !email || !password) {
+  const { firstName, lastName, email, age, homeAddress, password } = req.body;
+  if (!firstName || !lastName || !email || !password || !age || !homeAddress) {
+    console.log(req.body)
+    console.log('missing fields')
     next(
-      ApiError.missingFields(['firstName', 'lastName', 'email', 'password']),
+      ApiError.missingFields([
+        'firstName',
+        'lastName',
+        'email',
+        'age',
+        'homeAddress',
+        'password',
+      ]),
     );
     return;
   }
@@ -127,11 +136,13 @@ const register = async (
     !firstName.match(nameRegex) ||
     !lastName.match(nameRegex)
   ) {
+    console.log('invalid email, password, or name')
     next(ApiError.badRequest('Invalid email, password, or name.'));
     return;
   }
 
   if (req.isAuthenticated()) {
+    console.log('already logged in')
     next(ApiError.badRequest('Already logged in.'));
     return;
   }
@@ -139,6 +150,7 @@ const register = async (
   // Check if user exists
   const existingUser: IUser | null = await getUserByEmail(lowercaseEmail);
   if (existingUser) {
+    console.log('user already exists')
     next(
       ApiError.badRequest(
         `An account with email ${lowercaseEmail} already exists.`,
@@ -154,19 +166,26 @@ const register = async (
       lastName,
       lowercaseEmail,
       password,
+      age,
+      homeAddress,
     );
     // Don't need verification email if testing
-    if (process.env.NODE_ENV === 'test') {
+    // console.log(process.env)
+    if (process.env.NODE_ENV === 'development') {
       user!.verified = true;
       await user?.save();
+      console.log('user created')
     } else {
       const verificationToken = crypto.randomBytes(32).toString('hex');
       user!.verificationToken = verificationToken;
+      console.log(verificationToken);
       await user!.save();
       await emailVerificationLink(lowercaseEmail, verificationToken);
     }
     res.sendStatus(StatusCode.CREATED);
+    console.log('status sent')
   } catch (err) {
+    console.log('unable to register user')
     next(ApiError.internal('Unable to register user.'));
   }
 };
@@ -300,14 +319,32 @@ const registerInvite = async (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  const { firstName, lastName, email, password, inviteToken } = req.body;
-  if (!firstName || !lastName || !email || !password) {
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    age,
+    homeAddress,
+    inviteToken,
+  } = req.body;
+  if (
+    !firstName ||
+    !lastName ||
+    !email ||
+    !password ||
+    !age ||
+    !homeAddress ||
+    !inviteToken
+  ) {
     next(
       ApiError.missingFields([
         'firstName',
         'lastName',
         'email',
         'password',
+        'age',
+        'homeAddress',
         'inviteToken',
       ]),
     );
@@ -361,6 +398,8 @@ const registerInvite = async (
       lastName,
       lowercaseEmail,
       password,
+      age,
+      homeAddress,
     );
     user!.verified = true;
     await user?.save();

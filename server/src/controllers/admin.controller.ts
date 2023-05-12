@@ -9,6 +9,7 @@ import StatusCode from '../util/statusCode';
 import { IUser } from '../models/user.model';
 import {
   upgradeUserToAdmin,
+  upgradeUserToResearcher,
   getUserByEmail,
   getAllUsersFromDB,
   deleteUserById,
@@ -21,6 +22,11 @@ import {
 } from '../services/invite.service';
 import { IInvite } from '../models/invite.model';
 import { emailInviteLink } from '../services/mail.service';
+import {
+  getResearcherRequest,
+  approveRequest,
+} from '../services/researcherRequest.service';
+import { IResearcherRequest } from '../models/researcherRequest.model';
 
 /**
  * Get all users from the database. Upon success, send the a list of all users in the res body with 200 OK status code.
@@ -56,10 +62,10 @@ const upgradePrivilege = async (
     next(ApiError.missingFields(['email']));
     return;
   }
-
-  const user: IUser | null = await getUserByEmail(email);
+  const lowercaseEmail = email.toLowerCase();
+  const user: IUser | null = await getUserByEmail(lowercaseEmail);
   if (!user) {
-    next(ApiError.notFound(`User with email ${email} does not exist`));
+    next(ApiError.notFound(`User with email ${lowercaseEmail} does not exist`));
     return;
   }
   if (user.admin) {
@@ -114,6 +120,40 @@ const deleteUser = async (
     .catch((e) => {
       next(ApiError.internal('Failed to delete user.'));
     });
+};
+
+const approveResearcherRequest = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const { email } = req.body;
+  const lowercaseEmail = email.toLowerCase();
+  // implement approving research request
+  const researcherRequest: IResearcherRequest | null =
+    await getResearcherRequest(lowercaseEmail);
+  if (!researcherRequest) {
+    next(ApiError.notFound('Unable to retrieve researcher request'));
+  } else {
+    const user: IUser | null = await getUserByEmail(lowercaseEmail);
+    if (!user) {
+      next(ApiError.notFound('Unable to retrieve user'));
+    } else {
+      upgradeUserToResearcher(user._id)
+        .then(() => {
+          approveRequest(researcherRequest._id)
+            .then(() => {
+              res.sendStatus(StatusCode.OK);
+            })
+            .catch(() => {
+              next(ApiError.internal('Error approving researcher request'));
+            });
+        })
+        .catch(() => {
+          next(ApiError.internal('Error approving researcher request'));
+        });
+    }
+  }
 };
 
 const verifyToken = async (
@@ -174,4 +214,11 @@ const inviteUser = async (
   }
 };
 
-export { getAllUsers, upgradePrivilege, deleteUser, verifyToken, inviteUser };
+export {
+  getAllUsers,
+  upgradePrivilege,
+  deleteUser,
+  verifyToken,
+  inviteUser,
+  approveResearcherRequest,
+};

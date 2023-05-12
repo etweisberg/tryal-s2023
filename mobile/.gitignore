@@ -9,6 +9,9 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+ios/
+vendor/
+.yarn
 
 # macOS
 .DS_Store

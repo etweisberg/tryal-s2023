@@ -31,6 +31,8 @@ const createUser = async (
   lastName: string,
   email: string,
   password: string,
+  age: number,
+  homeAddress: string,
 ) => {
   const hashedPassword = await hash(password, passwordHashSaltRounds);
   if (!hashedPassword) {
@@ -41,9 +43,13 @@ const createUser = async (
     lastName,
     email,
     password: hashedPassword,
+    age,
+    homeAddress,
     admin: false,
   });
+  console.log('newUser')
   const user = await newUser.save();
+  console.log('user saved')
   return user;
 };
 
@@ -131,6 +137,13 @@ const upgradeUserToAdmin = async (id: string) => {
   return user;
 };
 
+const upgradeUserToResearcher = async (id: string) => {
+  const user = await User.findByIdAndUpdate(id, [
+    { $set: { researcher: { $eq: [false, '$researcher'] } } },
+  ]).exec();
+  return user;
+};
+
 /**
  * A function that deletes a user from the database.
  * @param id The id of the user to delete.
@@ -152,4 +165,5 @@ export {
   getAllUsersFromDB,
   upgradeUserToAdmin,
   deleteUserById,
+  upgradeUserToResearcher,
 };

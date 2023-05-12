@@ -7,11 +7,11 @@
   "license": "MIT",
   "scripts": {
     "start": "node server/dist/index.js",
-    "setup": "cd server && yarn install && cd ../mobile && yarn install",
+    "setup": "yarn install && cd server && yarn install && cd ../mobile && yarn install",
     "clean": "rm -rf node_modules && cd mobile && cd ../server",
     "dev": "cross-env NODE_ENV=development concurrently --kill-others-on-fail \"yarn server\" \"yarn mobile\"",
     "server": "cd server && yarn start",
-    "mobile": "cd mobile && expo start",
+    "mobile": "cd mobile && yarn start",
     "pre-commit": "yarn lint-staged",
     "pre-push": "yarn lint && yarn prettier-check && yarn test",
     "lint": "eslint --quiet --fix --ext .js,.ts,.tsx .",
@@ -21,8 +21,11 @@
     "heroku-postbuild": "cd mobile && yarn install && yarn build && cd ../server && yarn install --production=false && yarn build"
   },
   "dependencies": {
+    "@expo/webpack-config": "^0.17.2",
+    "@types/yup": "^0.32.0",
     "expo": "^47.0.13",
     "react": "18.1.0",
-    "react-native": "0.70.5"
+    "react-native": "0.70.5",
+    "yup": "^1.1.1"
   }
 }

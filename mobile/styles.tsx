@@ -1,5 +1,66 @@
 import { StyleSheet } from "react-native";
 
 module.exports = StyleSheet.create({
-
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 24,
+        // backgroundColor: 'white',
+      },
+      participantContainer: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'center',
+        marginTop: 24,
+        paddingHorizontal: 16,
+      },
+      msgContainer: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'center',
+        marginTop: 24,
+      },
+      cardsContainer: {
+        flex: 1, 
+        paddingHorizontal: 8, 
+        flexDirection: 'row', 
+        flexWrap: 'wrap', 
+        justifyContent: 'space-between'
+      },
+      button: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 48,
+        borderRadius: 24,
+        backgroundColor: '#195064',
+        marginVertical: 8,
+      },
+      textButton: {
+        paddingVertical: 8,
+        alignItems: 'center',
+      },
+      inputContainer: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+      },
+      snackbar: {
+        backgroundColor: 'white', // change the background color to white
+        color: 'red', // change the text color to black
+        borderRadius: 5, // add some border radius to the Snackbar
+        elevation: 3, // add some elevation to give a shadow effect
+        height: 70,
+        padding: 0,
+      },
+      checkboxContainer: {
+        flexDirection: 'row',
+        marginBottom: 16,
+      },
+      checkbox: {
+        alignSelf: 'center',
+      },
 })

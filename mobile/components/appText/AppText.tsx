@@ -1,5 +1,6 @@
 import React from 'react'
 import { Text, StyleSheet, TextProps, TextStyle } from 'react-native'
+import * as Font from 'expo-font'
 
 interface AppTextProps extends TextProps {
     children: string
@@ -8,7 +9,17 @@ interface AppTextProps extends TextProps {
 }
 
 export default function AppText({children, textType, style,}: AppTextProps) {
-    let textStyle: {}
+  const [fontsLoaded] = Font.useFonts({
+    'Inconsolata-Regular': require('../../assets/fonts/Inconsolata-Regular.ttf'),
+    'Inconsolata-Bold': require('../../assets/fonts/Inconsolata-Bold.ttf'),
+    'Inconsolata-Legular': require('../../assets/fonts/Inconsolata-Light.ttf'),
+  });
+
+  let textStyle: {}
+
+  if (!fontsLoaded) {
+    textStyle = styles.default
+  } else {
   switch (textType) {
     case 'regular':
       textStyle = styles.regular
@@ -22,6 +33,7 @@ export default function AppText({children, textType, style,}: AppTextProps) {
     default:
       textStyle = styles.regular
       break
+  }
   }
 
   const passedStyles = Array.isArray(style) ? Object.assign({}, ...style) : style
@@ -39,6 +51,9 @@ const styles = StyleSheet.create({
         fontFamily: 'Inconsolata-Bold'
       },
       light: {
-        fontFamily: 'Inconsolata-light'
+        fontFamily: 'Inconsolata-Light'
+      },
+      default: {
+        fontFamily: 'Arial'
       }
 })

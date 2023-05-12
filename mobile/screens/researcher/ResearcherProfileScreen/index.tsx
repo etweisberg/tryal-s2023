@@ -1,22 +1,22 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native'
 import React from 'react'
-import { ResearcherTabParamList } from '../../../navigation/types';
+import { ProfileStackParamList } from '../../../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
 
-type ProfileScreenProps = StackScreenProps<ResearcherTabParamList, 'ResearcherProfile'>;
+type ProfileScreenProps = StackScreenProps<ProfileStackParamList, 'MainProfile'>;
 
 export default function ResearcherProfileScreen({ navigation }: ProfileScreenProps) {
-  
-  const toParticipantTabs = () => {
-    navigation.navigate('ParticipantTabs')
+
+  const toSettings = () => { 
+    navigation.navigate('Settings')
   }
 
   return (
-    <View>
+    <SafeAreaView>
       <Text>ResearcherProfileScreen</Text>
-      <TouchableOpacity onPress={toParticipantTabs} >
-        <Text>Switch to Researcher Screen</Text>
+      <TouchableOpacity onPress={toSettings} >
+        <Text>Settings</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   )
 }

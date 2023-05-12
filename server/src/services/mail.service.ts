@@ -4,8 +4,8 @@
 import 'dotenv/config';
 import SGmail, { MailDataRequired } from '@sendgrid/mail';
 
-const appName = 'Boilerplate'; // Replace with a relevant project name
-const senderName = 'Hack4Impact UPenn'; // Replace with a relevant project sender
+const appName = 'Tryal'; // Replace with a relevant project name
+const senderName = 'Tryal Verification'; // Replace with a relevant project sender
 const baseUrl = 'http://localhost:3000'; // TODO: figure out better place to put this
 
 // eslint-disable-next-line no-useless-concat
@@ -62,6 +62,7 @@ const emailVerificationLink = async (email: string, token: string) => {
   };
   // Send the email and propogate the error up if one exists
   await SGmail.send(mailSettings);
+  console.log('email sent');
 };
 
 /**
