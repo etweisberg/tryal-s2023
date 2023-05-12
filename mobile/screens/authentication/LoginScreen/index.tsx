@@ -6,23 +6,17 @@ import { User, loginUser } from '../../../stores/userReducer';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../../components/Header';
 import Form from '../../../components/auth/Form';
-import * as yup from 'yup';
+import { loginSchema } from '../../../utils/validation';
 import { MyObject } from '../../../components/types';
 import { authErrors } from '../../../utils/errors';
 import AppText from '../../../components/appText/AppText';
-
-const styles = require("../../../styles")
+import styles from '../../../styles'
 
 const pages = [
   {
     inputs: ['Email', 'Password'],
   },
 ]
-
-const loginSchema = yup.object().shape({
-  email: yup.string().required("Email required").email("Valid email required"),
-  password: yup.string().required("Password required"),
-});
 
 export default function LoginScreen({ navigation }: { navigation: any}) {
   const [email, setEmail] = useState('');
@@ -121,8 +115,8 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
             /> 
         <View style={{width: '100%', paddingVertical: 16}}>
           <Pressable onPress={handleLogin} style={styles.button}>
-            <AppText>Log In</AppText>
-            {/* <Text style={{ color: 'white' }}>Log In</Text> */}
+            {/* <AppText>Log In</AppText> */}
+            <Text style={{ color: 'white' }}>Log In</Text>
           </Pressable>
 
           <View style={styles.textButton}>
@@ -138,27 +132,3 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
     </KeyboardAvoidingView>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     padding: 24,
-//     // backgroundColor: 'white',
-//   },
-//   button: {
-//     width: '100%',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     height: 48,
-//     borderRadius: 24,
-//     backgroundColor: '#195064',
-//     marginVertical: 8,
-//   },
-//   textButton: {
-//     paddingVertical: 8,
-//     alignItems: 'center',
-//   },
-
-// });

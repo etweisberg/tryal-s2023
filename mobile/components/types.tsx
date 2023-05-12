@@ -1,3 +1,5 @@
+import { Trial } from "../utils/types";
+
 export type DataItem = {
     id: string;
     title: string;
@@ -7,6 +9,11 @@ export type DataItem = {
 export type DataItemObj = {
   name: string;
   studies: DataItem[];
+}
+
+export type TrialListObj = {
+  name: string;
+  studies: Trial[];
 }
 
 export type MyObject = {

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-module.exports = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -48,6 +48,12 @@ module.exports = StyleSheet.create({
         alignItems: 'center',
         textAlign: 'center',
       },
+      searchbar: {
+        height: 50, 
+        width: '100%', 
+        backgroundColor: '#e8e8e8', 
+        marginVertical: 4
+      },
       snackbar: {
         backgroundColor: 'white', // change the background color to white
         color: 'red', // change the text color to black
@@ -64,3 +70,5 @@ module.exports = StyleSheet.create({
         alignSelf: 'center',
       },
 })
+
+export default styles;

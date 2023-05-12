@@ -77,8 +77,7 @@ export default function MessageScreen() {
   )
 }
 
-const styles = require("../../../styles")
-// const styles = StyleSheet.create({
+import styles from '../../../styles'// const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
 //     width: '100%',

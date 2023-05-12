@@ -7,28 +7,24 @@ import { Searchbar, Card, Divider } from 'react-native-paper'
 import StudyList from '../../../components/StudyList'
 import { DataItem } from '../../../components/types'
 import AppNavigator from '../../../components/AppNavigator'
+import styles from '../../../styles'
+import { Trial } from '../../../utils/types'
+import { testTrials } from '../../../utils/testObjs'
 
-const DATA: DataItem[] = [
-  { id: '1', title: 'Card 1', description: 'This is the first card' },
-  { id: '2', title: 'Card 2', description: 'This is the second card' },
-  { id: '3', title: 'Card 3', description: 'This is the third card' },
-  { id: '4', title: 'Card 4', description: 'This is the fourth card' },
-  { id: '5', title: 'Card 5', description: 'This is the fifth card' },
-  { id: '6', title: 'Card 6', description: 'This is the sixth card' },
-];
+const screenName = 'Explore'
 
 export default function ExploreScreen({navigation}: {navigation: any}) {
   const [search, setSearch] = useState<string>('');
   const [userID, setUserID] = useState<string>('');
-  const [studyID, setStudyID] = useState<string>('');
+  const [study, setStudy] = useState<Trial | null>(null);
 
   const updateSearch: (text: string) => void = (search: string) => {
     setSearch(search);
   };
 
-  const onStudyCardPress = ({studyID}: {studyID: string}) => {
-    setStudyID(studyID);
-    navigation.navigate('StudyInfoScreen');
+  const onStudyCardPress = ({trial}: {trial: Trial}) => {
+    setStudy(trial);
+    navigation.navigate('StudyInfoScreen' + screenName);
   }
 
   function MainPage() {
@@ -39,33 +35,20 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
           placeholder="Search"
           onChangeText={updateSearch}
           value={search}
-          style={{height: 50, backgroundColor: '#e8e8e8', marginVertical: 4}}
+          style={styles.searchbar}
         />
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Your Recents</Text>
-          <StudyList data={DATA} horizontal onPress={onStudyCardPress}/>
+          <StudyList data={testTrials} horizontal onPress={onStudyCardPress}/>
   
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Suggested Studies</Text>
-          <StudyList data={DATA} onPress={onStudyCardPress}/>        
+          <StudyList data={testTrials} onPress={onStudyCardPress}/>        
         </ScrollView>
       </View>
     )
   }
 
   return (
-    <AppNavigator components={[MainPage]} profileFocusable studyFocusable userID={userID} studyID={studyID}/>
+    <AppNavigator name={screenName} components={[MainPage]} profileFocusable studyFocusable userID={userID} trial={study}/>
   )
 }
-
-const styles = require("../../../styles")
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     width: '100%',
-//     justifyContent: 'center',
-//     marginTop: 24,
-//     paddingHorizontal: 16,
-//     // backgroundColor: 'black',
-//   },
-
-// });

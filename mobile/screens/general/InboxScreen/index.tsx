@@ -4,6 +4,7 @@ import Header from '../../../components/Header';
 import TabSwitch from '../../../components/TabSwitch';
 import MessageScreen from '../MessageScreen';
 import NotificationScreen from '../NotificationScreen';
+import styles from '../../../styles';
 
 export default function InboxScreen() {
     const [currentScreen, setCurrentScreen] = React.useState<string>('messages');
@@ -22,14 +23,3 @@ export default function InboxScreen() {
       )
     }
 
-    const styles = require ("../../../styles")
-// const styles = StyleSheet.create({
-//     container: {
-//     flex: 1,
-//     width: '100%',
-//     justifyContent: 'center',
-//     marginTop: 24,
-//     paddingHorizontal: 16,
-//     },
-
-// });

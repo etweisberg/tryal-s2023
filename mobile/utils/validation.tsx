@@ -22,3 +22,8 @@ export const registerSchemas = [
       'Ethnicity': yup.string(),
     }),
   ]
+
+  export const loginSchema = yup.object().shape({
+    email: yup.string().required("Email required").email("Valid email required"),
+    password: yup.string().required("Password required"),
+  });

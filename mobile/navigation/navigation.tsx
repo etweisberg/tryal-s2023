@@ -95,25 +95,25 @@ function ResearcherTabScreen() {
         },
       })}
       >
-        <ResearcherTab.Screen name="Studies" >
-          {() => AppNavigator({components: [StudiesScreen], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen>
+        <ResearcherTab.Screen name="Studies" component={StudiesScreen}/>
+          {/* {() => AppNavigator({components: [StudiesScreen], profileFocusable: true, studyFocusable: true})}
+        </ResearcherTab.Screen> */}
 
-        <ResearcherTab.Screen name="Upcoming">
-          {() => AppNavigator({components: [UpcomingScreen], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen>
+        <ResearcherTab.Screen name="Upcoming" component={UpcomingScreen}/>
+          {/* {() => AppNavigator({components: [UpcomingScreen], profileFocusable: true, studyFocusable: true})}
+        </ResearcherTab.Screen> */}
 
-        <ResearcherTab.Screen name="Create">
-          {() => AppNavigator({components: [CreateScreen], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen>
+        <ResearcherTab.Screen name="Create" component={CreateScreen}/>
+          {/* {() => AppNavigator({components: [CreateScreen], profileFocusable: true, studyFocusable: true})}
+        </ResearcherTab.Screen> */}
 
-        <ResearcherTab.Screen name="Inbox">
-          {() => AppNavigator({components: [InboxScreen], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen>
+        <ResearcherTab.Screen name="Inbox" component={InboxScreen}/>
+          {/* {() => AppNavigator({components: [InboxScreen], profileFocusable: true, studyFocusable: true})}
+        </ResearcherTab.Screen> */}
 
-        <ResearcherTab.Screen name="Profile">
-          {() => AppNavigator({components: [<ProfileStackScreen userType='researcher' />], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen>
+        <ResearcherTab.Screen name="Profile" >
+          {() => <ProfileStackScreen userType='researcher' />}
+        </ResearcherTab.Screen>   
       </ResearcherTab.Navigator>
     )
 }
@@ -145,20 +145,20 @@ function ParticipantTabScreen({navigation}: {navigation: any}) {
           {/* {() => AppNavigator({components: [ExploreScreen], profileFocusable: true, studyFocusable: true})} */}
         {/* </ParticipantTab.Screen> */}
 
-        <ParticipantTab.Screen name="Saved">
-          {() => AppNavigator({components: [<SavedScreen navigation={navigation}/>], profileFocusable: true, studyFocusable: true})}
-        </ParticipantTab.Screen>
+        <ParticipantTab.Screen name="Saved" component={SavedScreen}/>
+          {/* {() => AppNavigator({components: [<SavedScreen navigation={navigation}/>], profileFocusable: true, studyFocusable: true})}
+        </ParticipantTab.Screen> */}
 
-        <ParticipantTab.Screen name="My Studies">
-        {() => AppNavigator({components: [MyStudiesScreen], profileFocusable: true, studyFocusable: true})}
-        </ParticipantTab.Screen>
+        <ParticipantTab.Screen name="My Studies" component={MyStudiesScreen}/>
+        {/* {() => AppNavigator({components: [MyStudiesScreen], profileFocusable: true, studyFocusable: true})}
+        </ParticipantTab.Screen> */}
 
-        <ParticipantTab.Screen name="Inbox">
-        {() => AppNavigator({components: [InboxScreen], profileFocusable: true, studyFocusable: true})}
-        </ParticipantTab.Screen>
+        <ParticipantTab.Screen name="Inbox" component={InboxScreen}/>
+        {/* {() => AppNavigator({components: [InboxScreen], profileFocusable: true, studyFocusable: true})}
+        </ParticipantTab.Screen> */}
 
-        <ParticipantTab.Screen name="Profile">
-          {() => AppNavigator({components: [<ProfileStackScreen userType='participant' />], profileFocusable: true, studyFocusable: true})}
+        <ParticipantTab.Screen name="Profile" >
+          {() => <ProfileStackScreen userType='participant' />}
         </ParticipantTab.Screen>        
       </ParticipantTab.Navigator>
     )
