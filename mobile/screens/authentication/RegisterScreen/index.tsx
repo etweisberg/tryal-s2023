@@ -249,46 +249,48 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
-  inputContainer: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-  },
-  snackbar: {
-    backgroundColor: 'white', // change the background color to white
-    color: 'red', // change the text color to black
-    borderRadius: 5, // add some border radius to the Snackbar
-    elevation: 3, // add some elevation to give a shadow effect
-    height: 70,
-    padding: 0,
-  },
-  button: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#195064',
-    marginBottom: 24,
-  },
-  textButton: {
-    paddingVertical: 4,
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    marginBottom: 16,
-  },
-  checkbox: {
-    alignSelf: 'center',
-  },
+const styles = require("../../../styles")
 
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     padding: 24,
+//   },
+//   inputContainer: {
+//     flex: 1,
+//     width: '100%',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     textAlign: 'center',
+//   },
+//   snackbar: {
+//     backgroundColor: 'white', // change the background color to white
+//     color: 'red', // change the text color to black
+//     borderRadius: 5, // add some border radius to the Snackbar
+//     elevation: 3, // add some elevation to give a shadow effect
+//     height: 70,
+//     padding: 0,
+//   },
+//   button: {
+//     width: '100%',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     height: 48,
+//     borderRadius: 24,
+//     backgroundColor: '#195064',
+//     marginBottom: 24,
+//   },
+//   textButton: {
+//     paddingVertical: 4,
+//   },
+//   checkboxContainer: {
+//     flexDirection: 'row',
+//     marginBottom: 16,
+//   },
+//   checkbox: {
+//     alignSelf: 'center',
+//   },
+
+// });

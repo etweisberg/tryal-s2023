@@ -21,14 +21,15 @@ export default function InboxScreen() {
         </View>
       )
     }
-    
-const styles = StyleSheet.create({
-    container: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'center',
-    marginTop: 24,
-    paddingHorizontal: 16,
-    },
 
-});
+    const styles = require ("../../../styles")
+// const styles = StyleSheet.create({
+//     container: {
+//     flex: 1,
+//     width: '100%',
+//     justifyContent: 'center',
+//     marginTop: 24,
+//     paddingHorizontal: 16,
+//     },
+
+// });

@@ -16,7 +16,7 @@ const DATA: DataItem[] = [
 
 export default function MyStudiesScreen() {
   return (
-    <View style={styles.container}>
+    <View style={styles.participantContainer}>
       <Header title='My Studies'/>
       <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
         <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Pending</Text>
@@ -32,15 +32,16 @@ export default function MyStudiesScreen() {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'center',
-    marginTop: 24,
-    paddingHorizontal: 16,
+const styles = require("../../../styles")
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     width: '100%',
+//     justifyContent: 'center',
+//     marginTop: 24,
+//     paddingHorizontal: 16,
     
-    // backgroundColor: 'black',
-  },
+//     // backgroundColor: 'black',
+//   },
 
-});
+// });

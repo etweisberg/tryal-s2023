@@ -9,6 +9,9 @@ import Form from '../../../components/auth/Form';
 import * as yup from 'yup';
 import { MyObject } from '../../../components/types';
 import { authErrors } from '../../../utils/errors';
+import AppText from '../../../components/appText/AppText';
+
+const styles = require("../../../styles")
 
 const pages = [
   {
@@ -118,7 +121,8 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
             /> 
         <View style={{width: '100%', paddingVertical: 16}}>
           <Pressable onPress={handleLogin} style={styles.button}>
-            <Text style={{ color: 'white' }}>Log In</Text>
+            <AppText>Log In</AppText>
+            {/* <Text style={{ color: 'white' }}>Log In</Text> */}
           </Pressable>
 
           <View style={styles.textButton}>
@@ -135,26 +139,26 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-    // backgroundColor: 'white',
-  },
-  button: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#195064',
-    marginVertical: 8,
-  },
-  textButton: {
-    paddingVertical: 8,
-    alignItems: 'center',
-  },
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     padding: 24,
+//     // backgroundColor: 'white',
+//   },
+//   button: {
+//     width: '100%',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     height: 48,
+//     borderRadius: 24,
+//     backgroundColor: '#195064',
+//     marginVertical: 8,
+//   },
+//   textButton: {
+//     paddingVertical: 8,
+//     alignItems: 'center',
+//   },
 
-});
+// });

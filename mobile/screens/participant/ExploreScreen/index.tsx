@@ -57,15 +57,15 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
   )
 }
 
+const styles = require("../../../styles")
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     width: '100%',
+//     justifyContent: 'center',
+//     marginTop: 24,
+//     paddingHorizontal: 16,
+//     // backgroundColor: 'black',
+//   },
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'center',
-    marginTop: 24,
-    paddingHorizontal: 16,
-    // backgroundColor: 'black',
-  },
-
-});
+// });

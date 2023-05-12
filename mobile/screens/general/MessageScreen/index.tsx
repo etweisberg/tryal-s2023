@@ -71,18 +71,19 @@ export default function MessageScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.msgContainer}>
       {chat ? <ChatScreen /> : <MainScreen />}
     </View>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'center',
-    marginTop: 24,
-  },
+const styles = require("../../../styles")
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     width: '100%',
+//     justifyContent: 'center',
+//     marginTop: 24,
+//   },
 
-});
+// });

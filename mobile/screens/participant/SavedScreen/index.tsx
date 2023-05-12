@@ -48,7 +48,7 @@ export default function SavedScreen({ navigation }: { navigation: any}) {
 
   function MainPage() {
     return (
-      <View style={styles.container}>
+      <View style={styles.participantContainer}>
         <Header title='Saved'/>
 
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
@@ -75,7 +75,7 @@ export default function SavedScreen({ navigation }: { navigation: any}) {
 
   function GroupPage(data: DataItemObj) {
     return (
-      <View style={styles.container}>
+      <View style={styles.participantContainer}>
         <Header 
             title={data.name}
             leftComponentType='touchable-icon' leftText='chevron-back-outline' onLeftPress={toMain}
@@ -99,21 +99,21 @@ export default function SavedScreen({ navigation }: { navigation: any}) {
   )
 }
 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 24,
-    paddingHorizontal: 16
-    // backgroundColor: 'black',
-  },
-  cardsContainer: {
-    flex: 1, 
-    paddingHorizontal: 8, 
-    flexDirection: 'row', 
-    flexWrap: 'wrap', 
-    justifyContent: 'space-between'
-  },
-});
+const styles = require("../../../styles")
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     marginTop: 24,
+//     paddingHorizontal: 16
+//     // backgroundColor: 'black',
+//   },
+//   cardsContainer: {
+//     flex: 1, 
+//     paddingHorizontal: 8, 
+//     flexDirection: 'row', 
+//     flexWrap: 'wrap', 
+//     justifyContent: 'space-between'
+//   },
+// });
