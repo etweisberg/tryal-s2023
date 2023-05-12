@@ -37,7 +37,7 @@ requesting user must be a researcher on the trial
 router.put('/accept', isAuthenticated, isResearcher, acceptUserForTrial);
 
 /*
-put for togglign acceptingParticipants
+put for toggling acceptingParticipants
 */
 router.put(
   '/accepting',
@@ -57,7 +57,7 @@ get all trials
 router.get('/all', isAuthenticated, getAllTrials);
 
 /*
-get  rial by ID
+get trial by ID
 */
 router.get('/all', isAuthenticated, getTrialById);
 export default router;
