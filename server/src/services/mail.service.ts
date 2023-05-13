@@ -62,7 +62,6 @@ const emailVerificationLink = async (email: string, token: string) => {
   };
   // Send the email and propogate the error up if one exists
   await SGmail.send(mailSettings);
-  console.log('email sent');
 };
 
 /**
