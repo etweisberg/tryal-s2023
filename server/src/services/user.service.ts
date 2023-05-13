@@ -152,6 +152,44 @@ const deleteUserById = async (id: string) => {
   return user;
 };
 
+const addTrialToUser = async (userId: string, trialId: string) => {
+  const user = await User.findByIdAndUpdate(userId, {
+    $push: { trials: trialId },
+  }).exec();
+  return user;
+};
+
+const addTrialOwnershipToUser = async (userId: string, trialId: string) => {
+  const user = await User.findByIdAndUpdate(userId, {
+    $push: { trialsOwned: trialId },
+  }).exec();
+  return user;
+};
+
+const addTrialClickToUser = async (userId: string, trialId: string) => {
+  await User.findByIdAndUpdate(userId, {
+    $pull: {
+      clickedOnTrials: trialId,
+    },
+  }).exec();
+  const user = await User.findByIdAndUpdate(userId, {
+    $push: {
+      clickedOnTrials: {
+        $each: [trialId],
+        $position: 0,
+      },
+    },
+  }).exec();
+  return user;
+};
+
+const addTrialSaveToUser = async (userId: string, trialId: string) => {
+  const user = await User.findByIdAndUpdate(userId, {
+    $addToSet: { savedTrials: trialId },
+  }).exec();
+  return user;
+};
+
 export {
   passwordHashSaltRounds,
   createUser,
@@ -164,4 +202,8 @@ export {
   upgradeUserToAdmin,
   deleteUserById,
   upgradeUserToResearcher,
+  addTrialToUser,
+  addTrialClickToUser,
+  addTrialSaveToUser,
+  addTrialOwnershipToUser,
 };

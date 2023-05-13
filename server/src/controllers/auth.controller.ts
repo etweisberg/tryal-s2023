@@ -164,18 +164,16 @@ const register = async (
       age,
       homeAddress,
     );
-    // Don't need verification email if testing
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === 'development') {
       user!.verified = true;
       await user?.save();
     } else {
       const verificationToken = crypto.randomBytes(32).toString('hex');
       user!.verificationToken = verificationToken;
-      console.log(verificationToken);
       await user!.save();
       await emailVerificationLink(lowercaseEmail, verificationToken);
     }
-    res.sendStatus(StatusCode.CREATED);
+    res.status(StatusCode.CREATED).send(user);
   } catch (err) {
     next(ApiError.internal('Unable to register user.'));
   }

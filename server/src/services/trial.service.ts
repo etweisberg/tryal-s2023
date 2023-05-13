@@ -1,5 +1,4 @@
 import { Trial } from '../models/trial.model';
-import { User } from '../models/user.model';
 
 interface TrialFilter {
   date?: Date;
@@ -37,13 +36,6 @@ const getTrial = async (trialId: string) => {
 const getTrialByName = async (name: string) => {
   const trial = await Trial.findOne({ name }).exec();
   return trial;
-};
-
-const addTrialToUser = async (userId: string, trialId: string) => {
-  const user = await User.findByIdAndUpdate(userId, {
-    $push: { trials: trialId },
-  }).exec();
-  return user;
 };
 
 const addResearcherToTrial = async (trialId: string, researcherId: string) => {
@@ -98,7 +90,7 @@ const addUserToRequests = async (userId: string, trialId: string) => {
 const addUserToAccepted = async (userId: string, trialId: string) => {
   const trial = await Trial.findByIdAndUpdate(trialId, {
     $push: { participantAccepted: userId },
-    $remove: { participantRequests: userId },
+    $pull: { participantRequests: userId },
   }).exec();
   return trial;
 };
@@ -133,7 +125,6 @@ export {
   createNewTrial,
   getTrial,
   getTrialByName,
-  addTrialToUser,
   addResearcherToTrial,
   updateTrialName,
   updateTrialDate,

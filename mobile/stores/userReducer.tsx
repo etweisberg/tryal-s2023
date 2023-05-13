@@ -1,39 +1,21 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './index';
-
-// Define a type for the slice state
-export type User = {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  verified: boolean;
-  verificationToken: string | null | undefined;
-  resetPasswordToken: string | null | undefined;
-  resetPasswordTokenExpiryDate: Date | null | undefined;
-  trials: Array<string>;
-  trialsOwned: Array<string>;
-  age: number | null;
-  medConditions: Array<string>;
-  homeAddress: string;
-  seekingCompensation: boolean;
-  researcher: boolean;
-  institution: string;
-  admin: boolean;
-}
+import { getUser } from '../api/fakeApiUser';
+import { User } from '../utils/types';
 
 // Define the state type and initial value
 interface UserState {
   user: User | null;
   isLoading: boolean;
   error: string | null;
+  currentChatID: string | null;
 }
 
 const initialState: UserState = {
   user: null,
   isLoading: false,
   error: null,
+  currentChatID: null,
 };
 
 // Create a slice of state and reducers for the user
@@ -64,6 +46,8 @@ const userSlice = createSlice({
 export const { loginUser, logoutUser, setLoading, setError } = userSlice.actions;
 
 export const getCurrentUser = (state: RootState): User | null => state.user.user;
+export const getIsLoading = (state: RootState): boolean => state.user.isLoading;
+export const getError = (state: RootState): string | null => state.user.error;
 
 export const userReducer = userSlice.reducer;
 

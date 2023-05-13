@@ -13,6 +13,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  prefix: {
+    type: String,
+    required: false,
+  },
   email: {
     type: String,
     match:
@@ -48,7 +52,19 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: [],
   },
+  // eslint-disable-next-line spaced-comment
+  //add method, any duplicate just move to the front
+  clickedOnTrials: {
+    type: Array<string>(),
+    required: true,
+    default: [],
+  },
   trialsOwned: {
+    type: Array<string>(),
+    required: true,
+    default: [],
+  },
+  savedTrials: {
     type: Array<string>(),
     required: true,
     default: [],
@@ -59,6 +75,11 @@ const UserSchema = new mongoose.Schema({
     default: null,
   },
   medConditions: {
+    type: Array<string>(),
+    required: true,
+    default: [],
+  },
+  interests: {
     type: Array<string>(),
     required: true,
     default: [],
@@ -102,6 +123,8 @@ interface IUser extends mongoose.Document {
   resetPasswordTokenExpiryDate: Date | null | undefined;
   trials: Array<string>;
   trialsOwned: Array<string>;
+  clickedOnTrials: Array<string>;
+  savedTrials: Array<string>;
   age: number | null;
   medConditions: Array<string>;
   homeAddress: string;

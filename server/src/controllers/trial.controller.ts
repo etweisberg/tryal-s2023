@@ -5,7 +5,6 @@ import { IUser } from '../models/user.model';
 import {
   createNewTrial,
   getTrialByName,
-  addTrialToUser,
   getTrial,
   updateTrialName,
   updateTrialDescription,
@@ -19,6 +18,12 @@ import {
   getAll,
 } from '../services/trial.service';
 import StatusCode from '../util/statusCode';
+import {
+  addTrialClickToUser,
+  addTrialOwnershipToUser,
+  addTrialSaveToUser,
+  addTrialToUser,
+} from '../services/user.service';
 
 interface TrialFilter {
   date?: Date;
@@ -61,8 +66,8 @@ const createTrial = async (
       user.id,
     );
     await trial?.save();
-    addTrialToUser(user.id, trial.id);
-    res.sendStatus(StatusCode.CREATED);
+    addTrialOwnershipToUser(user.id, trial.id);
+    res.status(StatusCode.CREATED).send(trial);
   } catch (err) {
     next(ApiError.internal('Unable to create trial'));
   }
@@ -113,8 +118,8 @@ const requestTrial = async (
   next: express.NextFunction,
 ) => {
   const user: IUser | null = req.user as IUser;
-  const { trialId } = req.body;
-  const trial = await getTrial(trialId);
+  const { id } = req.params;
+  const trial = await getTrial(id);
   if (!trial) {
     next(ApiError.badRequest('Trial does not exist'));
     return;
@@ -128,7 +133,7 @@ const requestTrial = async (
     return;
   }
   try {
-    await addUserToRequests(user.id, trialId);
+    await addUserToRequests(user.id, id);
     res.sendStatus(StatusCode.OK);
   } catch (err) {
     next(ApiError.internal('Unable to request trial'));
@@ -155,12 +160,16 @@ const acceptUserForTrial = async (
     next(ApiError.badRequest('User has not requested to join this trial'));
     return;
   }
-  if (trial.participantAccepted.includes(participantId)) {
+  if (
+    trial.participantAccepted.includes(participantId) ||
+    user.trials.includes(trialId)
+  ) {
     next(ApiError.badRequest('User is already a participant in this trial'));
     return;
   }
   try {
     await addUserToAccepted(participantId, trialId);
+    await addTrialToUser(participantId, trialId);
     res.sendStatus(StatusCode.OK);
   } catch (err) {
     next(ApiError.internal('Unable to accept user for trial'));
@@ -232,6 +241,55 @@ const getTrialById = async (
   }
 };
 
+const clickOnTrial = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const { id } = req.params;
+  const user: IUser | null = req.user as IUser;
+  try {
+    const trial = await getTrial(id);
+    if (!trial) {
+      next(ApiError.badRequest('Trial does not exist'));
+      return;
+    }
+    if (!user) {
+      next(ApiError.badRequest('User does not exist'));
+      return;
+    }
+    await addTrialClickToUser(user.id, id);
+    res.sendStatus(StatusCode.OK);
+  } catch (err) {
+    console.log(err);
+    next(ApiError.internal('Unable to click on trial'));
+  }
+};
+
+const saveTrial = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const { id } = req.params;
+  const user: IUser | null = req.user as IUser;
+  try {
+    const trial = await getTrial(id);
+    if (!trial) {
+      next(ApiError.badRequest('Trial does not exist'));
+      return;
+    }
+    if (!user) {
+      next(ApiError.badRequest('User does not exist'));
+      return;
+    }
+    await addTrialSaveToUser(user.id, id);
+    res.sendStatus(StatusCode.OK);
+  } catch (err) {
+    next(ApiError.internal('Unable to save trial'));
+  }
+};
+
 // eslint-disable-next-line import/prefer-default-export
 export {
   createTrial,
@@ -242,4 +300,6 @@ export {
   filterTrials,
   getAllTrials,
   getTrialById,
+  clickOnTrial,
+  saveTrial,
 };

@@ -44,12 +44,12 @@ export default function Header(
     children: ReactNode}) {
 
   return (
-    <View>
+    <View style={{width: '100%'}}>
         <View style={styles.headerContainer}>
             {leftComponentType === 'touchable-text' 
                 ? 
                 <TouchableOpacity style={styles.sideContainer} onPress={onLeftPress}>
-                    <Text style={{color: '#195064', width: '100%', textAlign: 'right'}}>{leftText}</Text>
+                    <Text style={{color: '#195064', width: '100%', textAlign: 'left'}}>{leftText}</Text>
                 </TouchableOpacity> 
                 : leftComponentType === 'touchable-icon'
                 ?
@@ -91,12 +91,12 @@ const styles = StyleSheet.create({
     headerContainer: {
     //   flex: 1,
       width: '100%',
-      height: 70,
+      height: 50,
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row',
       marginTop: 24,
-      marginBottom: 16,
+      marginBottom: 8,
     //   backgroundColor: 'black'
     },
     title: {
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     midContainer: {
-        flex: 1, 
+        flex: 2, 
         width: '100%', 
         height: '100%', 
         justifyContent: 'center'

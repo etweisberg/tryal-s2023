@@ -13,14 +13,11 @@ import UpcomingScreen from '../screens/researcher/UpcomingScreen';
 import CreateScreen from '../screens/researcher/CreateScreen';
 import ResearcherProfileScreen from '../screens/researcher/ResearcherProfileScreen';
 
-import MessageScreen from '../screens/general/MessageScreen';
-import NotificationsScreen from '../screens/general/NotificationScreen';
-
 import RegisterScreen from '../screens/authentication/RegisterScreen';
 import LoginScreen from '../screens/authentication/LoginScreen';
 
 import Icon from "react-native-vector-icons/Ionicons";
-import { InboxStackParamList, 
+import {
   MainStackParamList, 
   ParticipantTabParamList, 
   ResearcherTabParamList, 
@@ -34,27 +31,19 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../stores';
 import { getCurrentUser } from '../stores/userReducer';
 import LoadingScreen from '../screens/general/LoadingScreen';
+import InboxScreen from '../screens/general/InboxScreen';
+import AppNavigator from '../components/AppNavigator';
+import ChatScreen from '../screens/common/ChatScreen';
 
 
 const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
 const ResearcherTab = createBottomTabNavigator<ResearcherTabParamList>();
-const InboxStack = createStackNavigator<InboxStackParamList>();
 const ProfileStack = createStackNavigator<ProfileStackParamList>();
 const MainStack = createStackNavigator<MainStackParamList>();
 const AuthStack = createStackNavigator<AuthStackParamList>();
 
-function InboxStackScreen() {
-  return (
-    <InboxStack.Navigator screenOptions={{
-      headerShown: false
-    }}>
-      <InboxStack.Screen name="Messages" component={MessageScreen} />
-      <InboxStack.Screen name="Notifications" component={NotificationsScreen} />
-    </InboxStack.Navigator>
-  );
-};
 
-function ProfileStackScreen(userType: string) {
+function ProfileStackScreen({userType}: {userType: string}) {
     return (
       <ProfileStack.Navigator screenOptions={{
         headerShown: false
@@ -107,13 +96,25 @@ function ResearcherTabScreen() {
         },
       })}
       >
-        <ResearcherTab.Screen name="Studies" component={StudiesScreen} />
-        <ResearcherTab.Screen name="Upcoming" component={UpcomingScreen} />
-        <ResearcherTab.Screen name="Create" component={CreateScreen} />
-        <ResearcherTab.Screen name="Inbox" component={InboxStackScreen} />
-        <ResearcherTab.Screen name="Profile">
-          {() => ProfileStackScreen("researcher")}
-        </ResearcherTab.Screen>
+        <ResearcherTab.Screen name="Studies" component={StudiesScreen}/>
+          {/* {() => AppNavigator({components: [StudiesScreen], profileFocusable: true, studyFocusable: true})}
+        </ResearcherTab.Screen> */}
+
+        <ResearcherTab.Screen name="Upcoming" component={UpcomingScreen}/>
+          {/* {() => AppNavigator({components: [UpcomingScreen], profileFocusable: true, studyFocusable: true})}
+        </ResearcherTab.Screen> */}
+
+        <ResearcherTab.Screen name="Create" component={CreateScreen}/>
+          {/* {() => AppNavigator({components: [CreateScreen], profileFocusable: true, studyFocusable: true})}
+        </ResearcherTab.Screen> */}
+
+        <ResearcherTab.Screen name="Inbox" component={InboxScreen}/>
+          {/* {() => AppNavigator({components: [InboxScreen], profileFocusable: true, studyFocusable: true})}
+        </ResearcherTab.Screen> */}
+
+        <ResearcherTab.Screen name="Profile" >
+          {() => <ProfileStackScreen userType='researcher' />}
+        </ResearcherTab.Screen>   
       </ResearcherTab.Navigator>
     )
 }
@@ -141,12 +142,12 @@ function ParticipantTabScreen() {
         },
       })}
       >
-        <ParticipantTab.Screen name="Explore" component={ExploreScreen} />
-        <ParticipantTab.Screen name="Saved" component={SavedScreen} />
-        <ParticipantTab.Screen name="My Studies" component={MyStudiesScreen} />
-        <ParticipantTab.Screen name="Inbox" component={InboxStackScreen} />
-        <ParticipantTab.Screen name="Profile">
-          {() => ProfileStackScreen("participant")}
+        <ParticipantTab.Screen name="Explore" component={ExploreScreen}/>
+        <ParticipantTab.Screen name="Saved" component={SavedScreen}/>
+        <ParticipantTab.Screen name="My Studies" component={MyStudiesScreen}/>
+        <ParticipantTab.Screen name="Inbox" component={InboxScreen}/>
+        <ParticipantTab.Screen name="Profile" >
+          {() => <ProfileStackScreen userType='participant' />}
         </ParticipantTab.Screen>        
       </ParticipantTab.Navigator>
     )
@@ -155,24 +156,29 @@ function ParticipantTabScreen() {
 export default function Navigation() {
   const [loading, setLoading] = useState(false)
   const user = useSelector((state: RootState) => getCurrentUser(state));
+  console.log('user');
   console.log(user);
 
   return (
     <NavigationContainer>
       <MainStack.Navigator screenOptions={{
-        headerShown: false
-      }}>
+        headerShown: false,
+        cardStyle: { backgroundColor: 'white', flex: 1 },
+        }}>
+        
         {loading ? (
           // This screen is only visible while the app is loading
           <MainStack.Screen name="Loading" component={LoadingScreen} />
-          // This screen is only visible when a user has been authenticated as a general user
-        ) : user && user["admin"] ? (
-          // This screen is only visible when a user has been authenticated as a researcher
-          <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
-        ) : (
+        ) : (!user) ? (
           <MainStack.Screen name="Auth" component={AuthStackScreen} />
-        )}
+        ) : null }
+        
         <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
+        <MainStack.Screen name="Chat" component={ChatScreen} />
+
+        { user && user["admin"] ? (
+          <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
+        ) : null }
 
       </MainStack.Navigator>
     </NavigationContainer>
