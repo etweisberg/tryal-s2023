@@ -5,7 +5,6 @@ import { IUser } from '../models/user.model';
 import {
   createNewTrial,
   getTrialByName,
-  addTrialToUser,
   getTrial,
   updateTrialName,
   updateTrialDescription,
@@ -19,6 +18,11 @@ import {
   getAll,
 } from '../services/trial.service';
 import StatusCode from '../util/statusCode';
+import {
+  addTrialClickToUser,
+  addTrialSaveToUser,
+  addTrialToUser,
+} from '../services/user.service';
 
 interface TrialFilter {
   date?: Date;
@@ -161,6 +165,7 @@ const acceptUserForTrial = async (
   }
   try {
     await addUserToAccepted(participantId, trialId);
+    await addTrialToUser(participantId, trialId);
     res.sendStatus(StatusCode.OK);
   } catch (err) {
     next(ApiError.internal('Unable to accept user for trial'));
@@ -232,6 +237,54 @@ const getTrialById = async (
   }
 };
 
+const clickOnTrial = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const { trialId } = req.params;
+  const user: IUser | null = req.user as IUser;
+  try {
+    const trial = await getTrial(trialId);
+    if (!trial) {
+      next(ApiError.badRequest('Trial does not exist'));
+      return;
+    }
+    if (!user) {
+      next(ApiError.badRequest('User does not exist'));
+      return;
+    }
+    await addTrialClickToUser(user.id, trialId);
+    res.sendStatus(StatusCode.OK);
+  } catch (err) {
+    next(ApiError.internal('Unable to click on trial'));
+  }
+};
+
+const saveTrial = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const { trialId } = req.params;
+  const user: IUser | null = req.user as IUser;
+  try {
+    const trial = await getTrial(trialId);
+    if (!trial) {
+      next(ApiError.badRequest('Trial does not exist'));
+      return;
+    }
+    if (!user) {
+      next(ApiError.badRequest('User does not exist'));
+      return;
+    }
+    await addTrialSaveToUser(user.id, trialId);
+    res.sendStatus(StatusCode.OK);
+  } catch (err) {
+    next(ApiError.internal('Unable to save trial'));
+  }
+};
+
 // eslint-disable-next-line import/prefer-default-export
 export {
   createTrial,
@@ -242,4 +295,6 @@ export {
   filterTrials,
   getAllTrials,
   getTrialById,
+  clickOnTrial,
+  saveTrial,
 };

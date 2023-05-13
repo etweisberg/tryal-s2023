@@ -11,10 +11,17 @@ import {
   toggleAcceptUserForTrial,
   getAllTrials,
   getTrialById,
+  clickOnTrial,
+  saveTrial,
 } from '../controllers/trial.controller';
 
 const router = express.Router();
 
+/*
+Trial routes now need to create messages 
+Message from researcher to user when user is accepted
+Message from user to researcher when they request to join
+Message from the researcher to all participants when the trial is updated
 /*
 creates new trial with the given parameters
 */
@@ -59,5 +66,16 @@ router.get('/all', isAuthenticated, getAllTrials);
 /*
 get trial by ID
 */
-router.get('/all', isAuthenticated, getTrialById);
+router.get('/:id', isAuthenticated, getTrialById);
+
+/*
+click on a trial and update a users clickedOnQueue
+*/
+router.put('/click:id', isAuthenticated, clickOnTrial);
+
+/*
+save  a trial and update a users saved
+*/
+router.put('/save:id', isAuthenticated, saveTrial);
+
 export default router;

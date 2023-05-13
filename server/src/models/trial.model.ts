@@ -38,7 +38,7 @@ const TrialSchema = new mongoose.Schema({
     default: true,
   },
   date: {
-    type: Date,
+    type: [Date, Date],
     required: true,
   },
   location: {
@@ -50,6 +50,14 @@ const TrialSchema = new mongoose.Schema({
     required: true,
     default: [],
   },
+  compensation: {
+    type: Number,
+    required: false,
+  },
+  timeCommitment: {
+    type: Number,
+    required: false,
+  },
 });
 
 interface ITrial extends mongoose.Document {
@@ -60,7 +68,7 @@ interface ITrial extends mongoose.Document {
   participantRequests: string[];
   participantAccepted: string[];
   acceptingParticipants: boolean;
-  date: Date;
+  date: [Date, Date];
   location: string;
   eligibleConditions: string[];
 }
