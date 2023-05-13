@@ -3,7 +3,7 @@ import { Trial, User } from "./types"
 export const testTrial1: Trial = {
     _id: '1',
     name: "psych study",
-    description: "testing brains", 
+    description: 'Labore sunt veniam amet est. Minim nisi dolor eu ad incididunt cillum elit ex ut. Dolore exercitation nulla tempor consequat aliquip occaecat. Nisi id ipsum irure aute. Deserunt sit aute irure quis nulla eu consequat fugiat Lorem sunt magna et consequat labore. Laboris incididunt id Lorem est duis deserunt nisi dolore eiusmod culpa exercitation consectetur.',
     researchers: ['1'],
     participantRequests: ['1','2'],
     date: new Date('6/1/2023'),

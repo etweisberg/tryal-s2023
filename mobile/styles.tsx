@@ -41,6 +41,16 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         alignItems: 'center',
       },
+      circleButton: {
+        height: 48, 
+        aspectRatio: 1, 
+        borderRadius: 24,
+        backgroundColor: '#d9d9d9', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        marginVertical: 8,
+        elevation: 6,
+      },
       inputContainer: {
         flex: 1,
         width: '100%',

@@ -12,33 +12,9 @@ import { MyObject } from '../../../components/types';
 import { authErrors } from '../../../utils/errors';
 import { registerSchemas } from '../../../utils/validation';
 import styles from '../../../styles'
+import { pages } from './data';
 
-const pages = [
-  {
-    header: 'First, we need your email.',
-    inputs: ['Email'],
-  },
-  {
-    header: 'Now, create a username and password.',
-    inputs: ['Username', 'Password', 'Confirm Password'],
-  },
-  {
-    header: 'Next, we need your name.',
-    inputs: ['First Name', 'Last Name'],
-  },
-  {
-    header: 'To match you with appropriate studies, we need to know a little bit more about you.',
-    inputs: ['Sex', 'Age'],
-  },
-  {
-    header: 'Last ones! (Optional)',
-    inputs: ['Race', 'Ethnicity'],
-  },
-]
-
-type RegisterScreenProps = StackScreenProps<MainStackParamList, 'Register'>;
-
-export default function RegisterScreen({ navigation }: RegisterScreenProps) {
+export default function RegisterScreen({ navigation }: {navigation: any}) {
   // state for form inputs
   const [username, setUsername] = useState('c');
   const [email, setEmail] = useState('a@a');
@@ -51,6 +27,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
   const [ethnicity, setEthnicity] = useState('');
   const [password, setPassword] = useState('password');
   const [passwordConfirm, setPasswordConfirm] = useState('password');
+
   const DATA: MyObject = {
     'Email': [email, setEmail],
     'Username': [username, setUsername],
@@ -191,7 +168,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
         <Header 
           title='Sign Up' 
           leftComponentType='touchable-icon' leftText='chevron-back-outline' onLeftPress={toPrev}
-          rightComponentType='touchable-text' rightText='Log In'onRightPress={toLogin}
+          rightComponentType='touchable-text' rightText='Log In' onRightPress={toLogin}
           children={
             <Progress.Bar 
               progress={(index + 1)/(pages.length + 1)} 

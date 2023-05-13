@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Pressable, StyleSheet } from 'react-native';
 import { View, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { User, loginUser } from '../../../stores/userReducer';
+import { loginUser } from '../../../stores/userReducer';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../../components/Header';
 import Form from '../../../components/auth/Form';
@@ -11,6 +11,7 @@ import { MyObject } from '../../../components/types';
 import { authErrors } from '../../../utils/errors';
 import AppText from '../../../components/appText/AppText';
 import styles from '../../../styles'
+import { User } from '../../../utils/types';
 
 const pages = [
   {

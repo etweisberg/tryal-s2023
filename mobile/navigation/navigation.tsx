@@ -33,6 +33,7 @@ import { getCurrentUser } from '../stores/userReducer';
 import LoadingScreen from '../screens/general/LoadingScreen';
 import InboxScreen from '../screens/general/InboxScreen';
 import AppNavigator from '../components/AppNavigator';
+import ChatScreen from '../screens/common/ChatScreen';
 
 
 const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
@@ -118,7 +119,7 @@ function ResearcherTabScreen() {
     )
 }
 
-function ParticipantTabScreen({navigation}: {navigation: any}) {
+function ParticipantTabScreen() {
     return (
       <ParticipantTab.Navigator
       initialRouteName="Explore"
@@ -142,21 +143,9 @@ function ParticipantTabScreen({navigation}: {navigation: any}) {
       })}
       >
         <ParticipantTab.Screen name="Explore" component={ExploreScreen}/>
-          {/* {() => AppNavigator({components: [ExploreScreen], profileFocusable: true, studyFocusable: true})} */}
-        {/* </ParticipantTab.Screen> */}
-
         <ParticipantTab.Screen name="Saved" component={SavedScreen}/>
-          {/* {() => AppNavigator({components: [<SavedScreen navigation={navigation}/>], profileFocusable: true, studyFocusable: true})}
-        </ParticipantTab.Screen> */}
-
         <ParticipantTab.Screen name="My Studies" component={MyStudiesScreen}/>
-        {/* {() => AppNavigator({components: [MyStudiesScreen], profileFocusable: true, studyFocusable: true})}
-        </ParticipantTab.Screen> */}
-
         <ParticipantTab.Screen name="Inbox" component={InboxScreen}/>
-        {/* {() => AppNavigator({components: [InboxScreen], profileFocusable: true, studyFocusable: true})}
-        </ParticipantTab.Screen> */}
-
         <ParticipantTab.Screen name="Profile" >
           {() => <ProfileStackScreen userType='participant' />}
         </ParticipantTab.Screen>        
@@ -185,6 +174,7 @@ export default function Navigation() {
         ) : null }
         
         <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
+        <MainStack.Screen name="Chat" component={ChatScreen} />
 
         { user && user["admin"] ? (
           <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />

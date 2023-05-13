@@ -49,7 +49,7 @@ export default function Header(
             {leftComponentType === 'touchable-text' 
                 ? 
                 <TouchableOpacity style={styles.sideContainer} onPress={onLeftPress}>
-                    <Text style={{color: '#195064', width: '100%', textAlign: 'right'}}>{leftText}</Text>
+                    <Text style={{color: '#195064', width: '100%', textAlign: 'left'}}>{leftText}</Text>
                 </TouchableOpacity> 
                 : leftComponentType === 'touchable-icon'
                 ?

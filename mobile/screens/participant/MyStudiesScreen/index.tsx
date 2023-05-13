@@ -22,7 +22,7 @@ export default function MyStudiesScreen({ navigation }: {navigation: any}) {
 
   function MainPage() {
     return (
-      <View style={styles.participantContainer}>
+      <View style={styles.container}>
         <Header title='My Studies'/>
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Pending</Text>
