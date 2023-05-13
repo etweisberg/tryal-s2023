@@ -109,8 +109,8 @@ const register = async (
 ) => {
   const { firstName, lastName, email, age, homeAddress, password } = req.body;
   if (!firstName || !lastName || !email || !password || !age || !homeAddress) {
-    console.log(req.body)
-    console.log('missing fields')
+    console.log(req.body);
+    console.log('missing fields');
     next(
       ApiError.missingFields([
         'firstName',
@@ -136,13 +136,13 @@ const register = async (
     !firstName.match(nameRegex) ||
     !lastName.match(nameRegex)
   ) {
-    console.log('invalid email, password, or name')
+    console.log('invalid email, password, or name');
     next(ApiError.badRequest('Invalid email, password, or name.'));
     return;
   }
 
   if (req.isAuthenticated()) {
-    console.log('already logged in')
+    console.log('already logged in');
     next(ApiError.badRequest('Already logged in.'));
     return;
   }
@@ -150,7 +150,7 @@ const register = async (
   // Check if user exists
   const existingUser: IUser | null = await getUserByEmail(lowercaseEmail);
   if (existingUser) {
-    console.log('user already exists')
+    console.log('user already exists');
     next(
       ApiError.badRequest(
         `An account with email ${lowercaseEmail} already exists.`,
@@ -174,7 +174,7 @@ const register = async (
     if (process.env.NODE_ENV === 'development') {
       user!.verified = true;
       await user?.save();
-      console.log('user created')
+      console.log('user created');
     } else {
       const verificationToken = crypto.randomBytes(32).toString('hex');
       user!.verificationToken = verificationToken;
@@ -183,9 +183,9 @@ const register = async (
       await emailVerificationLink(lowercaseEmail, verificationToken);
     }
     res.sendStatus(StatusCode.CREATED);
-    console.log('status sent')
+    console.log('status sent');
   } catch (err) {
-    console.log('unable to register user')
+    console.log('unable to register user');
     next(ApiError.internal('Unable to register user.'));
   }
 };
