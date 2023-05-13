@@ -25,7 +25,8 @@ export type MainStackParamList = {
     Auth: undefined;
     ParticipantTabs: undefined;
     ResearcherTabs: undefined;
-    Loading: undefined
+    Loading: undefined;
+    Chat: undefined;
 };
 
 export type ParticipantTabParamList = {

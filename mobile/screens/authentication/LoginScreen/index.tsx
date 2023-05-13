@@ -2,23 +2,44 @@ import React, { useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Pressable, StyleSheet } from 'react-native';
 import { View, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { User, loginUser } from '../../../stores/userReducer';
-import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import { loginUser } from '../../../stores/userReducer';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../../components/Header';
-import Form from '../../../components/Form';
+import Form from '../../../components/auth/Form';
+import { loginSchema } from '../../../utils/validation';
+import { MyObject } from '../../../components/types';
+import { authErrors } from '../../../utils/errors';
+import AppText from '../../../components/appText/AppText';
+import styles from '../../../styles'
+import { User } from '../../../utils/types';
+
+const pages = [
+  {
+    inputs: ['Email', 'Password'],
+  },
+]
 
 export default function LoginScreen({ navigation }: { navigation: any}) {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const DATA: MyObject = {
+    'Email': [email, setEmail],
+    'Password': [password, setPassword],
+  };
+
+  // state for error message
+  const [error, setError] = useState(['']);
 
   const dispatch = useDispatch();
 
   const toRegister = () => {
     navigation.navigate('Register')
+    setError(['']);
   }
 
   const toParticipantTabs = () => {
     navigation.navigate('ParticipantTabs')
+    setError(['']);
   }
 
   const dismissKeyboard = () => {
@@ -27,106 +48,88 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:4000/auth/login', {
+      await loginSchema.validate({ email, password }, { abortEarly: false });
+
+      const response = await fetch('http://localhost:4000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: username, password: password }),
+        body: JSON.stringify({ email: email, password: password }),
       });
       const result = await response.json();
-      const user : User = {
-        _id: result.data._id,
-        firstName: result.data.firstName,
-        lastName: result.data.lastName,
-        email: result.data.email,
-        password: result.data.password,
-        verified: result.data.verified,
-        verificationToken: result.data.verificationToken,
-        resetPasswordToken: result.data.resetPasswordToken,
-        resetPasswordTokenExpiryDate: result.data.resetPasswordTokenExpiryDate,
-        trials: result.data.trials,
-        trialsOwned: result.data.trialsOwned,
-        age: result.data.age,
-        medConditions: result.data.medConditions,
-        homeAddress: result.data.homeAddress,
-        seekingCompensation: result.data.seekingCompensation,
-        researcher: result.data.researcher,
-        institution: result.data.institution,
-        admin: result.data.admin,
+      // console.log(result);
+      if (response.status === 200) {
+        if (result !== null) {
+          const user : User = {
+            _id: result._id,
+            firstName: result.firstName,
+            lastName: result.lastName,
+            email: result.email,
+            password: result.password,
+            verified: result.verified,
+            verificationToken: result.verificationToken,
+            resetPasswordToken: result.resetPasswordToken,
+            resetPasswordTokenExpiryDate: result.resetPasswordTokenExpiryDate,
+            trials: result.trials,
+            trialsOwned: result.trialsOwned,
+            age: result.age,
+            medConditions: result.medConditions,
+            homeAddress: result.homeAddress,
+            seekingCompensation: result.seekingCompensation,
+            researcher: result.researcher,
+            institution: result.institution,
+            admin: result.admin,
+          };
+          dispatch(loginUser(user));
+        }
+      } else if (response.status === 401) {
+        setError(['Invalid username or password']);
+      } else if (response.status === 500) {
+        setError(['Server error']);
       }
-      dispatch(loginUser(user));
-    } catch (error) {
-      console.error(error);
-      // TODO: handle the error
+    } catch (errors: any) {
+      console.error(errors);
+      setError(errors.errors);
     }
   };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <Pressable style={{flex: 1, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}} onPress={dismissKeyboard}>
-        <Header 
-          title='Log In' 
-          rightComponentType='touchable-text' 
-          rightText='Sign Up'
-          onRightPress={toRegister}
-        />
+        <Header title='Log In' rightComponentType='touchable-text' rightText='Sign Up' onRightPress={toRegister} />
         <Form
-          data={[
-            {
-              id: 1,
-              name: 'Email',
-              state: username,
-              setState: setUsername,
-            },
-            {
-              id: 2,
-              name: 'Password',
-              state: password,
-              setState: setPassword,
-            }]}
-            children={
-              <TouchableOpacity onPress={toRegister} style={styles.textButton}>
-                <Text style={{ color: '#195064' }}>Forgot your password?</Text>
-              </TouchableOpacity>
-            }
-        />
-        <Pressable onPress={handleLogin} style={styles.button}>
-          <Text style={{ color: 'white' }}>Log In</Text>
-        </Pressable>
+              data={pages[0].inputs.map((item: string) => {
+                return ({
+                  name: item, 
+                  state: DATA[item][0], 
+                  setState: DATA[item][1], 
+                  errors: authErrors[item].filter(element => error.includes(element)),
+                  red: authErrors[item].some((item) => error.includes(item))
+                })
+              })}
+              bottomChildren={
+                <TouchableOpacity onPress={toRegister} style={styles.textButton}>
+                  <Text style={{ color: '#195064' }}>Forgot your password?</Text>
+                </TouchableOpacity>
+              }
+            /> 
+        <View style={{width: '100%', paddingVertical: 16}}>
+          <Pressable onPress={handleLogin} style={styles.button}>
+            {/* <AppText>Log In</AppText> */}
+            <Text style={{ color: 'white' }}>Log In</Text>
+          </Pressable>
 
-        <View style={styles.textButton}>
-          <Text style={{ fontWeight: 'bold', color: '#195064'}}>OR</Text>
+          <View style={styles.textButton}>
+            <Text style={{ fontWeight: 'bold', color: '#195064'}}>OR</Text>
+          </View>
+
+          <TouchableOpacity onPress={toParticipantTabs} style={styles.textButton}>
+            <Text style={{ color: '#195064' }}>Continue as Guest</Text>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={toParticipantTabs} style={styles.textButton}>
-          <Text style={{ color: '#195064' }}>Continue as Guest</Text>
-        </TouchableOpacity>
       </Pressable>
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 24,
-    // backgroundColor: 'black',
-  },
-  button: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#195064',
-    marginVertical: 8,
-  },
-  textButton: {
-    paddingVertical: 8,
-    alignItems: 'center',
-  },
-
-});
