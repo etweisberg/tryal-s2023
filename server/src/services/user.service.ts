@@ -159,12 +159,21 @@ const addTrialToUser = async (userId: string, trialId: string) => {
   return user;
 };
 
-const addTrialClickToUser = async (userId: string, trialId: string) => {
+const addTrialOwnershipToUser = async (userId: string, trialId: string) => {
   const user = await User.findByIdAndUpdate(userId, {
+    $push: { trialsOwned: trialId },
+  }).exec();
+  return user;
+};
+
+const addTrialClickToUser = async (userId: string, trialId: string) => {
+  await User.findByIdAndUpdate(userId, {
     $pull: {
-      trials: trialId,
+      clickedOnTrials: trialId,
     },
-    $addToSet: {
+  }).exec();
+  const user = await User.findByIdAndUpdate(userId, {
+    $push: {
       clickedOnTrials: {
         $each: [trialId],
         $position: 0,
@@ -196,4 +205,5 @@ export {
   addTrialToUser,
   addTrialClickToUser,
   addTrialSaveToUser,
+  addTrialOwnershipToUser,
 };

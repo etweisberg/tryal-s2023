@@ -173,7 +173,7 @@ const register = async (
       await user!.save();
       await emailVerificationLink(lowercaseEmail, verificationToken);
     }
-    res.sendStatus(StatusCode.CREATED);
+    res.status(StatusCode.CREATED).send(user);
   } catch (err) {
     next(ApiError.internal('Unable to register user.'));
   }

@@ -59,7 +59,7 @@ const registerResearcherRequest = async (
       institution,
     );
     await researcherRequest?.save();
-    res.sendStatus(StatusCode.CREATED);
+    res.status(StatusCode.CREATED).send(researcherRequest);
   } catch (err) {
     next(ApiError.internal('Unable to register researcher.'));
   }

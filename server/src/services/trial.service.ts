@@ -90,7 +90,7 @@ const addUserToRequests = async (userId: string, trialId: string) => {
 const addUserToAccepted = async (userId: string, trialId: string) => {
   const trial = await Trial.findByIdAndUpdate(trialId, {
     $push: { participantAccepted: userId },
-    $remove: { participantRequests: userId },
+    $pull: { participantRequests: userId },
   }).exec();
   return trial;
 };
