@@ -4,81 +4,51 @@ import { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import Header from '../../../components/Header'
 import { Searchbar, Card, Divider } from 'react-native-paper'
-import StudyList, { DataItem } from '../../../components/StudyList'
+import StudyList from '../../../components/StudyList'
+import { DataItem } from '../../../components/types'
+import AppNavigator from '../../../components/AppNavigator'
+import styles from '../../../styles'
+import { Trial } from '../../../utils/types'
+import { testTrials } from '../../../utils/testObjs'
 
-const DATA: DataItem[] = [
-  { id: '1', title: 'Card 1', description: 'This is the first card' },
-  { id: '2', title: 'Card 2', description: 'This is the second card' },
-  { id: '3', title: 'Card 3', description: 'This is the third card' },
-];
+const screenName = 'Explore'
 
-type RenderItemProps = {
-  item: DataItem;
-};
-
-const renderItem1 = ({ item }: RenderItemProps) => (
-  <Card style={styles.card1} mode='contained'>
-    <Card.Title title={item.title} />
-    <Card.Content>
-      <Text>{item.description}</Text>
-    </Card.Content>
-  </Card>
-);
-
-export default function ExploreScreen() {
+export default function ExploreScreen({navigation}: {navigation: any}) {
   const [search, setSearch] = useState<string>('');
+  const [userID, setUserID] = useState<string>('');
+  const [study, setStudy] = useState<Trial | null>(null);
 
   const updateSearch: (text: string) => void = (search: string) => {
     setSearch(search);
   };
 
-  return (
-    <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
+  const onStudyCardPress = ({trial}: {trial: Trial}) => {
+    setStudy(trial);
+    navigation.navigate('StudyInfoScreen' + screenName);
+  }
+
+  function MainPage() {
+    return (
+      <View style={styles.container}>
         <Header title='Explore'/>
         <Searchbar
           placeholder="Search"
           onChangeText={updateSearch}
           value={search}
-          style={{height: 50, backgroundColor: '#e8e8e8', marginHorizontal: 16}}
+          style={styles.searchbar}
         />
-
-        <Text style={{fontSize: 20, fontWeight: 'bold', padding: 16}}>Your Recents</Text>
-        <FlatList<DataItem>
-        showsVerticalScrollIndicator={false}
-        horizontal
-        data={DATA}
-        renderItem={renderItem1}
-        keyExtractor={(item) => item.id}
-        scrollEnabled={true}
-        style={{paddingHorizontal: 16}}
-        />
-
-        <Text style={{fontSize: 20, fontWeight: 'bold', padding: 16}}>Suggested Studies</Text>
-        <StudyList data={DATA} />        
-      </ScrollView>
-    </View>
-  )
-}
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 24,
-    // backgroundColor: 'black',
-  },
-  card1: {
-    width: 115,
-    height: 150,
-    margin: 4,
-  },
-  card2: {
-    width: '100%',
-    height: 80,
-    marginVertical: 4,
+        <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
+          <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Your Recents</Text>
+          <StudyList data={testTrials} horizontal onPress={onStudyCardPress}/>
+  
+          <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Suggested Studies</Text>
+          <StudyList data={testTrials} onPress={onStudyCardPress}/>        
+        </ScrollView>
+      </View>
+    )
   }
 
-});
+  return (
+    <AppNavigator name={screenName} components={[MainPage]} profileFocusable studyFocusable userID={userID} trial={study}/>
+  )
+}
