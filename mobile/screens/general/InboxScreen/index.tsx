@@ -6,7 +6,7 @@ import MessageScreen from '../MessageScreen';
 import NotificationScreen from '../NotificationScreen';
 import styles from '../../../styles';
 
-export default function InboxScreen() {
+export default function InboxScreen({navigation}: {navigation: any}) {
     const [currentScreen, setCurrentScreen] = React.useState<string>('messages');
 
     return (
@@ -18,7 +18,7 @@ export default function InboxScreen() {
           onPressLeft={() => setCurrentScreen('messages')} 
           onPressRight={() => setCurrentScreen('notifications')}
           />
-          {currentScreen === 'messages' ? <MessageScreen /> : <NotificationScreen />}
+          {currentScreen === 'messages' ? <MessageScreen navigation={navigation}/> : <NotificationScreen />}
         </View>
       )
     }

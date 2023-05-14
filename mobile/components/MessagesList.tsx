@@ -1,28 +1,58 @@
 import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { Card, Divider } from 'react-native-paper'
-import { DataItem } from './types';
+import { ChatRoom, Message } from '../utils/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../stores';
+import { getCurrentUser, setFocusedChatRoom } from '../stores/userReducer';
 
-export default function MessagesList({data, onPress}: {data: DataItem[], onPress?: ({userid}: {userid: string}) => void}) {
+export default function MessagesList({navigation, data}: {navigation: any, data: ChatRoom[]}) {
+
+  const [chatActive, setChatActive] = useState<boolean>(false);
+  const dispatch = useDispatch();
+
+  const getMostRecentMessage = (messages: Message[] | null) => {
+    return messages?.slice(-1)[0]?.content;
+  }
+
+  const getMessagerFromParticipants = (participants: string[]) => {
+    return participants.filter((participant) => participant !== user?._id)[0];
+  }
+
+  const getNameFromID = (id: string) => {
+    if (id === '1') {
+      return 'Chris W.'
+    } else if (id === '2') {
+      return 'Ethan W.'
+    } else if (id === '3') {
+      return 'Jasper Z.'
+    } else {
+      return ''
+    }
+  }
+
+  const setFocused = (chatRoom : ChatRoom) => {
+    dispatch(setFocusedChatRoom(chatRoom));
+    navigation.navigate('Chat');
+  }
+
+  const user = useSelector((state: RootState) => getCurrentUser(state));
+  
+  
   return (
     <View >
         { data ?
-          data.map((item: DataItem)=> {
-            const onCardPress = () => {
-              if (onPress) {
-                onPress({userid: item.id});
-              }
-            }
+          data.map((item: ChatRoom)=> {
             return(
-          <Pressable key={item.id} onPress={onCardPress}>
-            <Card style={styles.card} mode='contained'>
-              <Card.Title title={item.title} />
-              <Card.Content>
-                <Text>{item.description}</Text>
-              </Card.Content>
-            </Card>
-            <Divider />
-          </Pressable> )
+              <Pressable key={item._id} onPress={() => setFocused(item)}>
+                <Card style={styles.card} mode='contained'>
+                  <Card.Title title={getMessagerFromParticipants(item.participants)} />
+                  <Card.Content>
+                    <Text>{getMostRecentMessage(item.messages)}</Text>
+                  </Card.Content>
+                </Card>
+                <Divider />
+              </Pressable> )
           }) :
           <Text>No messages here!</Text>
         }

@@ -1,21 +1,22 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './index';
 import { getUser } from '../api/fakeApiUser';
-import { User } from '../utils/types';
+import { ChatRoom, User } from '../utils/types';
+import { testChatRoom1, testUser1 } from '../utils/testObjs';
 
 // Define the state type and initial value
 interface UserState {
   user: User | null;
   isLoading: boolean;
   error: string | null;
-  currentChatID: string | null;
+  focusedChatRoom: ChatRoom | null;
 }
 
 const initialState: UserState = {
-  user: null,
+  user: testUser1,
   isLoading: false,
   error: null,
-  currentChatID: null,
+  focusedChatRoom: testChatRoom1,
 };
 
 // Create a slice of state and reducers for the user
@@ -29,7 +30,6 @@ const userSlice = createSlice({
       } else {
         state.user = null;
       }
-      
     },
     logoutUser: (state) => {
       state.user = null;
@@ -40,14 +40,18 @@ const userSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+    setFocusedChatRoom: (state, action: PayloadAction<ChatRoom | null>) => {
+      state.focusedChatRoom = action.payload;
+    }
   },
 });
 
-export const { loginUser, logoutUser, setLoading, setError } = userSlice.actions;
+export const { loginUser, logoutUser, setLoading, setError, setFocusedChatRoom } = userSlice.actions;
 
 export const getCurrentUser = (state: RootState): User | null => state.user.user;
 export const getIsLoading = (state: RootState): boolean => state.user.isLoading;
 export const getError = (state: RootState): string | null => state.user.error;
+export const getFocusedChatRoom = (state: RootState): ChatRoom | null => state.user.focusedChatRoom;
 
 export const userReducer = userSlice.reducer;
 
