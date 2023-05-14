@@ -23,7 +23,12 @@ const MessageSchema = new mongoose.Schema({
     type: Date,
     required: false,
   },
-  deleted: {
+  deletedForSender: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  deletedForRecipient: {
     type: Boolean,
     required: true,
     default: false,
@@ -37,7 +42,8 @@ interface IMessage extends mongoose.Document {
   content: string;
   timestamp: Date;
   read: Date | null;
-  deleted: boolean;
+  deletedForSender: boolean;
+  deletedForRecipient: boolean;
 }
 
 const Message = mongoose.model<IMessage>('Message', MessageSchema);
