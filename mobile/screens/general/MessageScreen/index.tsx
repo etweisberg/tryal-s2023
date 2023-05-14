@@ -1,88 +1,55 @@
-import { View, StyleSheet, ScrollView } from 'react-native'
+import { Text, View, StyleSheet, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { Searchbar } from 'react-native-paper';
-import { DataItem } from '../../../components/types';
 import MessagesList from '../../../components/MessagesList';
 import Header from '../../../components/Header';
+import AppNavigator from '../../../components/AppNavigator';
+import styles from '../../../styles'
+import { ChatRoom, Trial } from '../../../utils/types';
+import { testChatRoom1, testChatRoom2, testChatRoom3 } from '../../../utils/testObjs';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentUser } from '../../../stores/userReducer';
 
-const DATA: DataItem[] = [
-  { id: '1', title: 'Card 1', description: 'This is the first card' },
-  { id: '2', title: 'Card 2', description: 'This is the second card' },
-  { id: '3', title: 'Card 3', description: 'This is the third card' },
-  { id: '4', title: 'Card 4', description: 'This is the fourth card' },
-  { id: '5', title: 'Card 5', description: 'This is the fifth card' },
-  { id: '6', title: 'Card 6', description: 'This is the sixth card' },
-];
+const DATA: ChatRoom[] = [testChatRoom1, testChatRoom2, testChatRoom3];
+const screenName = 'Messages';
 
-export default function MessageScreen() {
+export default function MessageScreen({navigation}: {navigation: any}) {
   const [search, setSearch] = useState<string>('');
-  const [userid, setUserid] = useState<string>('');
-  const [chat, setChat] = useState<boolean>(false);
+  const [userID, setUserID] = useState<string>('');
+  const [study, setStudy] = useState<Trial | null>(null);
+
+  const dispatch = useDispatch();
+
+  const user = useSelector(getCurrentUser);
 
   const updateSearch: (text: string) => void = (search: string) => {
     setSearch(search);
   };
 
-  const setUseridFromCard: ({userid}: {userid: string}) => void = ({userid}: {userid: string}) => {
-    setUserid(userid);
-    setChat(true);
-  }
-
-  const toMain: () => void = () => {
-    setChat(false);
-  }
-
-  const toProfile: () => void = () => {
-    // navigate to profile screen
-  }
-
-  function MainScreen() {
+  function MainPage() {
     return (
-      <View>
-        {/* <Header title='Messages'/> */}
+      <View style={styles.container}>
+        <Header title='Messages'/>
         <Searchbar
           placeholder="Search Messages"
           onChangeText={updateSearch}
           value={search}
-          style={{height: 50, backgroundColor: '#e8e8e8', marginVertical: 4}}
+          style={styles.searchbar}
         />
-        <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
-          <MessagesList data={DATA} onPress={setUseridFromCard}/>
-        </ScrollView>
-      </View>
-    )
-  }
 
-  // this needs to be done way better....
-  function ChatScreen() {
-    return (
-      <View>
-        <Header 
-          title='(name of person)' 
-          leftComponentType='touchable-icon' leftText='chevron-back-outline' onLeftPress={toMain}
-          rightComponentType='touchable-text' rightText='See Profile' onRightPress={toProfile}
-        />
-        <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
-          {/* implement messages here */}
+        <ScrollView showsVerticalScrollIndicator={false} 
+        style={{flex: 1, width: '100%', alignContent:'center'}}
+        >
+          { user ? 
+          <MessagesList data={DATA} navigation={navigation}/> : 
+          <Text>Log in to send and receive messages</Text>
+          }
         </ScrollView>
-
       </View>
     )
   }
 
   return (
-    <View style={styles.msgContainer}>
-      {chat ? <ChatScreen /> : <MainScreen />}
-    </View>
+    <AppNavigator name={screenName} components={[MainPage]} profileFocusable studyFocusable userID={userID} trial={study}/>
   )
 }
-
-import styles from '../../../styles'// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     width: '100%',
-//     justifyContent: 'center',
-//     marginTop: 24,
-//   },
-
-// });

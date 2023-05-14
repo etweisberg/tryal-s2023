@@ -1,4 +1,4 @@
-import { Trial, User } from "./types"
+import { ChatRoom, Message, Trial, User } from "./types"
 
 export const testTrial1: Trial = {
     _id: '1',
@@ -6,7 +6,7 @@ export const testTrial1: Trial = {
     description: 'Labore sunt veniam amet est. Minim nisi dolor eu ad incididunt cillum elit ex ut. Dolore exercitation nulla tempor consequat aliquip occaecat. Nisi id ipsum irure aute. Deserunt sit aute irure quis nulla eu consequat fugiat Lorem sunt magna et consequat labore. Laboris incididunt id Lorem est duis deserunt nisi dolore eiusmod culpa exercitation consectetur.',
     researchers: ['1'],
     participantRequests: ['1','2'],
-    date: new Date('6/1/2023'),
+    date: '2023-05-01',
     location: "Philly",
     eligibleConditions: ["boobs", "butts", "farts"],
     participantAccepted: [],
@@ -19,7 +19,7 @@ export const testTrial2: Trial = {
     description: "testing brains", 
     researchers: ['2'],
     participantRequests: ['1','2'],
-    date: new Date('6/1/2023'),
+    date: '2023-05-01',
     location: "NYC",
     eligibleConditions: ["boobs", "butts", "farts"],
     participantAccepted: [],
@@ -32,7 +32,7 @@ export const testTrial3: Trial = {
     description: "testing brains", 
     researchers: ['1'],
     participantRequests: ['1','2'],
-    date: new Date('6/1/2023'),
+    date: '2023-05-01',
     location: "Philly",
     eligibleConditions: ["boobs", "butts", "farts"],
     participantAccepted: [],
@@ -50,7 +50,7 @@ export const testUser1: User = {
     verified: true,
     verificationToken: '123456',
     resetPasswordToken: '123456',
-    resetPasswordTokenExpiryDate: new Date('6/1/2023'),
+    resetPasswordTokenExpiryDate: '2023-05-01',
     trials: ['1','2'],
     trialsOwned: ['3'],
     age: 21,
@@ -71,7 +71,7 @@ export const testUser2: User = {
     verified: true,
     verificationToken: '123456',
     resetPasswordToken: '123456',
-    resetPasswordTokenExpiryDate: new Date('6/1/2023'),
+    resetPasswordTokenExpiryDate: '2023-05-01',
     trials: ['2','3'],
     trialsOwned: ['1'],
     age: 21,
@@ -92,7 +92,7 @@ export const testUser3: User = {
     verified: true,
     verificationToken: '123456',
     resetPasswordToken: '123456',
-    resetPasswordTokenExpiryDate: new Date('6/1/2023'),
+    resetPasswordTokenExpiryDate: '2023-05-01',
     trials: ['1','2'],
     trialsOwned: [],
     age: 21,
@@ -102,4 +102,97 @@ export const testUser3: User = {
     homeAddress: '1234 Walnut St',
     seekingCompensation: true,     
     admin: false      
+}
+
+export const testMessages: Message[] = [
+    {
+        _id: '1',
+        sender: '1',
+        recipient: '2',
+        content: 'hello',
+        timestamp: '2023-05-01',
+        read: null,
+        deleted: false,
+    },
+    {
+        _id: '2',
+        sender: '2',
+        recipient: '1',
+        content: 'hi',
+        timestamp: '2023-05-01',
+        read: null,
+        deleted: false,
+    },
+    {
+        _id: '3',
+        sender: '1',
+        recipient: '2',
+        content: 'how are you?',
+        timestamp: '2023-05-01',
+        read: null,
+        deleted: false,
+    },
+    {
+        _id: '4',
+        sender: '2',
+        recipient: '1',
+        content: 'good',
+        timestamp: '2023-05-01',
+        read: null,
+        deleted: false,
+    },
+    {
+        _id: '8',
+        sender: '1',
+        recipient: '2',
+        content: 'hello \n \n \n hi',
+        timestamp: '2023-05-01',
+        read: null,
+        deleted: false,
+    },
+    {
+        _id: '5',
+        sender: '2',
+        recipient: '1',
+        content: 'hi \n \n \n hi',
+        timestamp: '2023-05-01',
+        read: null,
+        deleted: false,
+    },
+    {
+        _id: '6',
+        sender: '1',
+        recipient: '2',
+        content: 'how are you? \n \n \n hi',
+        timestamp: '2023-05-01',
+        read: null,
+        deleted: false,
+    },
+    {
+        _id: '7',
+        sender: '2',
+        recipient: '1',
+        content: 'good \n \n \n hi',
+        timestamp: '2023-05-01',
+        read: null,
+        deleted: false,
+    },
+]
+
+export const testChatRoom1: ChatRoom = {
+    _id: '1',
+    participants: ['1','2'],
+    messages: testMessages,
+}
+
+export const testChatRoom2: ChatRoom = {
+    _id: '2',
+    participants: ['1','3'],
+    messages: testMessages,
+}
+
+export const testChatRoom3: ChatRoom = {
+    _id: '3',
+    participants: ['1','2'],
+    messages: testMessages,
 }

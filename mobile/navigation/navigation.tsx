@@ -34,6 +34,7 @@ import LoadingScreen from '../screens/general/LoadingScreen';
 import InboxScreen from '../screens/general/InboxScreen';
 import AppNavigator from '../components/AppNavigator';
 import ChatScreen from '../screens/common/ChatScreen';
+import MessageScreen from '../screens/general/MessageScreen';
 
 
 const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
@@ -145,7 +146,7 @@ function ParticipantTabScreen() {
         <ParticipantTab.Screen name="Explore" component={ExploreScreen}/>
         <ParticipantTab.Screen name="Saved" component={SavedScreen}/>
         <ParticipantTab.Screen name="My Studies" component={MyStudiesScreen}/>
-        <ParticipantTab.Screen name="Inbox" component={InboxScreen}/>
+        <ParticipantTab.Screen name="Inbox" component={MessageScreen}/>
         <ParticipantTab.Screen name="Profile" >
           {() => <ProfileStackScreen userType='participant' />}
         </ParticipantTab.Screen>        
