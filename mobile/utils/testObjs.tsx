@@ -6,7 +6,7 @@ export const testTrial1: Trial = {
     description: 'Labore sunt veniam amet est. Minim nisi dolor eu ad incididunt cillum elit ex ut. Dolore exercitation nulla tempor consequat aliquip occaecat. Nisi id ipsum irure aute. Deserunt sit aute irure quis nulla eu consequat fugiat Lorem sunt magna et consequat labore. Laboris incididunt id Lorem est duis deserunt nisi dolore eiusmod culpa exercitation consectetur.',
     researchers: ['1'],
     participantRequests: ['1','2'],
-    date: '2023-05-01',
+    date: ['2023-05-01', '2023-05-02'],
     location: "Philly",
     eligibleConditions: ["boobs", "butts", "farts"],
     participantAccepted: [],
@@ -19,7 +19,7 @@ export const testTrial2: Trial = {
     description: "testing brains", 
     researchers: ['2'],
     participantRequests: ['1','2'],
-    date: '2023-05-01',
+    date: ['2023-05-01', '2023-05-02'],
     location: "NYC",
     eligibleConditions: ["boobs", "butts", "farts"],
     participantAccepted: [],
@@ -32,7 +32,7 @@ export const testTrial3: Trial = {
     description: "testing brains", 
     researchers: ['1'],
     participantRequests: ['1','2'],
-    date: '2023-05-01',
+    date: ['2023-05-01', '2023-05-02'],
     location: "Philly",
     eligibleConditions: ["boobs", "butts", "farts"],
     participantAccepted: [],
@@ -43,6 +43,7 @@ export const testTrials: Trial[] = [testTrial1, testTrial2, testTrial3]
 
 export const testUser1: User = {
     _id: '1',
+    prefix: 'Mr.',
     firstName: 'Chris',
     lastName: 'Wun',
     email: 'wunc@seas.upenn.edu',
@@ -53,6 +54,8 @@ export const testUser1: User = {
     resetPasswordTokenExpiryDate: '2023-05-01',
     trials: ['1','2'],
     trialsOwned: ['3'],
+    clickedOnTrials: ['1','2','3'],
+    savedTrials: ['1','2','3'],
     age: 21,
     medConditions: ['deaf', 'idk'],
     researcher: true,
@@ -64,6 +67,7 @@ export const testUser1: User = {
 
 export const testUser2: User = {
     _id: '1',
+    prefix: 'Mr.',
     firstName: 'Ethan',
     lastName: 'Weisberg',
     email: 'eiweisberg@seas.upenn.edu',
@@ -74,6 +78,8 @@ export const testUser2: User = {
     resetPasswordTokenExpiryDate: '2023-05-01',
     trials: ['2','3'],
     trialsOwned: ['1'],
+    clickedOnTrials: ['1','2','3'],
+    savedTrials: ['1','2','3'],
     age: 21,
     medConditions: ['small', 'idk'],
     researcher: true,
@@ -85,6 +91,7 @@ export const testUser2: User = {
 
 export const testUser3: User = {
     _id: '1',
+    prefix: 'Mr.',
     firstName: 'Jasper',
     lastName: 'Zhu',
     email: 'jzhu25@seas.upenn.edu',
@@ -95,6 +102,8 @@ export const testUser3: User = {
     resetPasswordTokenExpiryDate: '2023-05-01',
     trials: ['1','2'],
     trialsOwned: [],
+    clickedOnTrials: ['1','2','3'],
+    savedTrials: ['1','2','3'],
     age: 21,
     medConditions: ['philosophy major', 'idk'],
     researcher: false,
@@ -112,7 +121,8 @@ export const testMessages: Message[] = [
         content: 'hello',
         timestamp: '2023-05-01',
         read: null,
-        deleted: false,
+        deletedForSender: false,
+        deletedForRecipient: false,
     },
     {
         _id: '2',
@@ -121,7 +131,8 @@ export const testMessages: Message[] = [
         content: 'hi',
         timestamp: '2023-05-01',
         read: null,
-        deleted: false,
+        deletedForSender: false,
+        deletedForRecipient: false,
     },
     {
         _id: '3',
@@ -130,7 +141,8 @@ export const testMessages: Message[] = [
         content: 'how are you?',
         timestamp: '2023-05-01',
         read: null,
-        deleted: false,
+        deletedForSender: false,
+        deletedForRecipient: false,
     },
     {
         _id: '4',
@@ -139,7 +151,8 @@ export const testMessages: Message[] = [
         content: 'good',
         timestamp: '2023-05-01',
         read: null,
-        deleted: false,
+        deletedForSender: false,
+        deletedForRecipient: false,
     },
     {
         _id: '8',
@@ -148,7 +161,8 @@ export const testMessages: Message[] = [
         content: 'hello \n \n \n hi',
         timestamp: '2023-05-01',
         read: null,
-        deleted: false,
+        deletedForSender: false,
+        deletedForRecipient: false,
     },
     {
         _id: '5',
@@ -157,7 +171,8 @@ export const testMessages: Message[] = [
         content: 'hi \n \n \n hi',
         timestamp: '2023-05-01',
         read: null,
-        deleted: false,
+        deletedForSender: false,
+        deletedForRecipient: false,
     },
     {
         _id: '6',
@@ -166,7 +181,8 @@ export const testMessages: Message[] = [
         content: 'how are you? \n \n \n hi',
         timestamp: '2023-05-01',
         read: null,
-        deleted: false,
+        deletedForSender: false,
+        deletedForRecipient: false,
     },
     {
         _id: '7',
@@ -175,7 +191,8 @@ export const testMessages: Message[] = [
         content: 'good \n \n \n hi',
         timestamp: '2023-05-01',
         read: null,
-        deleted: false,
+        deletedForSender: false,
+        deletedForRecipient: false,
     },
 ]
 

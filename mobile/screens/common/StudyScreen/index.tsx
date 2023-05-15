@@ -36,8 +36,8 @@ export default function StudyScreen({trial}: {trial: Trial | null}) {
           <Text style={{fontSize: 16, paddingVertical: 4}}>
             <Text style={{fontWeight: 'bold'}}>Requirements: </Text>
             {trial?.eligibleConditions.map(
-              (item: string) => 
-                <Chip style={{marginHorizontal: 4, borderRadius: 10}}>{item}</Chip>
+              (item: string, index: number) => 
+                <Chip key={index} style={{marginHorizontal: 4, borderRadius: 10}}>{item}</Chip>
             )}
           </Text>
           <Text style={{fontSize: 16, paddingVertical: 4}}>
@@ -46,7 +46,7 @@ export default function StudyScreen({trial}: {trial: Trial | null}) {
           </Text>
           <Text style={{fontSize: 16, paddingVertical: 4}}>
             <Text style={{fontWeight: 'bold'}}>Location: </Text>
-            {/* add location here */}
+            {trial?.location}
           </Text>
           <Text style={{fontSize: 16, paddingVertical: 4}}>
             <Text style={{fontWeight: 'bold'}}>Duration: </Text>

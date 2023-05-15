@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 24,
         width: '100%',
-        // backgroundColor: 'white',
+        // backgroundColor: 'black',
       },
       participantContainer: {
         flex: 1,

@@ -8,14 +8,14 @@ import StudyList from '../../../components/StudyList'
 import { DataItem } from '../../../components/types'
 import AppNavigator from '../../../components/AppNavigator'
 import styles from '../../../styles'
-import { Trial } from '../../../utils/types'
+import { Trial, User } from '../../../utils/types'
 import { testTrials } from '../../../utils/testObjs'
 
 const screenName = 'Explore'
 
 export default function ExploreScreen({navigation}: {navigation: any}) {
   const [search, setSearch] = useState<string>('');
-  const [userID, setUserID] = useState<string>('');
+  const [user, setUser] = useState<User | null>(null);
   const [study, setStudy] = useState<Trial | null>(null);
 
   const updateSearch: (text: string) => void = (search: string) => {
@@ -49,6 +49,6 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
   }
 
   return (
-    <AppNavigator name={screenName} components={[MainPage]} profileFocusable studyFocusable userID={userID} trial={study}/>
+    <AppNavigator name={screenName} components={[MainPage]} profileFocusable studyFocusable user={user} trial={study}/>
   )
 }

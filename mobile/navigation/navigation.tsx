@@ -79,6 +79,15 @@ function ResearcherTabScreen() {
       <ResearcherTab.Navigator
       initialRouteName="Studies"
       screenOptions={({ route }) => ({
+        // tabBarActiveBackgroundColor: '#195064',
+        // tabBarActiveTintColor: 'white',
+        // tabBarInactiveBackgroundColor: '#195064',
+        // tabBarStyle: {
+        //   height: 50,
+        //   borderBottomWidth: 5,
+        //   borderTopWidth: 5,
+        //   borderColor: '#195064'
+        // },
         headerShown: false,
         tabBarIcon: ({ color, size }) => {
           let iconName = '';
@@ -125,6 +134,17 @@ function ParticipantTabScreen() {
       <ParticipantTab.Navigator
       initialRouteName="Explore"
       screenOptions={({ route }) => ({
+        // tabBarActiveBackgroundColor: '#195064',
+        // tabBarActiveTintColor: 'white',
+        // // tabBarInactiveTintColor: 'white',
+        // tabBarInactiveBackgroundColor: '#195064',
+        // tabBarStyle: {
+        //   height: 50,
+        //   borderBottomWidth: 5,
+        //   borderTopWidth: 5,
+        //   borderBottomColor: '#195064',
+        //   borderTopColor: '#195064'
+        // },
         headerShown: false,
         tabBarIcon: ({ color, size }) => {
           let iconName = '';

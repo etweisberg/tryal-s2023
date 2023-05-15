@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import ProfileInfoScreen from '../screens/common/ProfileInfoScreen';
+import ProfileInfoScreen from '../screens/common/ProfileScreen';
 import StudyScreen from '../screens/common/StudyScreen';
-import { Trial } from '../utils/types';
+import { Trial, User } from '../utils/types';
 
 const Stack = createStackNavigator();
 
 const screenNames = ['Main', 'Secondary', 'Tertiary', 'Quaternary', 'Quinary', 'Senary', 'Septenary', 'Octonary', 'Nonary', 'Denary']
 
 export default function AppNavigator(
-    {name, components, profileFocusable=false, studyFocusable=false, userID, trial}: 
+    {name, components, profileFocusable=false, studyFocusable=false, user, trial}: 
     {
         name: string
         components: (React.ReactNode | (()=>React.ReactNode))[], 
         profileFocusable?: boolean, 
         studyFocusable?: boolean, 
-        userID?: string, 
+        user?: User | null, 
         trial?: Trial | null
     }) {
     
@@ -33,7 +33,7 @@ export default function AppNavigator(
         }
         {profileFocusable ? 
             <Stack.Screen name={"ProfileInfoScreen" + name}>
-                {userID ? () => ProfileInfoScreen({userID}) : () => null}
+                {user ? () => ProfileInfoScreen({user}) : () => null}
             </Stack.Screen> 
             : null
         }
