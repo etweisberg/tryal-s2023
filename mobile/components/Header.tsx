@@ -78,13 +78,13 @@ export default function Header(
 const styles = StyleSheet.create({
     headerContainer: {
       width: '100%',
-      height: 50,
+      height: 70,
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row',
       paddingTop: 24,
       paddingBottom: 8,
-    //   backgroundColor: 'black'
+      marginBottom: 8,
     },
     title: {
       textAlign: 'center',
