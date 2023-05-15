@@ -3,7 +3,7 @@ import React from 'react'
 import Header from '../../../components/Header';
 import TabSwitch from '../../../components/TabSwitch';
 import MessageScreen from '../MessageScreen';
-import NotificationScreen from '../NotificationScreen';
+import NotificationScreen from '../zNotificationScreen';
 import styles from '../../../styles';
 
 export default function InboxScreen({navigation}: {navigation: any}) {

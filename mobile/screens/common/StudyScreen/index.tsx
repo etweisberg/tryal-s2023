@@ -1,19 +1,33 @@
-import { View, Text, ScrollView, Touchable, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, Touchable, TouchableOpacity, Pressable } from 'react-native'
 import React from 'react'
-import { Trial } from '../../../utils/types'
+import { Trial, User } from '../../../utils/types'
 import Header from '../../../components/Header'
 import { Chip, Searchbar } from 'react-native-paper'
 import StudyList from '../../../components/StudyList'
 import styles from '../../../styles'
-import { testTrials } from '../../../utils/testObjs'
+import { testTrials, testUser1 } from '../../../utils/testObjs'
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 
-export default function StudyScreen({trial}: {trial: Trial | null}) {
+export default function StudyScreen(
+  {trial, onUserPress=({user}: {user: User}) => null}:
+  {trial: Trial | null, onUserPress?: ({user}: {user: User}) => void  }
+  ) {
+
   const navigation = useNavigation();
   const toPrev = () => {
     navigation.goBack();
+  }
+  
+  const getUserFromID : (id: string) => User = (id: string) => {
+    return testUser1;
+  }
+
+  const onNamePress = (id: (string | undefined)) => {
+    if (id) {
+      onUserPress({user: getUserFromID(id)});
+    }
   }
 
   return (
@@ -28,7 +42,9 @@ export default function StudyScreen({trial}: {trial: Trial | null}) {
             <Text>pic here?</Text>
           </View>
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>{trial?.name}</Text>
-          <Text style={{fontSize: 16, fontWeight: 'bold', paddingVertical: 16}}>{trial?.researchers}</Text>
+          <TouchableOpacity style={{width: '100%'}} onPress={() => onNamePress(trial?.researchers[0])}>
+            <Text style={{fontSize: 16, fontWeight: 'bold', paddingVertical: 16}}>{trial?.researchers}</Text>
+          </TouchableOpacity>
           <Text style={{fontSize: 16, paddingVertical: 4}}>
             <Text style={{fontWeight: 'bold'}}>Description: </Text>
             {trial?.description}
@@ -36,8 +52,8 @@ export default function StudyScreen({trial}: {trial: Trial | null}) {
           <Text style={{fontSize: 16, paddingVertical: 4}}>
             <Text style={{fontWeight: 'bold'}}>Requirements: </Text>
             {trial?.eligibleConditions.map(
-              (item: string) => 
-                <Chip style={{marginHorizontal: 4, borderRadius: 10}}>{item}</Chip>
+              (item: string, index: number) => 
+                <Chip key={index} style={{marginHorizontal: 4, borderRadius: 10}}>{item}</Chip>
             )}
           </Text>
           <Text style={{fontSize: 16, paddingVertical: 4}}>
@@ -46,7 +62,7 @@ export default function StudyScreen({trial}: {trial: Trial | null}) {
           </Text>
           <Text style={{fontSize: 16, paddingVertical: 4}}>
             <Text style={{fontWeight: 'bold'}}>Location: </Text>
-            {/* add location here */}
+            {trial?.location}
           </Text>
           <Text style={{fontSize: 16, paddingVertical: 4}}>
             <Text style={{fontWeight: 'bold'}}>Duration: </Text>

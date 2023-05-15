@@ -8,7 +8,7 @@ import GroupCard from '../../../components/GroupCard';
 import styles from '../../../styles';
 import { testTrials } from '../../../utils/testObjs';
 import AppNavigator from '../../../components/AppNavigator';
-import { Trial } from '../../../utils/types';
+import { Trial, User } from '../../../utils/types';
 
 const Stack = createStackNavigator();
 const screenName = 'Saved'
@@ -24,7 +24,7 @@ const TEST_DATA: TrialListObj[] = [
 export default function SavedScreen({ navigation }: { navigation: any}) {
   const [data, setData] = useState(TEST_DATA);
   const [dataIndex, setDataIndex] = useState(0);
-  const [userID, setUserID] = useState<string>('');
+  const [user, setUser] = useState<User | null>(null);
   const [study, setStudy] = useState<Trial | null>(null);
   
   const toMain = () => {
@@ -42,6 +42,11 @@ export default function SavedScreen({ navigation }: { navigation: any}) {
 
   const handleNewGroup = async () => {
 
+  }
+
+  const onUserPress : ({user}: {user: User}) => void = ({user}: {user: User}) => {
+    setUser(user);
+    navigation.navigate('ProfileInfoScreen' + screenName);
   }
 
   function PrimaryPage() {
@@ -86,7 +91,7 @@ export default function SavedScreen({ navigation }: { navigation: any}) {
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
 
           
-          <StudyList data={data.studies} onPress={onStudyCardPress}/>
+          <StudyList data={data.studies} onCardPress={onStudyCardPress}/>
         </ScrollView>
       </View>
     )
@@ -104,6 +109,14 @@ export default function SavedScreen({ navigation }: { navigation: any}) {
   }
 
   return (
-    <AppNavigator name={screenName} components={[MainStack]} profileFocusable studyFocusable userID={userID} trial={study}/>
+    <AppNavigator 
+      name={screenName} 
+      components={[MainStack]} 
+      profileFocusable 
+      studyFocusable 
+      user={user} 
+      trial={study}
+      onUserPress={onUserPress}
+      />
   )
 }

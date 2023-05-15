@@ -10,6 +10,7 @@ interface UserState {
   isLoading: boolean;
   error: string | null;
   focusedChatRoom: ChatRoom | null;
+  focusedTabs: string;
 }
 
 const initialState: UserState = {
@@ -17,6 +18,7 @@ const initialState: UserState = {
   isLoading: false,
   error: null,
   focusedChatRoom: testChatRoom1,
+  focusedTabs: 'participant'
 };
 
 // Create a slice of state and reducers for the user
@@ -42,16 +44,20 @@ const userSlice = createSlice({
     },
     setFocusedChatRoom: (state, action: PayloadAction<ChatRoom | null>) => {
       state.focusedChatRoom = action.payload;
+    },
+    setFocusedTabs: (state, action: PayloadAction<string>) => {
+      state.focusedTabs = action.payload;
     }
   },
 });
 
-export const { loginUser, logoutUser, setLoading, setError, setFocusedChatRoom } = userSlice.actions;
+export const { loginUser, logoutUser, setLoading, setError, setFocusedChatRoom, setFocusedTabs } = userSlice.actions;
 
 export const getCurrentUser = (state: RootState): User | null => state.user.user;
 export const getIsLoading = (state: RootState): boolean => state.user.isLoading;
 export const getError = (state: RootState): string | null => state.user.error;
 export const getFocusedChatRoom = (state: RootState): ChatRoom | null => state.user.focusedChatRoom;
+export const getFocusedTabs = (state: RootState): string => state.user.focusedTabs;
 
 export const userReducer = userSlice.reducer;
 

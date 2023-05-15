@@ -3,24 +3,21 @@ import React from 'react'
 import { Card, Divider } from 'react-native-paper'
 import { DataItem } from './types';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Trial } from '../utils/types';
-
-type RenderItemProps = {
-  item: DataItem;
-};
-
-const renderItem = ({ item }: RenderItemProps) => (
-  <Card style={styles.card1} mode='contained'>
-    <Card.Title title={item.title} />
-    <Card.Content>
-      <Text>{item.description}</Text>
-    </Card.Content>
-  </Card>
-);
+import { Trial, User } from '../utils/types';
 
 export default function StudyList(
-  {data, horizontal=false, onPress}: 
-  {data: Trial[], horizontal?: boolean, onPress?: ({trial}: {trial: Trial}) => void}) {
+  {
+    data, 
+    horizontal=false, 
+    onCardPress, 
+    onUserPress
+  }: 
+  {
+    data: Trial[], 
+    horizontal?: boolean, 
+    onCardPress?: ({trial}: {trial: Trial}) => void,
+    onUserPress?: ({user}: {user: User}) => void,
+  }) {
 
   // TODO: change horizontal from flatlist...
   return (
@@ -31,8 +28,8 @@ export default function StudyList(
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {data.map((item: Trial)=> {
             const handleCardPress = () => {
-              if (onPress) {
-                onPress({trial: item});
+              if (onCardPress) {
+                onCardPress({trial: item});
                 }
               }
             return (
@@ -51,8 +48,8 @@ export default function StudyList(
         { data ?
           data.map((item: Trial)=> {
             const handleCardPress = () => {
-              if (onPress) {
-                onPress({trial: item});
+              if (onCardPress) {
+                onCardPress({trial: item});
               }
             }
             return (
