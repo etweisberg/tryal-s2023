@@ -31,8 +31,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../stores';
 import { getCurrentUser } from '../stores/userReducer';
 import LoadingScreen from '../screens/general/LoadingScreen';
-import InboxScreen from '../screens/general/InboxScreen';
-import AppNavigator from '../components/AppNavigator';
 import ChatScreen from '../screens/common/ChatScreen';
 import MessageScreen from '../screens/general/MessageScreen';
 
@@ -107,21 +105,9 @@ function ResearcherTabScreen() {
       })}
       >
         <ResearcherTab.Screen name="Studies" component={StudiesScreen}/>
-          {/* {() => AppNavigator({components: [StudiesScreen], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen> */}
-
         <ResearcherTab.Screen name="Upcoming" component={UpcomingScreen}/>
-          {/* {() => AppNavigator({components: [UpcomingScreen], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen> */}
-
         <ResearcherTab.Screen name="Create" component={CreateScreen}/>
-          {/* {() => AppNavigator({components: [CreateScreen], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen> */}
-
-        <ResearcherTab.Screen name="Inbox" component={InboxScreen}/>
-          {/* {() => AppNavigator({components: [InboxScreen], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen> */}
-
+        <ResearcherTab.Screen name="Inbox" component={MessageScreen}/>
         <ResearcherTab.Screen name="Profile" >
           {() => <ProfileStackScreen userType='researcher' />}
         </ResearcherTab.Screen>   

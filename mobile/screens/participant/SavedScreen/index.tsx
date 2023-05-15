@@ -44,6 +44,11 @@ export default function SavedScreen({ navigation }: { navigation: any}) {
 
   }
 
+  const onUserPress : ({user}: {user: User}) => void = ({user}: {user: User}) => {
+    setUser(user);
+    navigation.navigate('ProfileInfoScreen' + screenName);
+  }
+
   function PrimaryPage() {
     return (
       <View style={styles.participantContainer}>
@@ -86,7 +91,7 @@ export default function SavedScreen({ navigation }: { navigation: any}) {
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
 
           
-          <StudyList data={data.studies} onPress={onStudyCardPress}/>
+          <StudyList data={data.studies} onCardPress={onStudyCardPress}/>
         </ScrollView>
       </View>
     )
@@ -104,6 +109,14 @@ export default function SavedScreen({ navigation }: { navigation: any}) {
   }
 
   return (
-    <AppNavigator name={screenName} components={[MainStack]} profileFocusable studyFocusable user={user} trial={study}/>
+    <AppNavigator 
+      name={screenName} 
+      components={[MainStack]} 
+      profileFocusable 
+      studyFocusable 
+      user={user} 
+      trial={study}
+      onUserPress={onUserPress}
+      />
   )
 }

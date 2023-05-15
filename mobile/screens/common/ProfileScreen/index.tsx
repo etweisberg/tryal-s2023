@@ -5,9 +5,10 @@ import styles from '../../../styles'
 import Header from '../../../components/Header'
 import { Avatar, Chip } from 'react-native-paper'
 import TabSwitch from '../../../components/TabSwitch'
+import { useNavigation } from '@react-navigation/native'
 
 export default function ProfileScreen(
-  {navigation, user, editable=false}: 
+  {navigation=useNavigation(), user, editable=false}: 
   {navigation?: any, user: User | null, editable?: boolean}
   ) {
 
@@ -17,6 +18,10 @@ export default function ProfileScreen(
     navigation.navigate('Settings')
   }
 
+  const toPrev = () => {
+    navigation.goBack();
+  }
+  
   const getInitials = (user: User) => {
     return user.firstName[0] + user.lastName[0]
   }
@@ -35,9 +40,10 @@ export default function ProfileScreen(
                 textColor='white'
                 backgroundColor='#195064'/> 
             </View> :
-            <View style={{width: '100%', paddingTop: 24}}>
+            <View style={{width: '100%', paddingTop: 24, paddingBottom: 8, paddingHorizontal: 16, backgroundColor: '#195064'}}>
               <Header
-                title='Profile'
+                title='Researcher Profile'
+                leftComponentType='touchable-icon' leftText='chevron-back-outline' onLeftPress={toPrev}
                 textColor='white'
                 backgroundColor='#195064'/>
             </View>

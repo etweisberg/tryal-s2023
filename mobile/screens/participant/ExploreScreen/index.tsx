@@ -27,6 +27,11 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
     navigation.navigate('StudyInfoScreen' + screenName);
   }
 
+  const onUserPress : ({user}: {user: User}) => void = ({user}: {user: User}) => {
+    setUser(user);
+    navigation.navigate('ProfileInfoScreen' + screenName);
+  }
+
   function MainPage() {
     return (
       <View style={styles.container}>
@@ -39,16 +44,24 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
         />
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Your Recents</Text>
-          <StudyList data={testTrials} horizontal onPress={onStudyCardPress}/>
+          <StudyList data={testTrials} horizontal onCardPress={onStudyCardPress}/>
   
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Suggested Studies</Text>
-          <StudyList data={testTrials} onPress={onStudyCardPress}/>        
+          <StudyList data={testTrials} onCardPress={onStudyCardPress}/>        
         </ScrollView>
       </View>
     )
   }
 
   return (
-    <AppNavigator name={screenName} components={[MainPage]} profileFocusable studyFocusable user={user} trial={study}/>
+    <AppNavigator 
+      name={screenName} 
+      components={[MainPage]} 
+      profileFocusable 
+      studyFocusable 
+      user={user} 
+      trial={study} 
+      onUserPress={onUserPress}
+      />
   )
 }

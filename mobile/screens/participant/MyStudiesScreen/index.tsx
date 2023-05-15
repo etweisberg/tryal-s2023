@@ -6,18 +6,23 @@ import StudyList from '../../../components/StudyList'
 import { DataItem } from '../../../components/types'
 import styles from '../../../styles'
 import { testTrials } from '../../../utils/testObjs'
-import { Trial } from '../../../utils/types'
+import { Trial, User } from '../../../utils/types'
 import AppNavigator from '../../../components/AppNavigator'
 
 const screenName='MyStudies'
 
 export default function MyStudiesScreen({ navigation }: {navigation: any}) {
-  const [userID, setUserID] = useState<string>('');
+  const [user, setUser] = useState<User | null>(null);
   const [study, setStudy] = useState<Trial | null>(null);
 
   const onStudyCardPress = ({trial}: {trial: Trial}) => {
     setStudy(trial);
     navigation.navigate('StudyInfoScreen' + screenName);
+  }
+
+  const onUserPress : ({user}: {user: User}) => void = ({user}: {user: User}) => {
+    setUser(user);
+    navigation.navigate('ProfileInfoScreen' + screenName);
   }
 
   function MainPage() {
@@ -26,19 +31,27 @@ export default function MyStudiesScreen({ navigation }: {navigation: any}) {
         <Header title='My Studies'/>
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Pending</Text>
-          <StudyList data={testTrials} horizontal onPress={onStudyCardPress}/>
+          <StudyList data={testTrials} horizontal onCardPress={onStudyCardPress}/>
   
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Upcoming</Text>
-          <StudyList data={testTrials} onPress={onStudyCardPress}/>     
+          <StudyList data={testTrials} onCardPress={onStudyCardPress}/>     
   
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>All Studies</Text>
-          <StudyList data={testTrials} onPress={onStudyCardPress}/>   
+          <StudyList data={testTrials} onCardPress={onStudyCardPress}/>   
         </ScrollView>
       </View>
     )
   }
 
   return (
-    <AppNavigator name={screenName} components={[MainPage]} profileFocusable studyFocusable userID={userID} trial={study}/>
+    <AppNavigator 
+      name={screenName} 
+      components={[MainPage]} 
+      profileFocusable 
+      studyFocusable 
+      user={user} 
+      trial={study}
+      onUserPress={onUserPress}
+      />
   )
 }

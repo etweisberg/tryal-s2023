@@ -9,14 +9,17 @@ const Stack = createStackNavigator();
 const screenNames = ['Main', 'Secondary', 'Tertiary', 'Quaternary', 'Quinary', 'Senary', 'Septenary', 'Octonary', 'Nonary', 'Denary']
 
 export default function AppNavigator(
-    {name, components, profileFocusable=false, studyFocusable=false, user, trial}: 
+    {name, components, profileFocusable=false, studyFocusable=false, user, trial, onUserPress, setUser, setTrial}: 
     {
         name: string
         components: (React.ReactNode | (()=>React.ReactNode))[], 
         profileFocusable?: boolean, 
         studyFocusable?: boolean, 
-        user?: User | null, 
-        trial?: Trial | null
+        user?: User | null,
+        onUserPress?: ({user}: {user: User}) => void,
+        setUser?: React.Dispatch<React.SetStateAction<User | null>>,
+        trial?: Trial | null,
+        setTrial?: React.Dispatch<React.SetStateAction<User | null>>,
     }) {
     
   return (
@@ -39,7 +42,7 @@ export default function AppNavigator(
         }
         {studyFocusable ?
             <Stack.Screen name={"StudyInfoScreen" + name}>
-                {trial ? () => StudyScreen({trial}) : () => null}
+                {trial ? () => StudyScreen({trial, onUserPress}) : () => null}
             </Stack.Screen>
             : null
         }
