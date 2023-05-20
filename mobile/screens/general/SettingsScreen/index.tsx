@@ -35,8 +35,12 @@ export default function SettingsScreen(
 
   const switchTabs = () => {
     if (participant) {
-      navigation.navigate('ResearcherTabs')
-      navigation.navigate('Studies')
+      if (user?.researcher) {
+        navigation.navigate('ResearcherTabs')
+        navigation.navigate('Studies')
+      } else {
+        navigation.navigate('ResearcherAuth')
+      }
     } else {
       navigation.navigate('ParticipantTabs')
       navigation.navigate('Explore')

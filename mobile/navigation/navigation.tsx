@@ -33,6 +33,7 @@ import { getCurrentUser } from '../stores/userReducer';
 import LoadingScreen from '../screens/general/LoadingScreen';
 import ChatScreen from '../screens/common/ChatScreen';
 import MessageScreen from '../screens/general/MessageScreen';
+import ResearcherAuthScreen from '../screens/authentication/ResearcherAuthScreen';
 
 
 const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
@@ -184,6 +185,7 @@ export default function Navigation() {
         
         <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
         <MainStack.Screen name="Chat" component={ChatScreen} />
+        <MainStack.Screen name="ResearcherAuth" component={ResearcherAuthScreen} />
 
         { user && user.researcher ? (
           <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />

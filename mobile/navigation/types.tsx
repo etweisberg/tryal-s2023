@@ -24,6 +24,7 @@ export type MainStackParamList = {
     Login: undefined;
     Auth: undefined;
     ParticipantTabs: undefined;
+    ResearcherAuth: undefined;
     ResearcherTabs: undefined;
     Loading: undefined;
     Chat: undefined;

@@ -12,6 +12,8 @@ export const authErrors : MyObject = {
   'Age': [],
   'Race': [],
   'Ethnicity': [],
+  'Scanned ID': ['Scanned ID required'],
+  'Picture': ['Picture required'],
 }
 
 export const trialErrors: MyObject = {
