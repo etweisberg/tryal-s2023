@@ -50,10 +50,12 @@ export default function StudyScreen(
             {trial?.description}
           </Text>
           <Text style={{fontSize: 16, paddingVertical: 4}}>
-            <Text style={{fontWeight: 'bold'}}>Requirements: </Text>
+            <Text style={{fontWeight: 'bold'}}>Requirement(s): </Text>
             {trial?.eligibleConditions.map(
               (item: string, index: number) => 
-                <Chip key={index} style={{marginHorizontal: 4, borderRadius: 10}}>{item}</Chip>
+              <View>
+                <Chip key={index} style={{alignSelf: 'center', height: 30, marginHorizontal: 4, borderRadius: 15}}>{item}</Chip>
+              </View>
             )}
           </Text>
           <Text style={{fontSize: 16, paddingVertical: 4}}>
@@ -78,7 +80,7 @@ export default function StudyScreen(
 
         </ScrollView>
 
-        <View style={{paddingHorizontal: 24, backgroundColor: 'transparent', position: 'absolute', bottom: 0, flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
+        <View style={{backgroundColor: 'transparent', position: 'absolute', bottom: 0, flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
           <TouchableOpacity style={[styles.button, {width: '65%'}]}>
             <Text style={{fontWeight: 'bold', color: 'white'}}>Sign Up!</Text>
           </TouchableOpacity>

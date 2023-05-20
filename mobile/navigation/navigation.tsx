@@ -42,7 +42,7 @@ const MainStack = createStackNavigator<MainStackParamList>();
 const AuthStack = createStackNavigator<AuthStackParamList>();
 
 
-function ProfileStackScreen({userType}: {userType: string}) {
+function ProfileStackScreen({userType, navigation}: {userType: string, navigation: any}) {
     return (
       <ProfileStack.Navigator screenOptions={{
         headerShown: false
@@ -53,7 +53,9 @@ function ProfileStackScreen({userType}: {userType: string}) {
         ) : (
           <ProfileStack.Screen name="MainProfile" component={ResearcherProfileScreen} />
         )}
-        <ProfileStack.Screen name="Settings" component={SettingsScreen} />
+        <ProfileStack.Screen name="Settings">
+          {() => <SettingsScreen navigation={navigation} participant={userType==='participant'} />}
+        </ProfileStack.Screen>
         <ProfileStack.Screen name="PushNotifs" component={PushNotifsScreen} />
         <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
       </ProfileStack.Navigator>
@@ -72,7 +74,7 @@ function AuthStackScreen() {
 };
   
 
-function ResearcherTabScreen() {
+function ResearcherTabScreen({navigation}: {navigation: any}) {
     return (
       <ResearcherTab.Navigator
       initialRouteName="Studies"
@@ -109,13 +111,13 @@ function ResearcherTabScreen() {
         <ResearcherTab.Screen name="Create" component={CreateScreen}/>
         <ResearcherTab.Screen name="Inbox" component={MessageScreen}/>
         <ResearcherTab.Screen name="Profile" >
-          {() => <ProfileStackScreen userType='researcher' />}
+          {() => <ProfileStackScreen navigation={navigation} userType='researcher' />}
         </ResearcherTab.Screen>   
       </ResearcherTab.Navigator>
     )
 }
 
-function ParticipantTabScreen() {
+function ParticipantTabScreen({navigation}: {navigation: any}) {
     return (
       <ParticipantTab.Navigator
       initialRouteName="Explore"
@@ -154,7 +156,7 @@ function ParticipantTabScreen() {
         <ParticipantTab.Screen name="My Studies" component={MyStudiesScreen}/>
         <ParticipantTab.Screen name="Inbox" component={MessageScreen}/>
         <ParticipantTab.Screen name="Profile" >
-          {() => <ProfileStackScreen userType='participant' />}
+          {() => <ProfileStackScreen navigation={navigation} userType='participant' />}
         </ParticipantTab.Screen>        
       </ParticipantTab.Navigator>
     )
@@ -183,7 +185,7 @@ export default function Navigation() {
         <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
         <MainStack.Screen name="Chat" component={ChatScreen} />
 
-        { user && user["admin"] ? (
+        { user && user.researcher ? (
           <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
         ) : null }
 

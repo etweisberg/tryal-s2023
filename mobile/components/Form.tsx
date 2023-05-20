@@ -41,7 +41,11 @@ export default function Form(
                   placeholder={item.name}
                   value={item.state !== 0 ? item.state : ''}
                   onChangeText={item.setState}
-                  style={[styles.textInput, {borderColor: item.red ? 'red' : '#bdbdbd'}]}
+                  style={[
+                    styles.textInput, 
+                    {borderColor: item.red ? 'red' : '#bdbdbd'},
+                    {height: item.name==='Description' || item.name==='Additional Info' ? 200 : 48}
+                  ]}
                   secureTextEntry={item.name === 'Password' || item.name === 'Confirm Password' ? true : false}
                   />
                   <View style={{width: '100%', height: 15}}>

@@ -1,22 +1,33 @@
 import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { ProfileStackParamList } from '../../../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useDispatch, useSelector } from 'react-redux';
+import AppNavigator from '../../../components/AppNavigator';
+import { getCurrentUser } from '../../../stores/userReducer';
+import ProfileScreen from '../../common/ProfileScreen';
 
-type ProfileScreenProps = StackScreenProps<ProfileStackParamList, 'MainProfile'>;
+const screenName = 'ResearcherProfile'
 
-export default function ResearcherProfileScreen({ navigation }: ProfileScreenProps) {
+export default function ResearcherProfileScreen({ navigation }: { navigation: any}) {
+  const [user, setUser] = useState(null)
+  const [study, setStudy] = useState(null)
+
+  const dispatch = useDispatch()
+
+  const currentUser = useSelector(getCurrentUser);
 
   const toSettings = () => { 
     navigation.navigate('Settings')
   }
 
+  function MainPage() {
+    return (
+      <ProfileScreen navigation={navigation} user={currentUser} editable/>
+    )
+  }
+
   return (
-    <SafeAreaView>
-      <Text>ResearcherProfileScreen</Text>
-      <TouchableOpacity onPress={toSettings} >
-        <Text>Settings</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+    <AppNavigator name={screenName} components={[MainPage]} profileFocusable studyFocusable user={user} trial={study}/>
   )
 }

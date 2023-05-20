@@ -7,12 +7,23 @@ import { Card, Divider } from 'react-native-paper'
 // import { data } from './data';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BarList, { BarListItem } from '../../../components/BarList';
+import { useSelector } from 'react-redux';
+import { getCurrentUser } from '../../../stores/userReducer';
 
-export default function SettingsScreen({ navigation }: { navigation: any} ) {
+export default function SettingsScreen(
+  { navigation, participant }: 
+  { navigation: any, participant: boolean} ) {
+  
+  const user = useSelector(getCurrentUser);
+  
   const [search, setSearch] = useState<string>('');
   const updateSearch: (text: string) => void = (search: string) => {
     setSearch(search);
   };
+
+  const toProfile = () => {
+    navigation.navigate('MainProfile')
+  }
 
   const toPushNotifs = () => {
     navigation.navigate('PushNotifs')
@@ -22,11 +33,21 @@ export default function SettingsScreen({ navigation }: { navigation: any} ) {
     navigation.navigate('EditProfile')
   }
 
-  const switchTabs = (userType: string) => {
-    if (userType === 'researcher') {
-      navigation.navigate('ParticipantTabs')
-    } else {
+  const switchTabs = () => {
+    if (participant) {
       navigation.navigate('ResearcherTabs')
+      navigation.navigate('Studies')
+    } else {
+      navigation.navigate('ParticipantTabs')
+      navigation.navigate('Explore')
+    }
+  }
+
+  const getSwitchTitle = () => {
+    if (participant) {
+      return 'Switch to Researcher Profile'
+    } else {
+      return 'Switch to Participant Profile'
     }
   }
 
@@ -51,8 +72,8 @@ export default function SettingsScreen({ navigation }: { navigation: any} ) {
         onPress: toEditProfile
     },
     {
-        title: 'Switch to Researcher View',
-        onPress: () => switchTabs('researcher')
+        title: getSwitchTitle(),
+        onPress: switchTabs
     },
     {
         title: 'Privacy Policy',
@@ -73,7 +94,7 @@ export default function SettingsScreen({ navigation }: { navigation: any} ) {
       <View style={{width: '100%', paddingTop: 24, paddingBottom: 8, paddingHorizontal: 16, backgroundColor: '#195064'}}>
         <Header
           title='Settings'
-          leftComponentType='touchable-text' leftText='Back' onLeftPress={navigation.goBack}
+          leftComponentType='touchable-text' leftText='Back' onLeftPress={toProfile}
           textColor='white'
           backgroundColor='#195064'/> 
       </View>

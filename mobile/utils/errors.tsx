@@ -13,3 +13,12 @@ export const authErrors : MyObject = {
   'Race': [],
   'Ethnicity': [],
 }
+
+export const trialErrors: MyObject = {
+  'Title': ['Title required'],
+  'Description': ['Description required'],
+  'Date': ['Date required'],
+  'Compensation': ['Compensation required'],
+  'Location': ['Location required'],
+  'Additional Notes': [],
+}
