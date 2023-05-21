@@ -341,6 +341,9 @@ const registerInvite = async (
     password,
     age,
     homeAddress,
+    seekingCompensation,
+    medConditions,
+    prefix,
     inviteToken,
   } = req.body;
   if (
@@ -350,6 +353,9 @@ const registerInvite = async (
     !password ||
     !age ||
     !homeAddress ||
+    !seekingCompensation ||
+    !medConditions ||
+    !prefix ||
     !inviteToken
   ) {
     next(
@@ -360,6 +366,9 @@ const registerInvite = async (
         'password',
         'age',
         'homeAddress',
+        'seekingCompensation',
+        'medConditions',
+        'prefix',
         'inviteToken',
       ]),
     );
@@ -415,6 +424,9 @@ const registerInvite = async (
       password,
       age,
       homeAddress,
+      seekingCompensation,
+      medConditions,
+      prefix,
     );
     user!.verified = true;
     await user?.save();
