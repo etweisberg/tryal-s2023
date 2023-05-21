@@ -107,8 +107,28 @@ const register = async (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  const { firstName, lastName, email, age, homeAddress, password } = req.body;
-  if (!firstName || !lastName || !email || !password || !age || !homeAddress) {
+  const {
+    firstName,
+    lastName,
+    email,
+    age,
+    homeAddress,
+    password,
+    seekingCompensation,
+    medConditions,
+    prefix,
+  } = req.body;
+  if (
+    !firstName ||
+    !lastName ||
+    !email ||
+    !password ||
+    !age ||
+    !homeAddress ||
+    !seekingCompensation ||
+    !medConditions ||
+    !prefix
+  ) {
     next(
       ApiError.missingFields([
         'firstName',
@@ -117,6 +137,9 @@ const register = async (
         'age',
         'homeAddress',
         'password',
+        'seekingCompensation',
+        'medConditions',
+        'prefix',
       ]),
     );
     return;
@@ -163,6 +186,9 @@ const register = async (
       password,
       age,
       homeAddress,
+      seekingCompensation,
+      medConditions,
+      prefix,
     );
     if (process.env.NODE_ENV === 'development') {
       user!.verified = true;

@@ -33,6 +33,9 @@ const createUser = async (
   password: string,
   age: number,
   homeAddress: string,
+  seekingCompensation: boolean,
+  medConditions: Array<string>,
+  prefix: string,
 ) => {
   const hashedPassword = await hash(password, passwordHashSaltRounds);
   if (!hashedPassword) {
@@ -46,6 +49,9 @@ const createUser = async (
     age,
     homeAddress,
     admin: false,
+    seekingCompensation,
+    medConditions,
+    prefix,
   });
   const user = await newUser.save();
   return user;

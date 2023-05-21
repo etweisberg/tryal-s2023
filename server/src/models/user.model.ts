@@ -115,6 +115,7 @@ interface IUser extends mongoose.Document {
   _id: string;
   firstName: string;
   lastName: string;
+  prefix: string;
   email: string;
   password: string;
   verified: boolean;
