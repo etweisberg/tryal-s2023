@@ -31,9 +31,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../stores';
 import { getCurrentUser } from '../stores/userReducer';
 import LoadingScreen from '../screens/general/LoadingScreen';
-import InboxScreen from '../screens/general/InboxScreen';
-import AppNavigator from '../components/AppNavigator';
 import ChatScreen from '../screens/common/ChatScreen';
+import MessageScreen from '../screens/general/MessageScreen';
 
 
 const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
@@ -78,6 +77,15 @@ function ResearcherTabScreen() {
       <ResearcherTab.Navigator
       initialRouteName="Studies"
       screenOptions={({ route }) => ({
+        // tabBarActiveBackgroundColor: '#195064',
+        // tabBarActiveTintColor: 'white',
+        // tabBarInactiveBackgroundColor: '#195064',
+        // tabBarStyle: {
+        //   height: 50,
+        //   borderBottomWidth: 5,
+        //   borderTopWidth: 5,
+        //   borderColor: '#195064'
+        // },
         headerShown: false,
         tabBarIcon: ({ color, size }) => {
           let iconName = '';
@@ -97,21 +105,9 @@ function ResearcherTabScreen() {
       })}
       >
         <ResearcherTab.Screen name="Studies" component={StudiesScreen}/>
-          {/* {() => AppNavigator({components: [StudiesScreen], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen> */}
-
         <ResearcherTab.Screen name="Upcoming" component={UpcomingScreen}/>
-          {/* {() => AppNavigator({components: [UpcomingScreen], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen> */}
-
         <ResearcherTab.Screen name="Create" component={CreateScreen}/>
-          {/* {() => AppNavigator({components: [CreateScreen], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen> */}
-
-        <ResearcherTab.Screen name="Inbox" component={InboxScreen}/>
-          {/* {() => AppNavigator({components: [InboxScreen], profileFocusable: true, studyFocusable: true})}
-        </ResearcherTab.Screen> */}
-
+        <ResearcherTab.Screen name="Inbox" component={MessageScreen}/>
         <ResearcherTab.Screen name="Profile" >
           {() => <ProfileStackScreen userType='researcher' />}
         </ResearcherTab.Screen>   
@@ -124,6 +120,17 @@ function ParticipantTabScreen() {
       <ParticipantTab.Navigator
       initialRouteName="Explore"
       screenOptions={({ route }) => ({
+        // tabBarActiveBackgroundColor: '#195064',
+        // tabBarActiveTintColor: 'white',
+        // // tabBarInactiveTintColor: 'white',
+        // tabBarInactiveBackgroundColor: '#195064',
+        // tabBarStyle: {
+        //   height: 50,
+        //   borderBottomWidth: 5,
+        //   borderTopWidth: 5,
+        //   borderBottomColor: '#195064',
+        //   borderTopColor: '#195064'
+        // },
         headerShown: false,
         tabBarIcon: ({ color, size }) => {
           let iconName = '';
@@ -145,7 +152,7 @@ function ParticipantTabScreen() {
         <ParticipantTab.Screen name="Explore" component={ExploreScreen}/>
         <ParticipantTab.Screen name="Saved" component={SavedScreen}/>
         <ParticipantTab.Screen name="My Studies" component={MyStudiesScreen}/>
-        <ParticipantTab.Screen name="Inbox" component={InboxScreen}/>
+        <ParticipantTab.Screen name="Inbox" component={MessageScreen}/>
         <ParticipantTab.Screen name="Profile" >
           {() => <ProfileStackScreen userType='participant' />}
         </ParticipantTab.Screen>        

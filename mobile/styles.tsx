@@ -6,7 +6,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 24,
-        // backgroundColor: 'white',
+        width: '100%',
+        // backgroundColor: 'black',
       },
       participantContainer: {
         flex: 1,
@@ -20,6 +21,7 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         marginTop: 24,
+        backgroundColor: 'black',
       },
       cardsContainer: {
         flex: 1, 

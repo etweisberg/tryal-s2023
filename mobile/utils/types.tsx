@@ -1,5 +1,6 @@
 export type User = {
     _id: string;
+    prefix: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -7,9 +8,11 @@ export type User = {
     verified: boolean;
     verificationToken: string | null | undefined;
     resetPasswordToken: string | null | undefined;
-    resetPasswordTokenExpiryDate: Date | null | undefined;
+    resetPasswordTokenExpiryDate: string | null | undefined;
     trials: Array<string>;
     trialsOwned: Array<string>;
+    clickedOnTrials: Array<string>;
+    savedTrials: Array<string>;
     age: number | null;
     medConditions: Array<string>;
     homeAddress: string;
@@ -27,7 +30,7 @@ export type Trial = {
     participantRequests: string[];
     participantAccepted: string[];
     acceptingParticipants: boolean;
-    date: Date;
+    date: [string, string];
     location: string;
     eligibleConditions: string[];
 }
@@ -37,7 +40,14 @@ export type Message = {
     sender: string;
     recipient: string;
     content: string;
-    timestamp: Date;
-    read: Date | null;
-    deleted: boolean;
+    timestamp: string;
+    read: string | null;
+    deletedForSender: boolean;
+    deletedForRecipient: boolean;
+}
+
+export type ChatRoom = {
+    _id: string;
+    participants: string[];
+    messages: Message[] | null;
 }

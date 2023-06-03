@@ -5,7 +5,7 @@ import { View, Text } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../../navigation/types';
 import Header from '../../../components/Header';
-import Form from '../../../components/auth/Form';
+import Form from '../../../components/Form';
 import * as Progress from 'react-native-progress';
 import { Snackbar } from 'react-native-paper';
 import { MyObject } from '../../../components/types';

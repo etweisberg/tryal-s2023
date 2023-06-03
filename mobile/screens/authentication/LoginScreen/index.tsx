@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../stores/userReducer';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../../components/Header';
-import Form from '../../../components/auth/Form';
+import Form from '../../../components/Form';
 import { loginSchema } from '../../../utils/validation';
 import { MyObject } from '../../../components/types';
 import { authErrors } from '../../../utils/errors';
