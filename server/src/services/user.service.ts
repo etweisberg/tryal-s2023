@@ -141,9 +141,14 @@ const upgradeUserToAdmin = async (id: string) => {
   return user;
 };
 
-const upgradeUserToResearcher = async (id: string) => {
+const upgradeUserToResearcher = async (id: string, institution: string) => {
   const user = await User.findByIdAndUpdate(id, [
-    { $set: { researcher: { $eq: [false, '$researcher'] } } },
+    {
+      $set: {
+        researcher: { $eq: [false, '$researcher'] },
+        institution,
+      },
+    },
   ]).exec();
   return user;
 };
