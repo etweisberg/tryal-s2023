@@ -80,6 +80,9 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
             researcher: result.researcher,
             institution: result.institution,
             admin: result.admin,
+            prefix: result.prefix,
+            clickedOnTrials: result.clickedOnTrials,
+            savedTrials: result.savedTrials,
           };
           dispatch(loginUser(user));
         }

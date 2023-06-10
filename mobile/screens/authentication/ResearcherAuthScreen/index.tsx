@@ -14,9 +14,10 @@ import { pages } from './data';
 
 export default function ResearcherAuthScreen({ navigation }: {navigation: any}) {
   // state for form inputs
-  const [email, setEmail] = useState('a@a');
-  const [firstName, setFirstName] = useState('c');
-  const [lastName, setLastName] = useState('w');
+  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [institution, setInstitution] = useState('');
   const [scannedID, setScannedID] = useState(null);
   const [picture, setPicture] = useState(null);
 
@@ -68,7 +69,27 @@ export default function ResearcherAuthScreen({ navigation }: {navigation: any}) 
   // function to handle researcher auth
   const handleResearcherAuth = async () => {
     try {
-      
+      const response = await fetch('http://localhost:4000/api/researcher/researcher-request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ firstName, lastName, email, institution }),
+        });
+      const result = await response.json();
+
+      if (response.status === 201) {
+        setIndex(index + 1);
+        // TODO: send email to admin
+        // TODO: send email to researcher
+        // TODO: update researcher status to pending
+        // Update researcher info to include institution
+      } else if (response.status === 400) {
+        console.log('response status 400');
+        console.log(response);
+        setSnackbarMsg(result.message);
+        setVisible(true);
+      }
     } catch (error: any) {
       console.log(error)
     }
