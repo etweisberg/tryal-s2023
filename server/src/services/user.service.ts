@@ -2,7 +2,19 @@
  * All the functions for interacting with user data in the MongoDB database
  */
 import { hash } from 'bcrypt';
-import { User } from '../models/user.model';
+import { User, IUser } from '../models/user.model';
+
+interface UpdateFieldsInterface {
+  firstName?: string;
+  lastName?: string;
+  prefix?: string;
+  email?: string;
+  password?: string;
+  age?: number | null;
+  medConditions?: Array<string>;
+  homeAddress?: string;
+  seekingCompensation?: boolean;
+}
 
 const passwordHashSaltRounds = 10;
 const removeSensitiveDataQuery = [
@@ -135,21 +147,27 @@ const getAllUsersFromDB = async () => {
  * @returns The upgraded {@link User}
  */
 const upgradeUserToAdmin = async (id: string) => {
-  const user = await User.findByIdAndUpdate(id, [
-    { $set: { admin: { $eq: [false, '$admin'] } } },
-  ]).exec();
+  const user = await User.findByIdAndUpdate(
+    id,
+    [{ $set: { admin: { $eq: [false, '$admin'] } } }],
+    { new: true },
+  ).exec();
   return user;
 };
 
 const upgradeUserToResearcher = async (id: string, institution: string) => {
-  const user = await User.findByIdAndUpdate(id, [
-    {
-      $set: {
-        researcher: { $eq: [false, '$researcher'] },
-        institution,
+  const user = await User.findByIdAndUpdate(
+    id,
+    [
+      {
+        $set: {
+          researcher: { $eq: [false, '$researcher'] },
+          institution,
+        },
       },
-    },
-  ]).exec();
+    ],
+    { new: true },
+  ).exec();
   return user;
 };
 
@@ -164,16 +182,24 @@ const deleteUserById = async (id: string) => {
 };
 
 const addTrialToUser = async (userId: string, trialId: string) => {
-  const user = await User.findByIdAndUpdate(userId, {
-    $push: { trials: trialId },
-  }).exec();
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $push: { trials: trialId },
+    },
+    { new: true },
+  ).exec();
   return user;
 };
 
 const addTrialOwnershipToUser = async (userId: string, trialId: string) => {
-  const user = await User.findByIdAndUpdate(userId, {
-    $push: { trialsOwned: trialId },
-  }).exec();
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $push: { trialsOwned: trialId },
+    },
+    { new: true },
+  ).exec();
   return user;
 };
 
@@ -183,21 +209,47 @@ const addTrialClickToUser = async (userId: string, trialId: string) => {
       clickedOnTrials: trialId,
     },
   }).exec();
-  const user = await User.findByIdAndUpdate(userId, {
-    $push: {
-      clickedOnTrials: {
-        $each: [trialId],
-        $position: 0,
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $push: {
+        clickedOnTrials: {
+          $each: [trialId],
+          $position: 0,
+        },
       },
     },
-  }).exec();
+    { new: true },
+  ).exec();
   return user;
 };
 
 const addTrialSaveToUser = async (userId: string, trialId: string) => {
-  const user = await User.findByIdAndUpdate(userId, {
-    $addToSet: { savedTrials: trialId },
-  }).exec();
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $addToSet: { savedTrials: trialId },
+    },
+    { new: true },
+  ).exec();
+  return user;
+};
+
+/** A function that updates the user profile
+ * @param id The id of the user to update
+ * @param updateFields JSON object containing the fields to update
+ */
+
+const updateUser = async (id: string, updateFields: UpdateFieldsInterface) => {
+  const user = await User.findByIdAndUpdate(
+    id,
+    [
+      {
+        $set: updateFields,
+      },
+    ],
+    { new: true },
+  ).exec();
   return user;
 };
 
@@ -217,4 +269,5 @@ export {
   addTrialClickToUser,
   addTrialSaveToUser,
   addTrialOwnershipToUser,
+  updateUser,
 };

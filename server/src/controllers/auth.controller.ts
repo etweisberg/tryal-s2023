@@ -14,6 +14,8 @@ import {
   getUserByEmail,
   getUserByResetPasswordToken,
   getUserByVerificationToken,
+  getUserById,
+  updateUser,
 } from '../services/user.service';
 import {
   emailResetPasswordLink,
@@ -437,6 +439,38 @@ const registerInvite = async (
   }
 };
 
+/*
+updates a users profile
+*/
+const updateProfile = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const { id } = req.params;
+  const updateFields = req.body;
+  if (!id) {
+    next(ApiError.missingFields(['id']));
+    return;
+  }
+  if (!updateFields) {
+    next(ApiError.missingFields(['updateFields']));
+    return;
+  }
+  try {
+    const user = await getUserById(id);
+    if (!user) {
+      next(ApiError.notFound(`No user with id ${id} exists.`));
+      return;
+    }
+    const updatedUser = await updateUser(id, updateFields);
+    await updatedUser!.save();
+    res.status(StatusCode.OK).send(updatedUser);
+  } catch (err) {
+    next(ApiError.internal('Unable to update user.'));
+  }
+};
+
 export {
   login,
   logout,
@@ -446,4 +480,5 @@ export {
   sendResetPasswordEmail,
   resetPassword,
   registerInvite,
+  updateProfile,
 };
