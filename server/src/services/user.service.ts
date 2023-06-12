@@ -278,6 +278,22 @@ const updateUser = async (id: string, updateFields: UpdateFieldsInterface) => {
   return user;
 };
 
+/**
+ * A function that adds a trial to the user's requestedTrials
+ * @param userId The id of the user to update
+ * @param trialId The id of the trial to add
+ */
+const addTrialRequestToUser = async (userId: string, trialId: string) => {
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $push: { requestedTrials: trialId },
+    },
+    { new: true },
+  ).exec();
+  return user;
+};
+
 export {
   passwordHashSaltRounds,
   createUser,
@@ -295,4 +311,5 @@ export {
   addTrialSaveToUser,
   addTrialOwnershipToUser,
   updateUser,
+  addTrialRequestToUser,
 };

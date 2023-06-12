@@ -21,6 +21,7 @@ import StatusCode from '../util/statusCode';
 import {
   addTrialClickToUser,
   addTrialOwnershipToUser,
+  addTrialRequestToUser,
   addTrialSaveToUser,
   addTrialToUser,
 } from '../services/user.service';
@@ -134,6 +135,7 @@ const requestTrial = async (
   }
   try {
     await addUserToRequests(user.id, id);
+    await addTrialRequestToUser(user.id, id);
     res.sendStatus(StatusCode.OK);
   } catch (err) {
     next(ApiError.internal('Unable to request trial'));
