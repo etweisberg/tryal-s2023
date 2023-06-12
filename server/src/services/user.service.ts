@@ -3,6 +3,7 @@
  */
 import { hash } from 'bcrypt';
 import { User, IUser } from '../models/user.model';
+import { ITrial } from '../models/trial.model';
 
 interface UpdateFieldsInterface {
   firstName?: string;
@@ -224,15 +225,39 @@ const addTrialClickToUser = async (userId: string, trialId: string) => {
   return user;
 };
 
-const addTrialSaveToUser = async (userId: string, trialId: string) => {
-  const user = await User.findByIdAndUpdate(
-    userId,
-    {
-      $addToSet: { savedTrials: trialId },
-    },
-    { new: true },
-  ).exec();
-  return user;
+/**
+ * Finds the user with the given id and adds the given trial to their savedTrials
+ * by parsing the trials elgible conditions and adding the trial to the array in savedTrials with
+ * the same key as the elgible condition
+ * @param userId
+ * @param trial
+ * @returns user
+ */
+
+const addTrialSaveToUser = async (userId: string, trial: ITrial) => {
+  const user = await User.findById(userId).exec();
+  if (!user) {
+    throw new Error('User not found');
+  }
+  try {
+    const trialEligibleConditions = trial.eligibleConditions;
+    const savedTrials = user?.savedTrials;
+    trialEligibleConditions.forEach((condition) => {
+      if (savedTrials.has(condition)) {
+        const trialIds = savedTrials.get(condition);
+        if (!trialIds?.includes(trial.id)) {
+          trialIds?.push(trial.id);
+        }
+      } else {
+        savedTrials.set(condition, [trial.id]);
+      }
+    });
+    user.savedTrials = savedTrials;
+    await user.save();
+    return user;
+  } catch (err) {
+    throw new Error('Unable to save trial');
+  }
 };
 
 /** A function that updates the user profile

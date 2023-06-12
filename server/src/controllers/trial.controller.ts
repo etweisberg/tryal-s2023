@@ -283,7 +283,7 @@ const saveTrial = async (
       next(ApiError.badRequest('User does not exist'));
       return;
     }
-    await addTrialSaveToUser(user.id, id);
+    await addTrialSaveToUser(user.id, trial);
     res.sendStatus(StatusCode.OK);
   } catch (err) {
     next(ApiError.internal('Unable to save trial'));

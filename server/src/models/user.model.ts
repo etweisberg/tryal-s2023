@@ -65,9 +65,10 @@ const UserSchema = new mongoose.Schema({
     default: [],
   },
   savedTrials: {
-    type: Array<string>(),
+    type: Map,
+    of: [String],
     required: true,
-    default: [],
+    default: {},
   },
   age: {
     type: Number,
@@ -125,7 +126,7 @@ interface IUser extends mongoose.Document {
   trials: Array<string>;
   trialsOwned: Array<string>;
   clickedOnTrials: Array<string>;
-  savedTrials: Array<string>;
+  savedTrials: Map<string, Array<string>>;
   age: number | null;
   medConditions: Array<string>;
   homeAddress: string;
