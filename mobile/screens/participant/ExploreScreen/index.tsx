@@ -6,11 +6,13 @@ import Header from '../../../components/Header'
 import { Searchbar, Card, Divider } from 'react-native-paper'
 import StudyList from '../../../components/StudyList'
 import AppNavigator from '../../../components/AppNavigator'
-import styles from '../../../styles'
+import styles from '../../../styles_test'
 import { Trial, User } from '../../../utils/types'
 import { testTrials } from '../../../utils/testObjs'
 import { useSelector } from 'react-redux'
 import { getCurrentUser } from '../../../stores/userReducer'
+import UseFonts from '../../../components/fonts/Fonts'
+import AppLoading from 'expo-app-loading';
 
 const screenName = 'Explore'
 
@@ -18,6 +20,7 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
   const [search, setSearch] = useState<string>('');
   const [user, setUser] = useState<User | null>(null);
   const [study, setStudy] = useState<Trial | null>(null);
+  const [isReady, setIsReady] = useState(false)
 
   // Get user from redux store
   const currentUser = useSelector(getCurrentUser);
@@ -121,6 +124,20 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
   const onUserPress : ({user}: {user: User}) => void = ({user}: {user: User}) => {
     setUser(user);
     navigation.navigate('ProfileInfoScreen' + screenName);
+  }
+
+  const loadFonts = async () => {
+    await UseFonts()
+  }
+
+  if (!isReady) {
+    return (
+      <AppLoading
+      startAsync={loadFonts}
+      onFinish={() => setIsReady(true)}
+      onError={() => {}}
+      />
+    )
   }
 
   function MainPage() {

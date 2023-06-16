@@ -81,12 +81,6 @@ container: {
   checkbox: {
     alignSelf: 'center',
   },
-  test: {
-    fontSize: 20, 
-    fontWeight: 'bold', 
-    paddingVertical: 16,
-    fontFamily: 'Inconsolata-Regular',
-  },
 })
 
 export default styles
