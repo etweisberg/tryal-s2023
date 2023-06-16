@@ -134,7 +134,7 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
           style={styles.searchbar}
         />
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
-          <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Your Recents</Text>
+          <Text style={styles.test}>Your Recents</Text>
           <StudyList data={recents} horizontal onCardPress={onStudyCardPress}/>
   
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Suggested Studies</Text>

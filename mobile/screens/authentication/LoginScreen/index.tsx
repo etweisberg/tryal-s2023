@@ -9,7 +9,7 @@ import Form from '../../../components/Form';
 import { loginSchema } from '../../../utils/validation';
 import { MyObject } from '../../../components/types';
 import { authErrors } from '../../../utils/errors';
-import AppText from '../../../components/appText/AppText';
+import GetFont from '../../../components/fonts/Fonts';
 import styles from '../../../styles'
 import { User } from '../../../utils/types';
 
