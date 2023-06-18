@@ -48,30 +48,52 @@ const UserSchema = new mongoose.Schema({
     required: false,
   },
   trials: {
-    type: Array<string>(),
-    required: true,
-    default: [],
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trial',
+        required: true,
+      },
+    ],
   },
   // eslint-disable-next-line spaced-comment
   //add method, any duplicate just move to the front
   clickedOnTrials: {
-    type: Array<string>(),
-    required: true,
-    default: [],
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trial',
+        required: true,
+      },
+    ],
   },
   requestedTrials: {
-    type: Array<string>(),
-    required: true,
-    default: [],
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trial',
+        required: true,
+      },
+    ],
   },
   trialsOwned: {
-    type: Array<string>(),
-    required: true,
-    default: [],
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trial',
+        required: true,
+      },
+    ],
   },
   savedTrials: {
     type: Map,
-    of: [String],
+    of: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trial',
+        required: true,
+      },
+    ],
     required: true,
     default: {},
   },

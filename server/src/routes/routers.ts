@@ -12,6 +12,7 @@ import authRouter from './auth.route';
 import researcherRouter from './researcher.route';
 import trialRouter from './trial.route';
 import messageRouter from './message.route';
+import chatRouter from './chat.route';
 
 const prefixToRouterMap: { prefix: string; router: Router }[] = [
   {
@@ -33,6 +34,10 @@ const prefixToRouterMap: { prefix: string; router: Router }[] = [
   {
     prefix: '/api/messages',
     router: messageRouter,
+  },
+  {
+    prefix: '/api/chat',
+    router: chatRouter,
   },
 ];
 
