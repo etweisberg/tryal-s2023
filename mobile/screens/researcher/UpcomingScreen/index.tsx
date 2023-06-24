@@ -36,12 +36,12 @@ export default function UpcomingScreen({ navigation }: { navigation: any}) {
   }
 
   return (
-    <AppNavigator 
-      name={screenName} 
-      components={[MainPage]} 
-      profileFocusable 
-      studyFocusable 
-      user={user} 
+    <AppNavigator
+      name={screenName}
+      components={[MainPage]}
+      profileFocusable
+      studyFocusable
+      user={user}
       trial={study}
       onUserPress={onUserPress}
       />
