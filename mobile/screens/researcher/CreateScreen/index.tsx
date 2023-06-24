@@ -13,6 +13,7 @@ export default function CreateScreen() {
   const [date, setDate] = useState('');
   const [location, setLocation] = useState('');
   const [compensation, setCompensation] = useState('');
+  const [eligibleConditions, setEligibleConditions] = useState('');
   const [additionalInfo, setAdditionalInfo] = useState('');
 
   const DATA: MyObject = {
@@ -32,8 +33,35 @@ export default function CreateScreen() {
     Keyboard.dismiss();
   };
 
-  const createTrial = () => {
-    // needs to be implemented
+  const handleCreateTrial = async () => {
+    try {
+      const response = await fetch('http://localhost:4000/api/trial/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          date,
+          location,
+          eligibleConditions
+        })
+      });
+
+      if (response.status === 201) {
+        setIndex(index + 1);
+      } else if (response.status === 400) {
+        console.log('response status 400');
+        console.log(response);
+        const result = await response.json();
+        console.log(result.message)
+      } else {
+        console.log(response);
+      }
+    } catch (error: any) {
+      console.log(error)
+    }
   }
 
   return (
@@ -61,7 +89,7 @@ export default function CreateScreen() {
             </View>
         }
         
-        <Pressable onPress={createTrial} style={styles.button}>
+        <Pressable onPress={handleCreateTrial} style={styles.button}>
           <View style={{ flex: 1, justifyContent: 'center'}}>
             <Text style={{ color: 'white' }}>
               Create Trial!

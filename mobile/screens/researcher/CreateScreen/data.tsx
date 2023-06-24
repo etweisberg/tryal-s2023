@@ -6,6 +6,7 @@ export const pages = [
       'Date', 
       'Compensation', 
       'Location', 
+      'Eligible Conditions',
       'Additional Notes'
     ],
   }
