@@ -1,18 +1,47 @@
 import { View, Text, ScrollView } from 'react-native'
-import React, { useState } from 'react'
-import { User } from '../../../utils/types'
+import React, { useEffect, useState } from 'react'
+import { Trial, User } from '../../../utils/types'
 import styles from '../../../styles'
 import Header from '../../../components/Header'
 import { Avatar, Chip } from 'react-native-paper'
 import TabSwitch from '../../../components/TabSwitch'
 import { useNavigation } from '@react-navigation/native'
+import { getTrialFromId } from '../../../utils/apiCalls'
+import StudyList from '../../../components/StudyList'
 
 export default function ProfileScreen(
-  {navigation=useNavigation(), user, editable=false}: 
-  {navigation?: any, user: User | null, editable?: boolean}
+  {navigation=useNavigation(), user, editable=false, participant=true}: 
+  {navigation?: any, user: User | null, editable?: boolean, participant?: boolean}
   ) {
 
   const [currentTab, setCurrentTab] = useState<'About' | 'History'>('About')
+  const [userStudies, setUserStudies] = useState<Trial[]>([])
+
+  // Function to set user studies from user object
+  const setUserStudiesFromUser = async () => {
+    const newUserStudies: Trial[] = [];
+    // iterate through user.trials if participant, user.trialsOwned if researcher
+    for (const trial_id in (participant? user?.trials : user?.trialsOwned)) {
+      const trial_obj = await getTrialFromId(trial_id);
+      if (trial_obj) {
+          newUserStudies.push(trial_obj);
+      }
+    }
+
+    // Order upcoming studies by end date
+    newUserStudies.sort((a, b) => {
+      const aDate = new Date(a.date[1]);
+      const bDate = new Date(b.date[1]);
+      return aDate.getTime() - bDate.getTime();
+    });
+
+    setUserStudies(newUserStudies);
+  }
+
+  // set user studies on load
+  useEffect(() => {
+    setUserStudiesFromUser();
+  }, [])
 
   const toSettings = () => {
     navigation.navigate('Settings')
@@ -24,6 +53,10 @@ export default function ProfileScreen(
   
   const getInitials = (user: User) => {
     return user.firstName[0] + user.lastName[0]
+  }
+
+  const onStudyPress = () => {
+    // no action as of right now
   }
   
   return (
@@ -76,6 +109,7 @@ export default function ProfileScreen(
               onPressLeft={()=>setCurrentTab('About')} onPressRight={()=>setCurrentTab('History')}
               />
               {
+                // if currentTab is About, show user's medical conditions
                 currentTab === 'About' ?
                 <View>
                   <Text style={{fontSize: 16, paddingVertical: 8}}>
@@ -85,16 +119,15 @@ export default function ProfileScreen(
                         <Chip key={index} style={{marginHorizontal: 4, borderRadius: 10}}>{item}</Chip>
                     )}
                   </Text>
-                </View> :
+                </View> : // else, show studies participated in
                 <View>
                   <Text style={{fontSize: 16, paddingVertical: 8}}>
                     <Text style={{fontWeight: 'bold'}}>Studies Participated In: </Text>
-                    {/* add studies here */}
+                    {/* Show first 3 studies only */}
+                    <StudyList data={userStudies.slice(0,3)} onCardPress={onStudyPress}/>
                   </Text>
                 </View>
               }
-
-              
             </View>
 
           </ScrollView>
