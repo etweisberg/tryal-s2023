@@ -6,7 +6,7 @@ import Header from '../../../components/Header'
 import { Searchbar, Card, Divider } from 'react-native-paper'
 import StudyList from '../../../components/StudyList'
 import AppNavigator from '../../../components/AppNavigator'
-import styles from '../../../styles_test'
+import { styles, font_styles } from '../../../styles_temp'
 import { Trial, User } from '../../../utils/types'
 import { testTrials } from '../../../utils/testObjs'
 import { useSelector } from 'react-redux'
@@ -151,10 +151,10 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
           style={styles.searchbar}
         />
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
-          <Text style={styles.test}>Your Recents</Text>
+          <Text style={font_styles.section_header}>Your Recents</Text>
           <StudyList data={recents} horizontal onCardPress={onStudyCardPress}/>
   
-          <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Suggested Studies</Text>
+          <Text style={font_styles.section_header}>Suggested Studies</Text>
           <StudyList data={suggested} onCardPress={onStudyCardPress}/>        
         </ScrollView>
       </View>
