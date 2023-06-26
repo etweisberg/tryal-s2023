@@ -116,7 +116,7 @@ const addUsers = async (
     }
     const updatedChat = await Chat.findByIdAndUpdate(
       chatId,
-      { $addToSet: { arrayField: { $each: users } } },
+      { $addToSet: { users } },
       { new: true },
     ).exec();
     await updatedChat?.save();
