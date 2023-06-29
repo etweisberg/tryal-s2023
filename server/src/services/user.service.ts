@@ -2,7 +2,20 @@
  * All the functions for interacting with user data in the MongoDB database
  */
 import { hash } from 'bcrypt';
-import { User } from '../models/user.model';
+import { User, IUser } from '../models/user.model';
+import { ITrial } from '../models/trial.model';
+
+interface UpdateFieldsInterface {
+  firstName?: string;
+  lastName?: string;
+  prefix?: string;
+  email?: string;
+  password?: string;
+  age?: number | null;
+  medConditions?: Array<string>;
+  homeAddress?: string;
+  seekingCompensation?: boolean;
+}
 
 const passwordHashSaltRounds = 10;
 const removeSensitiveDataQuery = [
@@ -33,6 +46,9 @@ const createUser = async (
   password: string,
   age: number,
   homeAddress: string,
+  seekingCompensation: boolean,
+  medConditions: Array<string>,
+  prefix: string,
 ) => {
   const hashedPassword = await hash(password, passwordHashSaltRounds);
   if (!hashedPassword) {
@@ -46,6 +62,9 @@ const createUser = async (
     age,
     homeAddress,
     admin: false,
+    seekingCompensation,
+    medConditions,
+    prefix,
   });
   const user = await newUser.save();
   return user;
@@ -129,16 +148,27 @@ const getAllUsersFromDB = async () => {
  * @returns The upgraded {@link User}
  */
 const upgradeUserToAdmin = async (id: string) => {
-  const user = await User.findByIdAndUpdate(id, [
-    { $set: { admin: { $eq: [false, '$admin'] } } },
-  ]).exec();
+  const user = await User.findByIdAndUpdate(
+    id,
+    [{ $set: { admin: { $eq: [false, '$admin'] } } }],
+    { new: true },
+  ).exec();
   return user;
 };
 
-const upgradeUserToResearcher = async (id: string) => {
-  const user = await User.findByIdAndUpdate(id, [
-    { $set: { researcher: { $eq: [false, '$researcher'] } } },
-  ]).exec();
+const upgradeUserToResearcher = async (id: string, institution: string) => {
+  const user = await User.findByIdAndUpdate(
+    id,
+    [
+      {
+        $set: {
+          researcher: { $eq: [false, '$researcher'] },
+          institution,
+        },
+      },
+    ],
+    { new: true },
+  ).exec();
   return user;
 };
 
@@ -153,16 +183,24 @@ const deleteUserById = async (id: string) => {
 };
 
 const addTrialToUser = async (userId: string, trialId: string) => {
-  const user = await User.findByIdAndUpdate(userId, {
-    $push: { trials: trialId },
-  }).exec();
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $push: { trials: trialId },
+    },
+    { new: true },
+  ).exec();
   return user;
 };
 
 const addTrialOwnershipToUser = async (userId: string, trialId: string) => {
-  const user = await User.findByIdAndUpdate(userId, {
-    $push: { trialsOwned: trialId },
-  }).exec();
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $push: { trialsOwned: trialId },
+    },
+    { new: true },
+  ).exec();
   return user;
 };
 
@@ -172,21 +210,87 @@ const addTrialClickToUser = async (userId: string, trialId: string) => {
       clickedOnTrials: trialId,
     },
   }).exec();
-  const user = await User.findByIdAndUpdate(userId, {
-    $push: {
-      clickedOnTrials: {
-        $each: [trialId],
-        $position: 0,
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $push: {
+        clickedOnTrials: {
+          $each: [trialId],
+          $position: 0,
+        },
       },
     },
-  }).exec();
+    { new: true },
+  ).exec();
   return user;
 };
 
-const addTrialSaveToUser = async (userId: string, trialId: string) => {
-  const user = await User.findByIdAndUpdate(userId, {
-    $addToSet: { savedTrials: trialId },
-  }).exec();
+/**
+ * Finds the user with the given id and adds the given trial to their savedTrials
+ * by parsing the trials elgible conditions and adding the trial to the array in savedTrials with
+ * the same key as the elgible condition
+ * @param userId
+ * @param trial
+ * @returns user
+ */
+
+const addTrialSaveToUser = async (userId: string, trial: ITrial) => {
+  const user = await User.findById(userId).exec();
+  if (!user) {
+    throw new Error('User not found');
+  }
+  try {
+    const trialEligibleConditions = trial.eligibleConditions;
+    const savedTrials = user?.savedTrials;
+    trialEligibleConditions.forEach((condition) => {
+      if (savedTrials.has(condition)) {
+        const trialIds = savedTrials.get(condition);
+        if (!trialIds?.includes(trial.id)) {
+          trialIds?.push(trial.id);
+        }
+      } else {
+        savedTrials.set(condition, [trial.id]);
+      }
+    });
+    user.savedTrials = savedTrials;
+    await user.save();
+    return user;
+  } catch (err) {
+    throw new Error('Unable to save trial');
+  }
+};
+
+/** A function that updates the user profile
+ * @param id The id of the user to update
+ * @param updateFields JSON object containing the fields to update
+ */
+
+const updateUser = async (id: string, updateFields: UpdateFieldsInterface) => {
+  const user = await User.findByIdAndUpdate(
+    id,
+    [
+      {
+        $set: updateFields,
+      },
+    ],
+    { new: true },
+  ).exec();
+  return user;
+};
+
+/**
+ * A function that adds a trial to the user's requestedTrials
+ * @param userId The id of the user to update
+ * @param trialId The id of the trial to add
+ */
+const addTrialRequestToUser = async (userId: string, trialId: string) => {
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $push: { requestedTrials: trialId },
+    },
+    { new: true },
+  ).exec();
   return user;
 };
 
@@ -206,4 +310,6 @@ export {
   addTrialClickToUser,
   addTrialSaveToUser,
   addTrialOwnershipToUser,
+  updateUser,
+  addTrialRequestToUser,
 };
