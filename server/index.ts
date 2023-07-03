@@ -1,3 +1,4 @@
+import { config } from './src/config/herokuConfig';
 import MongoConnection from './src/config/mongoConnection';
 import createExpressApp from './src/config/createExpressApp';
 import 'dotenv/config';
@@ -14,8 +15,8 @@ const main = async () => {
   const app = createExpressApp(dbConnection.createSessionStore());
 
   // Instantiate a server to listen on a specified port
-  app.listen(app.get('port'), () => {
-    console.log(`Listening on port ${app.get('port')} 🚀`);
+  app.listen(config.server.port, () => {
+    console.log(`Listening on port ${config.server.port} 🚀`);
     console.log('  Press Control-C to stop\n');
   });
 };
