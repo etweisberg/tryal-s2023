@@ -5,28 +5,24 @@ import Header from '../../../components/Header'
 import { Chip, Searchbar } from 'react-native-paper'
 import StudyList from '../../../components/StudyList'
 import styles from '../../../styles'
-import { testTrials, testUser1 } from '../../../utils/testObjs'
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/Ionicons'
+import { getUserFromId } from '../../../utils/apiCalls'
 
 
 export default function StudyScreen(
-  {trial, onUserPress=({user}: {user: User}) => null}:
-  {trial: Trial | null, onUserPress?: ({user}: {user: User}) => void  }
+  {trial, onUserPress=({user}: {user: User | null}) => null}:
+  {trial: Trial | null, onUserPress?: ({user}: {user: User | null}) => void  }
   ) {
 
   const navigation = useNavigation();
   const toPrev = () => {
     navigation.goBack();
   }
-  
-  const getUserFromID : (id: string) => User = (id: string) => {
-    return testUser1;
-  }
 
-  const onNamePress = (id: (string | undefined)) => {
+  const onNamePress = async (id: (string | undefined)) => {
     if (id) {
-      onUserPress({user: getUserFromID(id)});
+      onUserPress({user: await getUserFromId(id)});
     }
   }
 

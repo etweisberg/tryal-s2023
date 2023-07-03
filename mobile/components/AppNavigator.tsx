@@ -16,12 +16,12 @@ export default function AppNavigator(
         profileFocusable?: boolean, 
         studyFocusable?: boolean, 
         user?: User | null,
-        onUserPress?: ({user}: {user: User}) => void,
+        onUserPress?: ({user}: {user: User | null}) => void,
         setUser?: React.Dispatch<React.SetStateAction<User | null>>,
         trial?: Trial | null,
         setTrial?: React.Dispatch<React.SetStateAction<User | null>>,
     }) {
-    
+
   return (
     <Stack.Navigator screenOptions={{
         headerShown: false,

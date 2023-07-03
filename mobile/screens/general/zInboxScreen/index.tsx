@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import Header from '../../../components/Header';
 import TabSwitch from '../../../components/TabSwitch';
-import MessageScreen from '../MessageScreen';
+import MessageScreen from '../zMessageScreen';
 import NotificationScreen from '../zNotificationScreen';
 import styles from '../../../styles';
 

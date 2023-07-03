@@ -118,7 +118,7 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
     navigation.navigate('StudyInfoScreen' + screenName);
   }
 
-  const onUserPress : ({user}: {user: User}) => void = ({user}: {user: User}) => {
+  const onUserPress = ({user}: {user: User | null}) => {
     setUser(user);
     navigation.navigate('ProfileInfoScreen' + screenName);
   }

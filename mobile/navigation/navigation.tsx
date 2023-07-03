@@ -32,7 +32,7 @@ import { RootState } from '../stores';
 import { getCurrentUser } from '../stores/userReducer';
 import LoadingScreen from '../screens/general/LoadingScreen';
 import ChatScreen from '../screens/common/ChatScreen';
-import MessageScreen from '../screens/general/MessageScreen';
+import MessageScreen from '../screens/general/zMessageScreen';
 import ResearcherAuthScreen from '../screens/authentication/ResearcherAuthScreen';
 
 

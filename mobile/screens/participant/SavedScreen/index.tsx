@@ -78,7 +78,7 @@ export default function SavedScreen({ navigation }: { navigation: any}) {
     // THIS DOES NOT NEED TO BE IMPLEMENTED ANYMORE SINCE GROUPS ARE AUTO-GENERATED BASED ON THEIR METADATA
   }
 
-  const onUserPress : ({user}: {user: User}) => void = ({user}: {user: User}) => {
+  const onUserPress = ({user}: {user: User | null}) => {
     setUser(user);
     navigation.navigate('ProfileInfoScreen' + screenName);
   }
