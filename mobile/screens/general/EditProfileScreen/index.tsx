@@ -25,7 +25,9 @@ export default function EditProfileScreen({ navigation }: { navigation: any }) {
   // function to handle edit profile
   const handleEditProfile = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/update-profile/' + user?._id.toString(), {
+      const route = 'https://evening-sierra-44597-c9d720e3bf04.herokuapp.com/api/auth/update-profile/' + user?._id.toString();
+      console.log(route)
+      const response = await fetch(route, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -38,6 +40,7 @@ export default function EditProfileScreen({ navigation }: { navigation: any }) {
           medConditions: medConditions,
         }),
       });
+      console.log(response)
       const result = await response.json();
       if (response.status === 200) {
         // update user in redux

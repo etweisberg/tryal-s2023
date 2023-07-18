@@ -69,7 +69,7 @@ export default function ResearcherAuthScreen({ navigation }: {navigation: any}) 
   // function to handle researcher auth
   const handleResearcherAuth = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/researcher/researcher-request', {
+      const response = await fetch('https://evening-sierra-44597-c9d720e3bf04.herokuapp.com/api/researcher/researcher-request', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

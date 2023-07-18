@@ -80,10 +80,10 @@ export default function MyStudiesScreen({ navigation }: {navigation: any}) {
         <Header title='My Studies'/>
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Pending</Text>
-          <StudyList data={testTrials} horizontal onCardPress={onStudyCardPress}/>
+          <StudyList data={pending} horizontal onCardPress={onStudyCardPress}/>
   
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Upcoming</Text>
-          <StudyList data={testTrials} onCardPress={onStudyCardPress}/>     
+          <StudyList data={upcoming} onCardPress={onStudyCardPress}/>     
   
           {/* <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>All Studies</Text>
           <StudyList data={testTrials} onCardPress={onStudyCardPress}/>    */}

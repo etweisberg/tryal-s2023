@@ -9,7 +9,8 @@ import Form from '../../../components/Form';
 import { MyObject } from '../../../components/types';
 import { authErrors } from '../../../utils/errors';
 import styles from '../../../styles'
-import { userLoginCall } from '../../../utils/apiCalls';
+import { userLoginCall, userLogoutCall } from '../../../utils/apiCalls';
+import { User } from '../../../utils/types'
 
 const pages = [
   {
@@ -30,6 +31,21 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
 
   const dispatch = useDispatch();
 
+  const signOut = async () => {
+    const response = await userLogoutCall();
+    if (response == null) {
+      alert('Something went wrong. Please try again.')
+      console.log(response);
+      return;
+    } else if (response.status==200) {
+      navigation.navigate('Auth');
+    } else {
+      alert('Something went wrong. Please try again.')
+      console.log(response);
+      return;
+    }
+  }
+
   const toRegister = () => {
     navigation.navigate('Register')
     setError(['']);
@@ -46,9 +62,11 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
 
   const handleLogin = async () => {
     const user = await userLoginCall(email, password);
-    if (user) {
+    // if user is type User (as tested by whether or not it has property 
+    // "verificationToken"), navigate to participant tabs
+    if (user.hasOwnProperty('verificationToken')) {
       dispatch(loginUser(user));
-      navigation.navigate('ParticipantTabs');
+      navigation.navigate('ParticipantTabs', { screen: 'Explore' })
     }
   };
 
@@ -67,7 +85,7 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
                 })
               })}
               bottomChildren={
-                <TouchableOpacity onPress={toRegister} style={styles.textButton}>
+                <TouchableOpacity onPress={signOut} style={styles.textButton}>
                   <Text style={{ color: '#195064' }}>Forgot your password?</Text>
                 </TouchableOpacity>
               }

@@ -35,7 +35,7 @@ export default function CreateScreen() {
 
   const handleCreateTrial = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/trial/create', {
+      const response = await fetch('https://evening-sierra-44597-c9d720e3bf04.herokuapp.com/api/trial/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

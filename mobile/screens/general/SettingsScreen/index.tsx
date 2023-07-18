@@ -7,14 +7,16 @@ import { Card, Divider } from 'react-native-paper'
 // import { data } from './data';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BarList, { BarListItem } from '../../../components/BarList';
-import { useSelector } from 'react-redux';
-import { getCurrentUser } from '../../../stores/userReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentUser, logoutUser } from '../../../stores/userReducer';
+import { serverUrl, userLogoutCall } from '../../../utils/apiCalls';
 
 export default function SettingsScreen(
   { navigation, participant }: 
   { navigation: any, participant: boolean} ) {
   
   const user = useSelector(getCurrentUser);
+  const dispatch = useDispatch();
   
   const [search, setSearch] = useState<string>('');
   const updateSearch: (text: string) => void = (search: string) => {
@@ -63,7 +65,22 @@ export default function SettingsScreen(
     navigation.navigate('TermsOfService')
   }
 
-  const signOut = () => {
+  const signOut = async () => {
+    const response = await userLogoutCall();
+    if (response == null) {
+      console.log(response);
+      alert('Error signing out')
+      return;
+    } else if (response.status==200) {
+      dispatch(logoutUser());
+      navigation.navigate('Auth');
+    } else {
+      console.log(response);
+      alert('Error signing out');
+      dispatch(logoutUser());
+      navigation.navigate('Auth');
+      return;
+    }
   }
 
   const data: BarListItem[] = [

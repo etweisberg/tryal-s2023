@@ -5,16 +5,22 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Navigation from './navigation/navigation';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
-import { store } from './stores'
+import { persistor, store } from './stores'
+import { PersistGate } from 'redux-persist/integration/react';
 
 export default function App() {
   return (
     <Provider store = {store}>
+      <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
+
       <SafeAreaProvider>
         {/* <View style={styles.container}> */}
           <Navigation />
         {/* </View> */}
       </SafeAreaProvider>
+
+      </PersistGate>
+
     </Provider>
   );
 }

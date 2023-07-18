@@ -14,10 +14,10 @@ interface UserState {
 }
 
 const initialState: UserState = {
-  user: testUser1,
+  user: null,
   isLoading: false,
   error: null,
-  focusedChatRoom: testChatRoom1,
+  focusedChatRoom: null,
   focusedTabs: 'participant'
 };
 

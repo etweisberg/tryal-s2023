@@ -16,17 +16,17 @@ import { pages } from './data';
 
 export default function RegisterScreen({ navigation }: {navigation: any}) {
   // state for form inputs
-  const [username, setUsername] = useState('c');
-  const [email, setEmail] = useState('a@a');
-  const [firstName, setFirstName] = useState('c');
-  const [lastName, setLastName] = useState('w');
-  const [sex, setSex] = useState('m');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [sex, setSex] = useState('');
   const [gender, setGender] = useState('');
   const [age, setAge] = useState(19);
   const [race, setRace] = useState('');
   const [ethnicity, setEthnicity] = useState('');
-  const [password, setPassword] = useState('password');
-  const [passwordConfirm, setPasswordConfirm] = useState('password');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const DATA: MyObject = {
     'Email': [email, setEmail],
@@ -69,24 +69,24 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
   }
 
   // Snackbar state and functions
-  const [visible, setVisible] = React.useState(false);
-  const [snackbarMsg, setSnackbarMsg] = React.useState('');
-  const onDismissSnackBar = () => setVisible(false);
-  function MySnackbar() {
-    return (
-      <Snackbar
-        style={styles.snackbar}
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        action={{
-          label: 'Close',
-          onPress: onDismissSnackBar,
-          color: 'white'
-        }}>
-        {snackbarMsg}
-      </Snackbar>
-    );
-  }
+  // const [visible, setVisible] = React.useState(false);
+  // const [snackbarMsg, setSnackbarMsg] = React.useState('');
+  // const onDismissSnackBar = () => setVisible(false);
+  // function MySnackbar() {
+  //   return (
+  //     <Snackbar
+  //       style={styles.snackbar}
+  //       visible={visible}
+  //       onDismiss={onDismissSnackBar}
+  //       action={{
+  //         label: 'Close',
+  //         onPress: onDismissSnackBar,
+  //         color: 'white'
+  //       }}>
+  //       {snackbarMsg}
+  //     </Snackbar>
+  //   );
+  // }
 
 
   // navigation functions
@@ -103,12 +103,15 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
   const handleRegister = async () => {
     try {
       const homeAddress = '1234 Main St';
-      const response = await fetch('http://localhost:4000/api/auth/register', {
+      const seekingCompensation = true;
+      const prefix = 'Mr.';
+      const medConditions = 'None';
+      const response = await fetch('https://evening-sierra-44597-c9d720e3bf04.herokuapp.com/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ firstName, lastName, email, age, homeAddress, password }),
+        body: JSON.stringify({ firstName, lastName, email, age, homeAddress, password, seekingCompensation, medConditions, prefix }),
       });
       
       if (response.status === 201) {
@@ -118,10 +121,12 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
         console.log(response);
         const result = await response.json();
         console.log(result.message)
-        setSnackbarMsg(result.message);
-        setVisible(true);
+        alert(result.message)
+        // setSnackbarMsg(result.message);
+        // setVisible(true);
       } else {
         console.log(response);
+        alert('Something went wrong. Please try again later.')
       }
 
     } catch (error: any) {
@@ -194,7 +199,7 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
                   red: authErrors[item].some((item) => error.includes(item))
                 })
               })}
-              topChildren={<MySnackbar/>}
+              // topChildren={<MySnackbar/>}
             /> : 
             <View style={styles.inputContainer}>
               <Text style={{fontSize: 24, fontWeight: 'bold'}}>Success!</Text>  
