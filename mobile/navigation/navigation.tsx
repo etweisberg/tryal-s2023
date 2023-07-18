@@ -34,6 +34,9 @@ import LoadingScreen from '../screens/general/LoadingScreen';
 import ChatScreen from '../screens/common/ChatScreen';
 import MessageScreen from '../screens/general/zMessageScreen';
 import ResearcherAuthScreen from '../screens/authentication/ResearcherAuthScreen';
+import { TouchableOpacity, View, Text } from 'react-native';
+import styles from '../styles';
+import RedirectScreen from '../screens/authentication/RedirectScreen';
 
 
 const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
@@ -119,6 +122,12 @@ function ResearcherTabScreen({navigation}: {navigation: any}) {
 }
 
 function ParticipantTabScreen({navigation}: {navigation: any}) {
+  const user = useSelector(getCurrentUser);
+
+  const toAuth = () => {
+    navigation.navigate("Auth");
+  }
+
     return (
       <ParticipantTab.Navigator
       initialRouteName="Explore"
@@ -153,12 +162,18 @@ function ParticipantTabScreen({navigation}: {navigation: any}) {
       })}
       >
         <ParticipantTab.Screen name="Explore" component={ExploreScreen}/>
-        <ParticipantTab.Screen name="Saved" component={SavedScreen}/>
-        <ParticipantTab.Screen name="My Studies" component={MyStudiesScreen}/>
-        <ParticipantTab.Screen name="Inbox" component={MessageScreen}/>
+        <ParticipantTab.Screen name="Saved" component={user ? SavedScreen : RedirectScreen}/>
+        <ParticipantTab.Screen name="My Studies" component={user ? MyStudiesScreen : RedirectScreen}/>
+        <ParticipantTab.Screen name="Inbox" component={user ? MessageScreen : RedirectScreen}/>
         <ParticipantTab.Screen name="Profile" >
-          {() => <ProfileStackScreen navigation={navigation} userType='participant' />}
-        </ParticipantTab.Screen>        
+        {  // Show Screen only if logged in 
+          user ? 
+          () => <ProfileStackScreen navigation={navigation} userType='participant' />
+          :
+          () => <RedirectScreen navigation={navigation}/>
+        }
+        </ParticipantTab.Screen>
+               
       </ParticipantTab.Navigator>
     )
 }
