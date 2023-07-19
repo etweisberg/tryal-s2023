@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ScrollView, StyleSheet } from 'react-native'
+import { View, Text, SafeAreaView, ScrollView, StyleSheet, RefreshControl } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '../../../components/Header'
 import { Searchbar } from 'react-native-paper'
@@ -12,9 +12,17 @@ import { getCurrentUser } from '../../../stores/userReducer'
 import { useSelector } from 'react-redux'
 import { getTrialFromId } from '../../../utils/apiCalls'
 
-const screenName='MyStudies'
+const screenName = 'MyStudies'
 
 export default function MyStudiesScreen({ navigation }: {navigation: any}) {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setStudies();
+    setRefreshing(false);
+  }, []);
+
   const [user, setUser] = useState<User | null>(null);
   const [study, setStudy] = useState<Trial | null>(null);
 
@@ -22,11 +30,11 @@ export default function MyStudiesScreen({ navigation }: {navigation: any}) {
   const [pending, setPending] = useState<Trial[]>([]);
   const [upcoming, setUpcoming] = useState<Trial[]>([]);
 
-  // Get current user
-  const currentUser = useSelector(getCurrentUser);
-
   // Function to set pending, upcoming, and all studies
   const setStudies = async () => {
+    // Get current user
+    const currentUser = useSelector(getCurrentUser);
+
     // Get trials from user
     const newPending: Trial[] = [];
     const newUpcoming: Trial[] = []; 
@@ -78,7 +86,13 @@ export default function MyStudiesScreen({ navigation }: {navigation: any}) {
     return (
       <View style={styles.container}>
         <Header title='My Studies'/>
-        <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false} 
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          style={{flex: 1, width: '100%'}}>
+          
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Pending</Text>
           <StudyList data={pending} horizontal onCardPress={onStudyCardPress}/>
   

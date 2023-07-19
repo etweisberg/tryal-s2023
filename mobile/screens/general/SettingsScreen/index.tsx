@@ -1,20 +1,20 @@
 import { View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../../../components/Header';
 import styles from '../../../styles';
 import { Searchbar } from 'react-native-paper';
 import { Card, Divider } from 'react-native-paper'
-// import { data } from './data';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BarList, { BarListItem } from '../../../components/BarList';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser, logoutUser } from '../../../stores/userReducer';
 import { serverUrl, userLogoutCall } from '../../../utils/apiCalls';
+import { User } from '../../../utils/types';
 
 export default function SettingsScreen(
   { navigation, participant }: 
   { navigation: any, participant: boolean} ) {
-  
+    
   const user = useSelector(getCurrentUser);
   const dispatch = useDispatch();
   
@@ -38,14 +38,12 @@ export default function SettingsScreen(
   const switchTabs = () => {
     if (participant) {
       if (user?.researcher) {
-        navigation.navigate('ResearcherTabs')
-        navigation.navigate('Studies')
+        navigation.navigate('ResearcherTabs', {screen: 'Studies'})
       } else {
         navigation.navigate('ResearcherAuth')
       }
     } else {
-      navigation.navigate('ParticipantTabs')
-      navigation.navigate('Explore')
+      navigation.navigate('ParticipantTabs', {screen: 'Explore'})
     }
   }
 
@@ -66,19 +64,13 @@ export default function SettingsScreen(
   }
 
   const signOut = async () => {
+    dispatch(logoutUser());
     const response = await userLogoutCall();
-    if (response == null) {
-      console.log(response);
-      alert('Error signing out')
-      return;
-    } else if (response.status==200) {
-      dispatch(logoutUser());
+    if (response !== null) {
       navigation.navigate('Auth');
     } else {
+      alert('Something went wrong. Please try again.')
       console.log(response);
-      alert('Error signing out');
-      dispatch(logoutUser());
-      navigation.navigate('Auth');
       return;
     }
   }
@@ -107,7 +99,7 @@ export default function SettingsScreen(
     {
         title: 'Sign Out',
         onPress: signOut
-    },
+    }
   ];
 
   return (

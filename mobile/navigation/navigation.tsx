@@ -162,7 +162,7 @@ function ParticipantTabScreen({navigation}: {navigation: any}) {
       })}
       >
         <ParticipantTab.Screen name="Explore" component={ExploreScreen}/>
-        <ParticipantTab.Screen name="Saved" component={user ? SavedScreen : RedirectScreen}/>
+        <ParticipantTab.Screen name="Saved" component={user ? RedirectScreen : RedirectScreen}/>
         <ParticipantTab.Screen name="My Studies" component={user ? MyStudiesScreen : RedirectScreen}/>
         <ParticipantTab.Screen name="Inbox" component={user ? MessageScreen : RedirectScreen}/>
         <ParticipantTab.Screen name="Profile" >

@@ -8,10 +8,9 @@ import StudyList from '../../../components/StudyList'
 import AppNavigator from '../../../components/AppNavigator'
 import styles from '../../../styles'
 import { Trial, User } from '../../../utils/types'
-import { testTrials } from '../../../utils/testObjs'
 import { useSelector } from 'react-redux'
 import { getCurrentUser } from '../../../stores/userReducer'
-import { getTrialFromId, serverUrl } from '../../../utils/apiCalls'
+import { getTrialFromId, getUserFromId, serverUrl } from '../../../utils/apiCalls'
 
 const screenName = 'Explore'
 
@@ -43,9 +42,13 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
     const newSuggested: Trial[] = [];
     const newAllStudies: Trial[] = [];
 
+    console.log(currentUser?.clickedOnTrials)
+
     // Get recents from recently clicked on trials
-    for (const trial_id in (currentUser?.clickedOnTrials)) {
+    for (const trial_id of (currentUser?.clickedOnTrials || [])) {
+      console.log(trial_id)
       const trial_obj = await getTrialFromId(trial_id);
+      console.log(trial_obj)
       if (trial_obj) {
         newRecents.push(trial_obj);
       }
@@ -92,17 +95,14 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
 
     // Set all studies
     const route2 = serverUrl + "/api/trial/all";
+    console.log(route2)
     const response2 = await fetch(route2, {
       method: 'GET',
-      // headers: {
-      //   'Content-Type': 'application/json',
-      // },
     });
     const result2 = await response2.json();
 
     // If response is OK, add trials from result to all studies
     if (response2.status === 200) {
-      console.log(result2)
       for (const trial of result2) {
         const trial_obj: Trial = {
           _id: trial._id,
@@ -131,7 +131,14 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
     setSuggested(newSuggested);
     setAllStudies(newAllStudies);
 
-    console.log('Studies updated');
+    // log studies
+    // console.log('Recents: ');
+    // console.log(newRecents);
+    // console.log('Suggested: ');
+    // console.log(newSuggested);
+    // console.log('All Studies: ');
+    // console.log(newAllStudies);
+    // console.log('Studies updated');
   }
 
   // define a useEffect for recents and suggested studies from db

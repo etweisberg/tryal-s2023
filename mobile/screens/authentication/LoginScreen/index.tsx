@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Pressable, StyleSheet } from 'react-native';
 import { View, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../../stores/userReducer';
+import { loginUser, logoutUser } from '../../../stores/userReducer';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../../components/Header';
 import Form from '../../../components/Form';
@@ -32,12 +32,9 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
   const dispatch = useDispatch();
 
   const signOut = async () => {
+    dispatch(logoutUser());
     const response = await userLogoutCall();
-    if (response == null) {
-      alert('Something went wrong. Please try again.')
-      console.log(response);
-      return;
-    } else if (response.status==200) {
+    if (response !== null) {
       navigation.navigate('Auth');
     } else {
       alert('Something went wrong. Please try again.')
@@ -52,7 +49,7 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
   }
 
   const toParticipantTabs = () => {
-    navigation.navigate('ParticipantTabs')
+    navigation.navigate('ParticipantTabs', { screen: 'Explore' })
     setError(['']);
   }
 
@@ -64,7 +61,7 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
     const user = await userLoginCall(email, password);
     // if user is type User (as tested by whether or not it has property 
     // "verificationToken"), navigate to participant tabs
-    if (user.hasOwnProperty('verificationToken')) {
+    if (user !== null && user !== undefined) {
       dispatch(loginUser(user));
       navigation.navigate('ParticipantTabs', { screen: 'Explore' })
     }
