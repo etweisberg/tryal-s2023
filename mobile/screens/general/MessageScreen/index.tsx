@@ -8,9 +8,8 @@ import styles from '../../../styles'
 import { ChatRoom, Trial, User } from '../../../utils/types';
 import { testChatRoom1, testChatRoom2, testChatRoom3 } from '../../../utils/testObjs';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentUser } from '../../../stores/userReducer';
+import { getChatRooms } from '../../../stores/chatsReducer';
 
-const DATA: ChatRoom[] = [testChatRoom1, testChatRoom2, testChatRoom3];
 const screenName = 'Messages';
 
 export default function MessageScreen({navigation}: {navigation: any}) {
@@ -18,9 +17,8 @@ export default function MessageScreen({navigation}: {navigation: any}) {
   const [user, setUser] = useState<User | null>(null);
   const [study, setStudy] = useState<Trial | null>(null);
 
-  const dispatch = useDispatch();
-
-  // const user = useSelector(getCurrentUser);
+  const data = useSelector(getChatRooms);
+  console.log(data);
 
   const updateSearch: (text: string) => void = (search: string) => {
     setSearch(search);
@@ -40,7 +38,7 @@ export default function MessageScreen({navigation}: {navigation: any}) {
         <ScrollView showsVerticalScrollIndicator={false} 
         style={{flex: 1, width: '100%', alignContent:'center'}}
         >
-          <MessagesList data={DATA} navigation={navigation}/>
+          <MessagesList data={data} navigation={navigation}/>
         </ScrollView>
       </View>
     )

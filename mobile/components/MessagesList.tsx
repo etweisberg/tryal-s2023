@@ -1,52 +1,52 @@
 import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Divider } from 'react-native-paper'
-import { ChatRoom, Message } from '../utils/types';
+import { ChatRoom, Message, User } from '../utils/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../stores';
-import { getCurrentUser, setFocusedChatRoom } from '../stores/userReducer';
+import { getCurrentUser } from '../stores/userReducer';
+import { setFocusedChatRoom, setFocusedMessager } from '../stores/chatsReducer';
+import { getUserFromId } from '../utils/apiCalls';
 
 export default function MessagesList({navigation, data}: {navigation: any, data: ChatRoom[]}) {
-
-  const [chatActive, setChatActive] = useState<boolean>(false);
   const dispatch = useDispatch();
+  const user = useSelector(getCurrentUser);
+  const [messagers, setMessagers] = useState<string[]>([]);
+
+  useEffect(() => {
+    const getMessagers = async () => {
+      var messagers : string[] = [];
+      for (const chatRoom of data) {
+        const messager = await getMessagerFromParticipants(chatRoom.participants);
+        messagers.push(messager?.firstName + ' ' + messager?.lastName);
+      }
+      setMessagers(messagers);
+    }
+    getMessagers();
+  }, [data])
+  
+  const getMessagerFromParticipants = async (participants: string[]) => {
+    const messagerId = participants.filter((participant) => participant !== user?._id)[0];
+    return await getUserFromId(messagerId);
+  }
 
   const getMostRecentMessage = (messages: Message[] | null) => {
     return messages?.slice(-1)[0]?.content;
   }
 
-  const getMessagerFromParticipants = (participants: string[]) => {
-    return participants.filter((participant) => participant !== user?._id)[0];
-  }
-
-  const getNameFromID = (id: string) => {
-    if (id === '1') {
-      return 'Chris W.'
-    } else if (id === '2') {
-      return 'Ethan W.'
-    } else if (id === '3') {
-      return 'Jasper Z.'
-    } else {
-      return ''
-    }
-  }
-
-  const setFocused = (chatRoom : ChatRoom) => {
+  const setFocused = async (chatRoom : ChatRoom) => {
     dispatch(setFocusedChatRoom(chatRoom));
+    dispatch(setFocusedMessager(await getMessagerFromParticipants(chatRoom.participants)));
     navigation.navigate('Chat');
-  }
-
-  const user = useSelector((state: RootState) => getCurrentUser(state));
-  
+  }  
   
   return (
     <View >
         { data ?
-          data.map((item: ChatRoom)=> {
+          data.map((item: ChatRoom, index: number)=> {
             return(
               <Pressable key={item._id} onPress={() => setFocused(item)}>
                 <Card style={styles.card} mode='contained'>
-                  <Card.Title title={getMessagerFromParticipants(item.participants)} />
+                  <Card.Title title={messagers[index]} />
                   <Card.Content>
                     <Text>{getMostRecentMessage(item.messages)}</Text>
                   </Card.Content>

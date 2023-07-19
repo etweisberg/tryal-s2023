@@ -50,5 +50,5 @@ export type Message = {
 export type ChatRoom = {
     _id: string;
     participants: string[];
-    messages: Message[] | null;
+    messages: Message[];
 }

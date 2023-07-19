@@ -3,9 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' 
 import { userReducer } from './userReducer';
+import { socketReducer } from './zsocketReducer';
+import { chatsReducer } from './chatsReducer';
 
 export interface RootState {
   user: ReturnType<typeof userReducer>;
+  chats: ReturnType<typeof chatsReducer>;
 }
 
 const persistConfig = {
@@ -13,11 +16,12 @@ const persistConfig = {
   storage: AsyncStorage,
 }
 
-const persistedReducer = persistReducer(persistConfig, userReducer)
+const persistedUserReducer = persistReducer(persistConfig, userReducer)
 
 export const store = configureStore({
   reducer: {
-    user: persistedReducer,
+    user: persistedUserReducer,
+    chats: chatsReducer,
   },
 });
 

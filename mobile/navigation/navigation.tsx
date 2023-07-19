@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -32,7 +32,7 @@ import { RootState } from '../stores';
 import { getCurrentUser } from '../stores/userReducer';
 import LoadingScreen from '../screens/general/LoadingScreen';
 import ChatScreen from '../screens/common/ChatScreen';
-import MessageScreen from '../screens/general/zMessageScreen';
+import MessageScreen from '../screens/general/MessageScreen';
 import ResearcherAuthScreen from '../screens/authentication/ResearcherAuthScreen';
 import { TouchableOpacity, View, Text } from 'react-native';
 import styles from '../styles';
