@@ -5,12 +5,14 @@ import { ProfileStackParamList } from '../../../navigation/types';
 import Header from '../../../components/Header';
 import styles from '../../../styles';
 import BarList, { BarListItem } from '../../../components/BarList';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser, loginUser } from '../../../stores/userReducer';
+import { serverUrl } from '../../../utils/apiCalls';
 
 export default function EditProfileScreen({ navigation }: { navigation: any }) {
   // get user from redux
   const user = useSelector(getCurrentUser);
+  const dispatch = useDispatch();
 
   const [email, setEmail] = React.useState<string>(user?.email || '');
   const [firstName, setFirstName] = React.useState<string>(user?.firstName || '');
@@ -25,7 +27,7 @@ export default function EditProfileScreen({ navigation }: { navigation: any }) {
   // function to handle edit profile
   const handleEditProfile = async () => {
     try {
-      const route = 'https://evening-sierra-44597-c9d720e3bf04.herokuapp.com/api/auth/update-profile/' + user?._id.toString();
+      const route = serverUrl + '/api/auth/update-profile/' + user?._id.toString();
       console.log(route)
       const response = await fetch(route, {
         method: 'PUT',
@@ -40,7 +42,6 @@ export default function EditProfileScreen({ navigation }: { navigation: any }) {
           medConditions: medConditions,
         }),
       });
-      console.log(response)
       const result = await response.json();
       if (response.status === 200) {
         // update user in redux
@@ -68,12 +69,13 @@ export default function EditProfileScreen({ navigation }: { navigation: any }) {
           institution: result.institution,
           admin: result.admin,
         }
+        console.log(user)
         dispatch(loginUser(user))      
       } else {
         console.log(response);
       }
     } catch (error: any) {
-      console.log(error)
+      console.log(error.message)
       return null;
     }
   }
@@ -108,8 +110,4 @@ export default function EditProfileScreen({ navigation }: { navigation: any }) {
   </View>
     
   )
-}
-
-function dispatch(arg0: { payload: import("../../../utils/types").User | null; type: "user/loginUser"; }) {
-  throw new Error('Function not implemented.');
 }
