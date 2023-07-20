@@ -135,15 +135,22 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
 
   // function to go to next page, validate inputs, and handle register
   const toNext = async () => {
+    // Validate inputs if not on final acceptance page
     if (index < pages.length) {
       const pageInputs = pages[index].inputs.reduce((acc, val) => ({ ...acc, [val]: DATA[val][0] }), {});
-      await registerSchemas[index].validate(pageInputs, { abortEarly: false });
-    }
-    if (index < pages.length - 1) {
-      setIndex(index + 1);
-      setError(['']);
-    } else if (index === pages.length - 1) {
-      handleRegister();
+      await registerSchemas[index].validate(pageInputs, { abortEarly: false })
+        .then(() => {
+          if (index < pages.length - 1) {
+            setIndex(index + 1);
+            setError(['']);
+          } else if (index === pages.length - 1) {
+            handleRegister(); // Page will be incremented here
+          } 
+        })
+        .catch((err: any) => {
+          setError(err.errors);
+        })
+    // Go to login page if on final acceptance page
     } else {
       toLogin();
     }

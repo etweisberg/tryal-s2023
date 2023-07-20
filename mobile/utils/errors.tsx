@@ -12,6 +12,7 @@ export const authErrors : MyObject = {
   'Age': [],
   'Race': [],
   'Ethnicity': [],
+  'Institution': ['Institution required'],
   'Scanned ID': ['Scanned ID required'],
   'Picture': ['Picture required'],
 }
