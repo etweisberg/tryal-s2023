@@ -42,7 +42,7 @@ export default function StudiesScreen({navigation} : {navigation: any}) {
     const newUpcoming: Trial[] = []; 
 
     // Get upcoming studies from current user's owned trials
-    for (const trial_id of (currentUser?.trials || [])) {
+    for (const trial_id of (currentUser?.trialsOwned || [])) {
       const trial_obj = await getTrialFromId(trial_id);
       if (trial_obj) {
           newUpcoming.push(trial_obj);
@@ -65,7 +65,6 @@ export default function StudiesScreen({navigation} : {navigation: any}) {
         }
       }
     }
-
     // Set states
     setPending(newPending);
     setUpcoming(newUpcoming);
