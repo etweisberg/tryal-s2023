@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text } from 'react-native';
 import Navigation from './navigation/navigation';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Provider, useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
 import { persistor, store } from './stores'
 import { PersistGate } from 'redux-persist/integration/react';
 import { io } from 'socket.io-client';
@@ -25,11 +25,11 @@ export default function App() {
     <Provider store = {store}>
       <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
 
-      <SafeAreaProvider>
-        {/* <View style={styles.container}> */}
-          <Navigation />
-        {/* </View> */}
-      </SafeAreaProvider>
+        <SafeAreaProvider>
+          {/* <View style={styles.container}> */}
+            <Navigation />
+          {/* </View> */}
+        </SafeAreaProvider>
 
       </PersistGate>
 

@@ -13,6 +13,7 @@ import { authErrors } from '../../../utils/errors';
 import { registerSchemas } from '../../../utils/validation';
 import styles from '../../../styles'
 import { pages } from './data';
+import { serverUrl } from '../../../utils/apiCalls';
 
 export default function RegisterScreen({ navigation }: {navigation: any}) {
   // state for form inputs
@@ -102,59 +103,50 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
   // function to handle register
   const handleRegister = async () => {
     try {
+      // define inputs not yet defined
       const homeAddress = '1234 Main St';
       const seekingCompensation = true;
       const prefix = 'Mr.';
       const medConditions = 'None';
-      const response = await fetch('https://evening-sierra-44597-c9d720e3bf04.herokuapp.com/api/auth/register', {
+
+      // send request to register
+      const route = serverUrl + '/api/auth/register';
+      console.log(route);
+      const response = await fetch(route, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ firstName, lastName, email, age, homeAddress, password, seekingCompensation, medConditions, prefix }),
       });
+      const result = await response.json();
       
       if (response.status === 201) {
         setIndex(index + 1);
-      } else if (response.status === 400) {
-        console.log('response status 400');
-        console.log(response);
-        const result = await response.json();
-        console.log(result.message)
-        alert(result.message)
-        // setSnackbarMsg(result.message);
-        // setVisible(true);
       } else {
         console.log(response);
-        alert('Something went wrong. Please try again later.')
+        alert(result.message)
       }
-
     } catch (error: any) {
       console.log(error)
+      alert(error)
     }
   }
 
   // function to go to next page, validate inputs, and handle register
   const toNext = async () => {
-    try {
-      if (index < pages.length) {
-        const pageInputs = pages[index].inputs.reduce((acc, val) => ({ ...acc, [val]: DATA[val][0] }), {});
-        await registerSchemas[index].validate(pageInputs, { abortEarly: false });
-      }
-      if (index < pages.length - 1) {
-        setIndex(index + 1);
-        setError(['']);
-      } else if (index === pages.length - 1) {
-        handleRegister();
-      } else {
-        toLogin();
-      }
-    } catch (error: any) {
-      console.log(error);
-      console.log(error.errors);
-      setError(error.errors);
+    if (index < pages.length) {
+      const pageInputs = pages[index].inputs.reduce((acc, val) => ({ ...acc, [val]: DATA[val][0] }), {});
+      await registerSchemas[index].validate(pageInputs, { abortEarly: false });
     }
-    
+    if (index < pages.length - 1) {
+      setIndex(index + 1);
+      setError(['']);
+    } else if (index === pages.length - 1) {
+      handleRegister();
+    } else {
+      toLogin();
+    }
   }
 
   // function to go to previous page
@@ -190,7 +182,6 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
             <Form
               header={pages[index].header}
               data={pages[index].inputs.map((item: string) => {
-                // console.log(item);
                 return ({
                   name: item, 
                   state: DATA[item][0], 

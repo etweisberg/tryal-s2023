@@ -15,7 +15,14 @@ import { getTrialFromId } from '../../../utils/apiCalls'
 const screenName = 'MyStudies'
 
 export default function MyStudiesScreen({ navigation }: {navigation: any}) {
+  // Get current user
+  const currentUser = useSelector(getCurrentUser);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Set studies on load
+  useEffect(() => {
+    setStudies();
+  }, [currentUser])
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -32,15 +39,12 @@ export default function MyStudiesScreen({ navigation }: {navigation: any}) {
 
   // Function to set pending, upcoming, and all studies
   const setStudies = async () => {
-    // Get current user
-    const currentUser = useSelector(getCurrentUser);
-
-    // Get trials from user
+    // Init trials
     const newPending: Trial[] = [];
     const newUpcoming: Trial[] = []; 
 
     // Get upcoming studies from current user's trials
-    for (const trial_id in (currentUser?.trials)) {
+    for (const trial_id of (currentUser?.trials || [])) {
       const trial_obj = await getTrialFromId(trial_id);
       if (trial_obj) {
           newUpcoming.push(trial_obj);
@@ -48,7 +52,7 @@ export default function MyStudiesScreen({ navigation }: {navigation: any}) {
     }
 
     // Get pending studies from current user's requested trials (once it's implemented)
-    for (const trial_id in (currentUser?.requestedTrials)) {
+    for (const trial_id of (currentUser?.requestedTrials || [])) {
       const trial_obj = await getTrialFromId(trial_id);
       if (trial_obj) {
           newPending.push(trial_obj);
@@ -67,10 +71,7 @@ export default function MyStudiesScreen({ navigation }: {navigation: any}) {
     setUpcoming(newUpcoming);
   }
 
-  // Set studies on load
-  useEffect(() => {
-    setStudies();
-  }, [])
+
 
   const onStudyCardPress = ({trial}: {trial: Trial}) => {
     setStudy(trial);

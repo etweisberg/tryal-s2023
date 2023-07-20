@@ -11,6 +11,7 @@ import { authErrors } from '../../../utils/errors';
 import { registerSchemas } from '../../../utils/validation';
 import styles from '../../../styles'
 import { pages } from './data';
+import { serverUrl } from '../../../utils/apiCalls';
 
 export default function ResearcherAuthScreen({ navigation }: {navigation: any}) {
   // state for form inputs
@@ -69,7 +70,9 @@ export default function ResearcherAuthScreen({ navigation }: {navigation: any}) 
   // function to handle researcher auth
   const handleResearcherAuth = async () => {
     try {
-      const response = await fetch('https://evening-sierra-44597-c9d720e3bf04.herokuapp.com/api/researcher/researcher-request', {
+      const route = serverUrl + '/api/researcher/researcher-request';
+      console.log(route);
+      const response = await fetch(route, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,25 +100,18 @@ export default function ResearcherAuthScreen({ navigation }: {navigation: any}) 
 
   // function to go to next page, validate inputs, and handle register
   const toNext = async () => {
-    try {
-      if (index < pages.length) {
-        const pageInputs = pages[index].inputs.reduce((acc, val) => ({ ...acc, [val]: DATA[val][0] }), {});
-        await registerSchemas[index].validate(pageInputs, { abortEarly: false });
-      }
-      if (index < pages.length - 1) {
-        setIndex(index + 1);
-        setError(['']);
-      } else if (index === pages.length - 1) {
-        handleResearcherAuth();
-      } else {
-        toLogin();
-      }
-    } catch (error: any) {
-      console.log(error);
-      console.log(error.errors);
-      setError(error.errors);
+    if (index < pages.length) {
+      const pageInputs = pages[index].inputs.reduce((acc, val) => ({ ...acc, [val]: DATA[val][0] }), {});
+      await registerSchemas[index].validate(pageInputs, { abortEarly: false });
     }
-    
+    if (index < pages.length - 1) {
+      setIndex(index + 1);
+      setError(['']);
+    } else if (index === pages.length - 1) {
+      handleResearcherAuth();
+    } else {
+      toLogin();
+    }
   }
 
   // function to go to previous page

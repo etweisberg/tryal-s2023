@@ -69,13 +69,12 @@ export default function EditProfileScreen({ navigation }: { navigation: any }) {
           institution: result.institution,
           admin: result.admin,
         }
-        console.log(user)
         dispatch(loginUser(user))      
       } else {
         console.log(response);
       }
     } catch (error: any) {
-      console.log(error.message)
+      console.log(error)
       return null;
     }
   }

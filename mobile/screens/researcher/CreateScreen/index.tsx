@@ -38,9 +38,12 @@ export default function CreateScreen() {
 
   const handleCreateTrial = async () => {
     try {
+      // define variable to correctly format
+      const name = title;
+
+      // define route
       const route = serverUrl + '/api/trial/create';
       console.log(route);
-      const name = title;
       const response = await fetch(route, {
         method: 'POST',
         headers: {

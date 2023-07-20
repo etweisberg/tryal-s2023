@@ -111,7 +111,7 @@ function ResearcherTabScreen({navigation}: {navigation: any}) {
       })}
       >
         <ResearcherTab.Screen name="Studies" component={StudiesScreen}/>
-        <ResearcherTab.Screen name="Upcoming" component={UpcomingScreen}/>
+        <ResearcherTab.Screen name="Upcoming" component={RedirectScreen}/>
         <ResearcherTab.Screen name="Create" component={CreateScreen}/>
         <ResearcherTab.Screen name="Inbox" component={MessageScreen}/>
         <ResearcherTab.Screen name="Profile" >
@@ -181,8 +181,7 @@ function ParticipantTabScreen({navigation}: {navigation: any}) {
 export default function Navigation() {
   const [loading, setLoading] = useState(false)
   const user = useSelector((state: RootState) => getCurrentUser(state));
-  console.log('user');
-  console.log(user);
+  // console.log("Current user:" + user?.firstName + " " + user?.lastName);
 
   return (
     <NavigationContainer>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import ProfileInfoScreen from '../screens/common/ProfileScreen';
 import StudyScreen from '../screens/common/StudyScreen';

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Trial, User } from "./types";
 import { loginSchema } from "./validation";
 
@@ -6,13 +7,13 @@ export const serverUrl = 'https://evening-sierra-44597-c9d720e3bf04.herokuapp.co
 // Function to get trial from id
 export const getTrialFromId = async (id: string) => {
   try {
+    console.log('Getting trial from id: ' + id + '...')
     const route = serverUrl + '/api/trial/'+id;
     console.log(route)
     const response = await fetch(route, {
       method: 'GET',
     });
     const result = await response.json();
-    console.log(response.status)
     // If response is OK, return trial
     if (response.status === 200) {
       const trial: Trial = {
@@ -41,44 +42,46 @@ export const getTrialFromId = async (id: string) => {
 // Function to get user from id
 export const getUserFromId = async (id: string) => {
     try {
-        const response = await fetch('https://evening-sierra-44597-c9d720e3bf04.herokuapp.com/api/user/'+id, {
-        method: 'GET',
-        });
-        const result = await response.json();
-        // If response is OK, return user
-        if (response.status === 200) {
-            const user: User = {
-                _id: result._id,
-                prefix: result.prefix,
-                firstName: result.firstName,
-                lastName: result.lastName,
-                email: result.email,
-                password: result.password,
-                verified: result.verified,
-                verificationToken: result.verificationToken,
-                resetPasswordToken: result.resetPasswordToken,
-                resetPasswordTokenExpiryDate: result.resetPasswordTokenExpiryDate,
-                trials: result.trials,
-                trialsOwned: result.trialsOwned,
-                clickedOnTrials: result.clickedOnTrials,
-                requestedTrials: result.requestedTrials,
-                savedTrials: result.savedTrials,
-                age: result.age,
-                medConditions: result.medConditions,
-                homeAddress: result.homeAddress,
-                seekingCompensation: result.seekingCompensation,
-                researcher: result.researcher,
-                institution: result.institution,
-                admin: result.admin,
-            };
-            return user;
-        } else if (response.status === 400) {
-            console.log('response status 400');
-            console.log(result.message);
-            return null;
-        } else {
-            return null
-        }
+      const route = serverUrl + '/api/user/'+id;
+      console.log(route)
+      const response = await fetch(route, {
+      method: 'GET',
+      });
+      const result = await response.json();
+      // If response is OK, return user
+      if (response.status === 200) {
+          const user: User = {
+              _id: result._id,
+              prefix: result.prefix,
+              firstName: result.firstName,
+              lastName: result.lastName,
+              email: result.email,
+              password: result.password,
+              verified: result.verified,
+              verificationToken: result.verificationToken,
+              resetPasswordToken: result.resetPasswordToken,
+              resetPasswordTokenExpiryDate: result.resetPasswordTokenExpiryDate,
+              trials: result.trials,
+              trialsOwned: result.trialsOwned,
+              clickedOnTrials: result.clickedOnTrials,
+              requestedTrials: result.requestedTrials,
+              savedTrials: result.savedTrials,
+              age: result.age,
+              medConditions: result.medConditions,
+              homeAddress: result.homeAddress,
+              seekingCompensation: result.seekingCompensation,
+              researcher: result.researcher,
+              institution: result.institution,
+              admin: result.admin,
+          };
+          return user;
+      } else if (response.status === 400) {
+          console.log('response status 400');
+          console.log(result.message);
+          return null;
+      } else {
+          return null
+      }
     }
     catch (error: any) {
         console.log(error)
@@ -150,6 +153,7 @@ export const userLogoutCall = async () => {
         'Content-Type': 'application/json'
       },
     })
+    await AsyncStorage.clear();
     return response;
   } catch (error) {
     console.log(error)

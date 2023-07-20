@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { Divider } from 'react-native-paper'
 

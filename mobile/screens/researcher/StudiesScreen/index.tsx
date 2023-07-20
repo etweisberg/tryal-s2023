@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ScrollView } from 'react-native'
+import { View, Text, SafeAreaView, ScrollView, RefreshControl } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import AppNavigator from '../../../components/AppNavigator';
 import StudyList from '../../../components/StudyList';
@@ -10,7 +10,7 @@ import { getTrialFromId, getUserFromId } from '../../../utils/apiCalls';
 import { useSelector } from 'react-redux';
 import { getCurrentUser } from '../../../stores/userReducer';
 
-const screenName='Studies'
+const screenName = 'Studies'
 
 export default function StudiesScreen({navigation} : {navigation: any}) {
   const [user, setUser] = useState<User | null>(null);
@@ -22,6 +22,18 @@ export default function StudiesScreen({navigation} : {navigation: any}) {
 
   // Get current user
   const currentUser = useSelector(getCurrentUser);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Set studies on load
+  useEffect(() => {
+    setStudies();
+  }, [currentUser])
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setStudies();
+    setRefreshing(false);
+  }, []);
 
   // Function to set pending, upcoming, and all studies
   const setStudies = async () => {
@@ -30,7 +42,7 @@ export default function StudiesScreen({navigation} : {navigation: any}) {
     const newUpcoming: Trial[] = []; 
 
     // Get upcoming studies from current user's owned trials
-    for (const trial_id in (currentUser?.trials)) {
+    for (const trial_id of (currentUser?.trials || [])) {
       const trial_obj = await getTrialFromId(trial_id);
       if (trial_obj) {
           newUpcoming.push(trial_obj);
@@ -59,10 +71,6 @@ export default function StudiesScreen({navigation} : {navigation: any}) {
     setUpcoming(newUpcoming);
   }
 
-  // Set studies on load
-  useEffect(() => {
-    setStudies();
-  }, [])
 
   const onStudyCardPress = ({trial}: {trial: Trial}) => {
     setStudy(trial);
@@ -78,7 +86,12 @@ export default function StudiesScreen({navigation} : {navigation: any}) {
     return (
       <View style={styles.container}>
         <Header title='Studies'/>
-        <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false} 
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          style={{flex: 1, width: '100%'}}>
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Pending Requests</Text>
           {/* TODO: CREATE COMPONENT TO DISPLAY PEOPLE INSTEAD OF STUDIES */}
           {/* <StudyList data={pending} horizontal onCardPress={onStudyCardPress}/> */}
