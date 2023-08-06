@@ -29,7 +29,7 @@ import EditProfileScreen from '../screens/general/EditProfileScreen';
 
 import { useSelector } from 'react-redux';
 import { RootState } from '../stores';
-import { getCurrentUser } from '../stores/userReducer';
+import { getCurrentUser, getView } from '../stores/userReducer';
 import LoadingScreen from '../screens/general/LoadingScreen';
 import ChatScreen from '../screens/common/ChatScreen';
 import MessageScreen from '../screens/general/MessageScreen';
@@ -46,19 +46,20 @@ const MainStack = createStackNavigator<MainStackParamList>();
 const AuthStack = createStackNavigator<AuthStackParamList>();
 
 
-function ProfileStackScreen({userType, navigation}: {userType: string, navigation: any}) {
+function ProfileStackScreen({navigation}: {navigation: any}) {
+  const view = useSelector(getView);
     return (
       <ProfileStack.Navigator screenOptions={{
         headerShown: false
       }}>
         {/* Show Participant Profile if participant, Researcher Profile otherwise */}
-        {userType === "participant" ? (
+        {view === "participant" ? (
           <ProfileStack.Screen name="MainProfile" component={ParticipantProfileScreen} />
         ) : (
           <ProfileStack.Screen name="MainProfile" component={ResearcherProfileScreen} />
         )}
         <ProfileStack.Screen name="Settings">
-          {() => <SettingsScreen navigation={navigation} participant={userType==='participant'} />}
+          {() => <SettingsScreen navigation={navigation}/>}
         </ProfileStack.Screen>
         <ProfileStack.Screen name="PushNotifs" component={PushNotifsScreen} />
         <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
@@ -115,18 +116,14 @@ function ResearcherTabScreen({navigation}: {navigation: any}) {
         <ResearcherTab.Screen name="Create" component={CreateScreen}/>
         <ResearcherTab.Screen name="Inbox" component={MessageScreen}/>
         <ResearcherTab.Screen name="Profile" >
-          {() => <ProfileStackScreen navigation={navigation} userType='researcher' />}
-        </ResearcherTab.Screen>   
+          {() => <ProfileStackScreen navigation={navigation} />}
+        </ResearcherTab.Screen>
       </ResearcherTab.Navigator>
     )
 }
 
 function ParticipantTabScreen({navigation}: {navigation: any}) {
   const user = useSelector(getCurrentUser);
-
-  const toAuth = () => {
-    navigation.navigate("Auth");
-  }
 
     return (
       <ParticipantTab.Navigator
@@ -165,10 +162,10 @@ function ParticipantTabScreen({navigation}: {navigation: any}) {
         <ParticipantTab.Screen name="Saved" component={user ? RedirectScreen : RedirectScreen}/>
         <ParticipantTab.Screen name="My Studies" component={user ? MyStudiesScreen : RedirectScreen}/>
         <ParticipantTab.Screen name="Inbox" component={user ? MessageScreen : RedirectScreen}/>
-        <ParticipantTab.Screen name="Profile" >
+        <ParticipantTab.Screen name="Profile">
         {  // Show Screen only if logged in 
           user ? 
-          () => <ProfileStackScreen navigation={navigation} userType='participant' />
+          () => <ProfileStackScreen navigation={navigation} />
           :
           () => <RedirectScreen navigation={navigation}/>
         }

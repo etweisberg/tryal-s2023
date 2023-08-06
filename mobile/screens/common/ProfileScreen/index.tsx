@@ -1,27 +1,31 @@
 import { View, Text, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Trial, User } from '../../../utils/types'
-import styles from '../../../styles'
 import Header from '../../../components/Header'
 import { Avatar, Chip } from 'react-native-paper'
 import TabSwitch from '../../../components/TabSwitch'
 import { useNavigation } from '@react-navigation/native'
 import { getTrialFromId } from '../../../utils/apiCalls'
 import StudyList from '../../../components/StudyList'
+import TextAndChips from '../../../components/TextAndChips'
+import { getView } from '../../../stores/userReducer'
+import { useSelector } from 'react-redux'
 
 export default function ProfileScreen(
-  {navigation=useNavigation(), user, editable=false, participant=true}: 
-  {navigation?: any, user: User | null, editable?: boolean, participant?: boolean}
+  {navigation=useNavigation(), user, editable=false}: 
+  {navigation?: any, user: User | null, editable?: boolean}
   ) {
 
   const [currentTab, setCurrentTab] = useState<'About' | 'History'>('About')
   const [userStudies, setUserStudies] = useState<Trial[]>([])
 
+  const view = useSelector(getView)
+
   // Function to set user studies from user object
   const setUserStudiesFromUser = async () => {
     const newUserStudies: Trial[] = [];
     // iterate through user.trials if participant, user.trialsOwned if researcher
-    for (const trial_id in (participant? user?.trials : user?.trialsOwned)) {
+    for (const trial_id in (view == 'participant' ? user?.trials : user?.trialsOwned)) {
       const trial_obj = await getTrialFromId(trial_id);
       if (trial_obj) {
           newUserStudies.push(trial_obj);
@@ -62,17 +66,18 @@ export default function ProfileScreen(
   return (
     <View style={{width: '100%', flex: 1}}>
       {
-        user ?
+        // if user is not null, show profile
+        user ? 
         <View style= {{width: '100%', flex: 1}}>
           {
-            editable ?
+            editable ? // if editable, show cog icon on right (this means it was accessed from profile tab)
             <View style={{width: '100%', paddingTop: 24, paddingBottom: 8, paddingHorizontal: 16, backgroundColor: '#195064'}}>
               <Header
                 title='My Profile'
                 rightComponentType='touchable-icon' rightText='cog-outline' onRightPress={toSettings}
                 textColor='white'
                 backgroundColor='#195064'/> 
-            </View> :
+            </View> : // if not editable, show back arrow on left (this means it was accessed from another page)
             <View style={{width: '100%', paddingTop: 24, paddingBottom: 8, paddingHorizontal: 16, backgroundColor: '#195064'}}>
               <Header
                 title='Researcher Profile'
@@ -89,7 +94,6 @@ export default function ProfileScreen(
               <View style = {{position: 'absolute', top: 0, justifyContent: 'center', height: '100%', width: '100%'}}>
                 
                 <View style={{alignSelf: 'center', justifyContent: 'center', height: 150, aspectRatio: 1, borderRadius: 75, backgroundColor: 'white'}}>
-                  {/* ONCE PROFILE PIC IS IMPLEMENTED: */}
                   {/* {
                     user.profilePicture?
                     <Avatar.Image size={100} source={{uri: user.profilePicture}} style={{alignSelf: 'center'}}/>:
@@ -100,33 +104,37 @@ export default function ProfileScreen(
               </View>
             </View> 
 
+            {/* Profile Details */}
             <View style={{flex: 1, width: '100%', paddingHorizontal: 16}}>
-              <Text style={{fontSize: 20, fontWeight: 'bold', textAlign: 'center', padding: 4}}>{user.prefix} {user.firstName} {user.lastName}</Text>
+              <Text style={{fontSize: 20, fontWeight: 'bold', textAlign: 'center', padding: 4}}>
+                {user.prefix} {user.firstName} {user.lastName}
+              </Text>
+
               <Text style={{fontSize: 16, textAlign: 'center', paddingTop: 4, paddingBottom: 16}}>{user.institution}</Text>
 
               <TabSwitch 
-              textLeft='About' textRight='History' 
-              onPressLeft={()=>setCurrentTab('About')} onPressRight={()=>setCurrentTab('History')}
+              textLeft='About' textRight={view == 'participant' ? 'History' : 'Active Studies'}
+              onPressLeft={()=>setCurrentTab('About')} 
+              onPressRight={()=>setCurrentTab('History')} // note that this is 'History' for both researcher and participant (its for the state var, not name of tab)
               />
               {
-                // if currentTab is About, show user's medical conditions
+                // if currentTab is About, show user's medical conditions, researcher's research areas
                 currentTab === 'About' ?
-                <View>
-                  <Text style={{fontSize: 16, paddingVertical: 8}}>
-                    <Text style={{fontWeight: 'bold'}}>Medical Condition(s): </Text>
-                    {user?.medConditions.map(
-                      (item: string, index: number) => 
-                        <Chip key={index} style={{marginHorizontal: 4, borderRadius: 10}}>{item}</Chip>
-                    )}
-                  </Text>
-                </View> : // else, show studies participated in
-                <View>
-                  <Text style={{fontSize: 16, paddingVertical: 8}}>
-                    <Text style={{fontWeight: 'bold'}}>Studies Participated In: </Text>
-                    {/* Show first 3 studies only */}
-                    <StudyList data={userStudies.slice(0,3)} onCardPress={onStudyPress}/>
-                  </Text>
-                </View>
+                  // <View/>
+                  <TextAndChips 
+                    name={view == 'participant' ? 'Medical Conditions: ' : 'Research Areas: '} 
+                    data={view == 'participant' ? user.medConditions : user.trialsOwned}/> 
+
+                    : // else, show studies participated in / researcher's studies
+                  <View>
+                    <Text style={{fontSize: 16, paddingVertical: 8}}>
+                      <Text style={{fontWeight: 'bold'}}>
+                        {view == 'participant' ? 'Studies Participated In: ' : 'Studies: '}
+                      </Text>
+                      {/* Show first 3 studies only */}
+                      <StudyList data={userStudies.slice(0,3)} onCardPress={onStudyPress}/>
+                    </Text>
+                  </View>
               }
             </View>
 

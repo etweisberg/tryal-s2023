@@ -7,15 +7,15 @@ import { Card, Divider } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/Ionicons';
 import BarList, { BarListItem } from '../../../components/BarList';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentUser, logoutUser } from '../../../stores/userReducer';
+import { getCurrentUser, getView, setView, logoutUser } from '../../../stores/userReducer';
 import { serverUrl, userLogoutCall } from '../../../utils/apiCalls';
-import { User } from '../../../utils/types';
 
 export default function SettingsScreen(
-  { navigation, participant }: 
-  { navigation: any, participant: boolean} ) {
+  { navigation }: 
+  { navigation: any } ) {
     
   const user = useSelector(getCurrentUser);
+  const view = useSelector(getView);
   const dispatch = useDispatch();
   
   const [search, setSearch] = useState<string>('');
@@ -36,22 +36,30 @@ export default function SettingsScreen(
   }
 
   const switchTabs = () => {
-    if (participant) {
+    if (view=='participant') {
       if (user?.researcher) {
+        dispatch(setView('researcher'));
         navigation.navigate('ResearcherTabs', {screen: 'Studies'})
       } else {
         navigation.navigate('ResearcherAuth')
       }
-    } else {
+    } else if (view=='researcher') {
+      dispatch(setView('participant'));
       navigation.navigate('ParticipantTabs', {screen: 'Explore'})
+    } else {
+      alert('Something went wrong. Please reload the app.')
+      return;
     }
   }
 
   const getSwitchTitle = () => {
-    if (participant) {
+    if (view=='participant') {
       return 'Switch to Researcher Profile'
-    } else {
+    } else if (view=='researcher') {
       return 'Switch to Participant Profile'
+    } else {
+      alert('Something went wrong. Please reload the app.')
+      return '';
     }
   }
 

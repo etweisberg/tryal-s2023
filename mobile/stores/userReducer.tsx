@@ -6,6 +6,7 @@ import { ChatRoom, User } from '../utils/types';
 interface UserState {
   user: User | null;
   isLoading: boolean;
+  view: string;
   error: string | null;
   focusedTabs: string;
 }
@@ -13,6 +14,7 @@ interface UserState {
 const initialState: UserState = {
   user: null,
   isLoading: false,
+  view: 'participant',
   error: null,
   focusedTabs: 'participant'
 };
@@ -35,16 +37,20 @@ const userSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
+    setView: (state, action: PayloadAction<string>) => {
+      state.view = action.payload;
+    },
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
   },
 });
 
-export const { loginUser, logoutUser, setLoading, setError, } = userSlice.actions;
+export const { loginUser, logoutUser, setLoading, setError, setView } = userSlice.actions;
 
 export const getCurrentUser = (state: RootState): User | null => state.user.user;
 export const getIsLoading = (state: RootState): boolean => state.user.isLoading;
+export const getView = (state: RootState): string => state.user.view;
 export const getError = (state: RootState): string | null => state.user.error;
 export const getFocusedTabs = (state: RootState): string => state.user.focusedTabs;
 
