@@ -17,7 +17,7 @@ const router = express.Router();
 get all chats that include a given list of users and the current user
 only return chats that include all users in the list and the current user
 */
-router.get('/filter', isAuthenticated, getChats);
+router.post('/filter', isAuthenticated, getChats);
 
 /*
 create a new chat with the current user and a given list of users

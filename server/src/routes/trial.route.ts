@@ -56,17 +56,17 @@ router.put(
 /*
 getter for filtering trials by a filter object
 */
-router.get('/filter', isAuthenticated, filterTrials);
+router.post('/filter', filterTrials);
 
 /*
 get all trials
 */
-router.get('/all', isAuthenticated, getAllTrials);
+router.get('/all', getAllTrials);
 
 /*
 get trial by ID
 */
-router.get('/:id', isAuthenticated, getTrialById);
+router.get('/:id', getTrialById);
 
 /*
 click on a trial and update a users clickedOnQueue

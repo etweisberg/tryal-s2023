@@ -234,9 +234,9 @@ const getTrialById = async (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  const { trialId } = req.params;
+  const { id } = req.params;
   try {
-    const trial = await getTrial(trialId);
+    const trial = await getTrial(id);
     res.status(StatusCode.OK).send(trial);
   } catch (err) {
     next(ApiError.internal('Unable to get trial'));
@@ -263,7 +263,6 @@ const clickOnTrial = async (
     await addTrialClickToUser(user.id, id);
     res.sendStatus(StatusCode.OK);
   } catch (err) {
-    console.log(err);
     next(ApiError.internal('Unable to click on trial'));
   }
 };
