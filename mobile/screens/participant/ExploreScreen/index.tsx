@@ -6,10 +6,12 @@ import Header from '../../../components/Header'
 import { Searchbar } from 'react-native-paper'
 import StudyList from '../../../components/StudyList'
 import AppNavigator from '../../../components/AppNavigator'
-import styles from '../../../styles'
+import { styles, font_styles } from '../../../styles_temp'
 import { Trial, User } from '../../../utils/types'
 import { useSelector } from 'react-redux'
 import { getCurrentUser } from '../../../stores/userReducer'
+import UseFonts from '../../../components/fonts/Fonts'
+import AppLoading from 'expo-app-loading';
 import { getTrialFromId, getUserFromId, serverUrl } from '../../../utils/apiCalls'
 
 const screenName = 'Explore'
@@ -20,6 +22,7 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
   // states for focusable pages (i.e. a study page or a user page)
   const [user, setUser] = useState<User | null>(null);
   const [study, setStudy] = useState<Trial | null>(null);
+  const [isReady, setIsReady] = useState(false)
 
   // Get user from redux store
   const currentUser = useSelector(getCurrentUser);
@@ -164,6 +167,20 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
     navigation.navigate('ProfileInfoScreen' + screenName);
   }
 
+  const loadFonts = async () => {
+    await UseFonts()
+  }
+
+  if (!isReady) {
+    return (
+      <AppLoading
+      startAsync={loadFonts}
+      onFinish={() => setIsReady(true)}
+      onError={() => {}}
+      />
+    )
+  }
+
   function MainPage() {
     return (
       <View style={styles.container}>
@@ -175,19 +192,16 @@ export default function ExploreScreen({navigation}: {navigation: any}) {
           style={styles.searchbar}
         />
         <ScrollView 
-          showsVerticalScrollIndicator={false} 
+          showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
           style={{flex: 1, width: '100%'}}>
-          <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Your Recents</Text>
+          <Text style={font_styles.section_header}>Your Recents</Text>
           <StudyList data={recents} horizontal onCardPress={onStudyCardPress}/>
   
-          <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>Suggested Studies</Text>
-          <StudyList data={suggested} onCardPress={onStudyCardPress}/>
-
-          <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>All Studies</Text>
-          <StudyList data={allStudies} onCardPress={onStudyCardPress}/>               
+          <Text style={font_styles.section_header}>Suggested Studies</Text>
+          <StudyList data={suggested} onCardPress={onStudyCardPress}/>        
         </ScrollView>
       </View>
     )

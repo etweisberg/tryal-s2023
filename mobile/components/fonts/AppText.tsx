@@ -8,7 +8,7 @@ interface AppTextProps extends TextProps {
     style?: TextStyle | TextStyle[] 
 }
 
-export default function AppText({children, textType, style,}: AppTextProps) {
+export default function GetFont({children, textType, style,}: AppTextProps) {
   const [fontsLoaded] = Font.useFonts({
     'Inconsolata-Regular': require('../../assets/fonts/Inconsolata-Regular.ttf'),
     'Inconsolata-Bold': require('../../assets/fonts/Inconsolata-Bold.ttf'),
