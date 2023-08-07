@@ -19,7 +19,7 @@ export default function StudiesScreen({navigation} : {navigation: any}) {const [
 
   const onUserPress : ({user}: {user: User}) => void = ({user}: {user: User}) => {
     setUser(user);
-    navigation.navigate('ProfileInfoScreen' + screenName);
+    navigation.navigate('ProfileInfoScreen' + screenName); 
   }
 
   function MainPage() {
