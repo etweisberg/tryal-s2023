@@ -12,7 +12,8 @@ export type User = {
     trials: Array<string>;
     trialsOwned: Array<string>;
     clickedOnTrials: Array<string>;
-    savedTrials: Array<string>;
+    requestedTrials: Array<string>;
+    savedTrials: Map<string, Array<string>>;
     age: number | null;
     medConditions: Array<string>;
     homeAddress: string;
@@ -49,5 +50,5 @@ export type Message = {
 export type ChatRoom = {
     _id: string;
     participants: string[];
-    messages: Message[] | null;
+    messages: Message[];
 }

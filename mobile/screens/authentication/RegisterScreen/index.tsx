@@ -13,20 +13,21 @@ import { authErrors } from '../../../utils/errors';
 import { registerSchemas } from '../../../utils/validation';
 import styles from '../../../styles'
 import { pages } from './data';
+import { serverUrl } from '../../../utils/apiCalls';
 
 export default function RegisterScreen({ navigation }: {navigation: any}) {
   // state for form inputs
-  const [username, setUsername] = useState('c');
-  const [email, setEmail] = useState('a@a');
-  const [firstName, setFirstName] = useState('c');
-  const [lastName, setLastName] = useState('w');
-  const [sex, setSex] = useState('m');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [sex, setSex] = useState('');
   const [gender, setGender] = useState('');
   const [age, setAge] = useState(19);
   const [race, setRace] = useState('');
   const [ethnicity, setEthnicity] = useState('');
-  const [password, setPassword] = useState('password');
-  const [passwordConfirm, setPasswordConfirm] = useState('password');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const DATA: MyObject = {
     'Email': [email, setEmail],
@@ -69,24 +70,24 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
   }
 
   // Snackbar state and functions
-  const [visible, setVisible] = React.useState(false);
-  const [snackbarMsg, setSnackbarMsg] = React.useState('');
-  const onDismissSnackBar = () => setVisible(false);
-  function MySnackbar() {
-    return (
-      <Snackbar
-        style={styles.snackbar}
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        action={{
-          label: 'Close',
-          onPress: onDismissSnackBar,
-          color: 'white'
-        }}>
-        {snackbarMsg}
-      </Snackbar>
-    );
-  }
+  // const [visible, setVisible] = React.useState(false);
+  // const [snackbarMsg, setSnackbarMsg] = React.useState('');
+  // const onDismissSnackBar = () => setVisible(false);
+  // function MySnackbar() {
+  //   return (
+  //     <Snackbar
+  //       style={styles.snackbar}
+  //       visible={visible}
+  //       onDismiss={onDismissSnackBar}
+  //       action={{
+  //         label: 'Close',
+  //         onPress: onDismissSnackBar,
+  //         color: 'white'
+  //       }}>
+  //       {snackbarMsg}
+  //     </Snackbar>
+  //   );
+  // }
 
 
   // navigation functions
@@ -102,54 +103,57 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
   // function to handle register
   const handleRegister = async () => {
     try {
+      // define inputs not yet defined
       const homeAddress = '1234 Main St';
-      const response = await fetch('http://localhost:4000/api/auth/register', {
+      const seekingCompensation = true;
+      const prefix = 'Mr.';
+      const medConditions = 'None';
+
+      // send request to register
+      const route = serverUrl + '/api/auth/register';
+      console.log(route);
+      const response = await fetch(route, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ firstName, lastName, email, age, homeAddress, password }),
+        body: JSON.stringify({ firstName, lastName, email, age, homeAddress, password, seekingCompensation, medConditions, prefix }),
       });
+      const result = await response.json();
       
       if (response.status === 201) {
         setIndex(index + 1);
-      } else if (response.status === 400) {
-        console.log('response status 400');
-        console.log(response);
-        const result = await response.json();
-        console.log(result.message)
-        setSnackbarMsg(result.message);
-        setVisible(true);
       } else {
         console.log(response);
+        alert(result.message)
       }
-
     } catch (error: any) {
       console.log(error)
+      alert(error)
     }
   }
 
   // function to go to next page, validate inputs, and handle register
   const toNext = async () => {
-    try {
-      if (index < pages.length) {
-        const pageInputs = pages[index].inputs.reduce((acc, val) => ({ ...acc, [val]: DATA[val][0] }), {});
-        await registerSchemas[index].validate(pageInputs, { abortEarly: false });
-      }
-      if (index < pages.length - 1) {
-        setIndex(index + 1);
-        setError(['']);
-      } else if (index === pages.length - 1) {
-        handleRegister();
-      } else {
-        toLogin();
-      }
-    } catch (error: any) {
-      console.log(error);
-      console.log(error.errors);
-      setError(error.errors);
+    // Validate inputs if not on final acceptance page
+    if (index < pages.length) {
+      const pageInputs = pages[index].inputs.reduce((acc, val) => ({ ...acc, [val]: DATA[val][0] }), {});
+      await registerSchemas[index].validate(pageInputs, { abortEarly: false })
+        .then(() => {
+          if (index < pages.length - 1) {
+            setIndex(index + 1);
+            setError(['']);
+          } else if (index === pages.length - 1) {
+            handleRegister(); // Page will be incremented here
+          } 
+        })
+        .catch((err: any) => {
+          setError(err.errors);
+        })
+    // Go to login page if on final acceptance page
+    } else {
+      toLogin();
     }
-    
   }
 
   // function to go to previous page
@@ -185,7 +189,6 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
             <Form
               header={pages[index].header}
               data={pages[index].inputs.map((item: string) => {
-                // console.log(item);
                 return ({
                   name: item, 
                   state: DATA[item][0], 
@@ -194,7 +197,7 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
                   red: authErrors[item].some((item) => error.includes(item))
                 })
               })}
-              topChildren={<MySnackbar/>}
+              // topChildren={<MySnackbar/>}
             /> : 
             <View style={styles.inputContainer}>
               <Text style={{fontSize: 24, fontWeight: 'bold'}}>Success!</Text>  

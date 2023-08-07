@@ -1,20 +1,22 @@
 import { View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../../../components/Header';
 import styles from '../../../styles';
 import { Searchbar } from 'react-native-paper';
 import { Card, Divider } from 'react-native-paper'
-// import { data } from './data';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BarList, { BarListItem } from '../../../components/BarList';
-import { useSelector } from 'react-redux';
-import { getCurrentUser } from '../../../stores/userReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentUser, getView, setView, logoutUser } from '../../../stores/userReducer';
+import { serverUrl, userLogoutCall } from '../../../utils/apiCalls';
 
 export default function SettingsScreen(
-  { navigation, participant }: 
-  { navigation: any, participant: boolean} ) {
-  
+  { navigation }: 
+  { navigation: any } ) {
+    
   const user = useSelector(getCurrentUser);
+  const view = useSelector(getView);
+  const dispatch = useDispatch();
   
   const [search, setSearch] = useState<string>('');
   const updateSearch: (text: string) => void = (search: string) => {
@@ -34,24 +36,30 @@ export default function SettingsScreen(
   }
 
   const switchTabs = () => {
-    if (participant) {
+    if (view=='participant') {
       if (user?.researcher) {
-        navigation.navigate('ResearcherTabs')
-        navigation.navigate('Studies')
+        dispatch(setView('researcher'));
+        navigation.navigate('ResearcherTabs', {screen: 'Studies'})
       } else {
         navigation.navigate('ResearcherAuth')
       }
+    } else if (view=='researcher') {
+      dispatch(setView('participant'));
+      navigation.navigate('ParticipantTabs', {screen: 'Explore'})
     } else {
-      navigation.navigate('ParticipantTabs')
-      navigation.navigate('Explore')
+      alert('Something went wrong. Please reload the app.')
+      return;
     }
   }
 
   const getSwitchTitle = () => {
-    if (participant) {
+    if (view=='participant') {
       return 'Switch to Researcher Profile'
-    } else {
+    } else if (view=='researcher') {
       return 'Switch to Participant Profile'
+    } else {
+      alert('Something went wrong. Please reload the app.')
+      return '';
     }
   }
 
@@ -63,7 +71,16 @@ export default function SettingsScreen(
     navigation.navigate('TermsOfService')
   }
 
-  const signOut = () => {
+  const signOut = async () => {
+    dispatch(logoutUser());
+    const response = await userLogoutCall();
+    if (response !== null) {
+      navigation.navigate('Auth');
+    } else {
+      alert('Something went wrong. Please try again.')
+      console.log(response);
+      return;
+    }
   }
 
   const data: BarListItem[] = [
@@ -90,7 +107,7 @@ export default function SettingsScreen(
     {
         title: 'Sign Out',
         onPress: signOut
-    },
+    }
   ];
 
   return (

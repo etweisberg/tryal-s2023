@@ -14,6 +14,8 @@ import {
   getUserByEmail,
   getUserByResetPasswordToken,
   getUserByVerificationToken,
+  getUserById,
+  updateUser,
 } from '../services/user.service';
 import {
   emailResetPasswordLink,
@@ -107,8 +109,28 @@ const register = async (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  const { firstName, lastName, email, age, homeAddress, password } = req.body;
-  if (!firstName || !lastName || !email || !password || !age || !homeAddress) {
+  const {
+    firstName,
+    lastName,
+    email,
+    age,
+    homeAddress,
+    password,
+    seekingCompensation,
+    medConditions,
+    prefix,
+  } = req.body;
+  if (
+    !firstName ||
+    !lastName ||
+    !email ||
+    !password ||
+    !age ||
+    !homeAddress ||
+    !seekingCompensation ||
+    !medConditions ||
+    !prefix
+  ) {
     next(
       ApiError.missingFields([
         'firstName',
@@ -117,6 +139,9 @@ const register = async (
         'age',
         'homeAddress',
         'password',
+        'seekingCompensation',
+        'medConditions',
+        'prefix',
       ]),
     );
     return;
@@ -163,6 +188,9 @@ const register = async (
       password,
       age,
       homeAddress,
+      seekingCompensation,
+      medConditions,
+      prefix,
     );
     if (process.env.NODE_ENV === 'development') {
       user!.verified = true;
@@ -315,6 +343,9 @@ const registerInvite = async (
     password,
     age,
     homeAddress,
+    seekingCompensation,
+    medConditions,
+    prefix,
     inviteToken,
   } = req.body;
   if (
@@ -324,6 +355,9 @@ const registerInvite = async (
     !password ||
     !age ||
     !homeAddress ||
+    !seekingCompensation ||
+    !medConditions ||
+    !prefix ||
     !inviteToken
   ) {
     next(
@@ -334,6 +368,9 @@ const registerInvite = async (
         'password',
         'age',
         'homeAddress',
+        'seekingCompensation',
+        'medConditions',
+        'prefix',
         'inviteToken',
       ]),
     );
@@ -389,6 +426,9 @@ const registerInvite = async (
       password,
       age,
       homeAddress,
+      seekingCompensation,
+      medConditions,
+      prefix,
     );
     user!.verified = true;
     await user?.save();
@@ -396,6 +436,38 @@ const registerInvite = async (
     res.sendStatus(StatusCode.CREATED);
   } catch (err) {
     next(ApiError.internal('Unable to register user.'));
+  }
+};
+
+/*
+updates a users profile
+*/
+const updateProfile = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const { id } = req.params;
+  const updateFields = req.body;
+  if (!id) {
+    next(ApiError.missingFields(['id']));
+    return;
+  }
+  if (!updateFields) {
+    next(ApiError.missingFields(['updateFields']));
+    return;
+  }
+  try {
+    const user = await getUserById(id);
+    if (!user) {
+      next(ApiError.notFound(`No user with id ${id} exists.`));
+      return;
+    }
+    const updatedUser = await updateUser(id, updateFields);
+    await updatedUser!.save();
+    res.status(StatusCode.OK).send(updatedUser);
+  } catch (err) {
+    next(ApiError.internal('Unable to update user.'));
   }
 };
 
@@ -408,4 +480,5 @@ export {
   sendResetPasswordEmail,
   resetPassword,
   registerInvite,
+  updateProfile,
 };

@@ -139,7 +139,7 @@ const approveResearcherRequest = async (
     if (!user) {
       next(ApiError.notFound('Unable to retrieve user'));
     } else {
-      upgradeUserToResearcher(user._id)
+      upgradeUserToResearcher(user._id, researcherRequest.institution)
         .then(() => {
           approveRequest(researcherRequest._id)
             .then(() => {

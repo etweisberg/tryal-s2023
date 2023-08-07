@@ -48,26 +48,54 @@ const UserSchema = new mongoose.Schema({
     required: false,
   },
   trials: {
-    type: Array<string>(),
-    required: true,
-    default: [],
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trial',
+        required: true,
+      },
+    ],
   },
   // eslint-disable-next-line spaced-comment
   //add method, any duplicate just move to the front
   clickedOnTrials: {
-    type: Array<string>(),
-    required: true,
-    default: [],
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trial',
+        required: true,
+      },
+    ],
+  },
+  requestedTrials: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trial',
+        required: true,
+      },
+    ],
   },
   trialsOwned: {
-    type: Array<string>(),
-    required: true,
-    default: [],
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trial',
+        required: true,
+      },
+    ],
   },
   savedTrials: {
-    type: Array<string>(),
+    type: Map,
+    of: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trial',
+        required: true,
+      },
+    ],
     required: true,
-    default: [],
+    default: {},
   },
   age: {
     type: Number,
@@ -115,6 +143,7 @@ interface IUser extends mongoose.Document {
   _id: string;
   firstName: string;
   lastName: string;
+  prefix: string;
   email: string;
   password: string;
   verified: boolean;
@@ -124,7 +153,8 @@ interface IUser extends mongoose.Document {
   trials: Array<string>;
   trialsOwned: Array<string>;
   clickedOnTrials: Array<string>;
-  savedTrials: Array<string>;
+  requestedTrials: Array<string>;
+  savedTrials: Map<string, Array<string>>;
   age: number | null;
   medConditions: Array<string>;
   homeAddress: string;

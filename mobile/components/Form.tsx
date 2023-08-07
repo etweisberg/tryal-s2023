@@ -18,8 +18,8 @@ Form.propTypes = {
 }
 
 export default function Form(
-  { header=null, data={}, topChildren=null, bottomChildren=null}: 
-  { header: string | null, data: any, topChildren: ReactNode, bottomChildren: ReactNode }) {
+  { header=null, data={}, topChildren=null, bottomChildren=null, scrollable=false}: 
+  { header: string | null, data: any, topChildren: ReactNode, bottomChildren: ReactNode , scrollable?: boolean}) {
   return (
     <View style={styles.inputContainer}>
         {topChildren}
@@ -30,7 +30,7 @@ export default function Form(
           <FlatList 
               style={{flexGrow: 1}}
               data={data}
-              scrollEnabled={false}
+              scrollEnabled={scrollable}
               renderItem={({item}) => {
                 return (<View>
                   <TextInput

@@ -12,6 +12,7 @@ import {
   resetPassword,
   verifyAccount,
   registerInvite,
+  updateProfile,
 } from '../controllers/auth.controller';
 import { isAuthenticated } from '../controllers/auth.middleware';
 import 'dotenv/config';
@@ -72,5 +73,10 @@ router.get('/authstatus', isAuthenticated, approve);
  * a new account is created. Otherwise a 400 bad request error is returned
  */
 router.post('/register-invite', registerInvite);
+
+/**
+ * A PUT request do update a user's profile. Expects a JSON body with the fields that are to be updated
+ */
+router.put('/update-profile/:id', isAuthenticated, updateProfile);
 
 export default router;

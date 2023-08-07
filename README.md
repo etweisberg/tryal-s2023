@@ -1,5 +1,4 @@
-# Tryal 
-
+![Ad Long](https://github.com/etweisberg/tryal-s2023/assets/58375851/2b1b47d8-52d0-4007-8d2b-6e8c8ce99578)
 ## Mission
 Our mission is to accelerate medical research by empowering everyday people to get involved with research on their own terms. Tryal will be a personalized mobile platform to attract, encourage, and educate participants in order to expand the research recruiting pool while developing involved and eager participants. 
 

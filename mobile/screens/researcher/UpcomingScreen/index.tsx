@@ -18,7 +18,7 @@ export default function UpcomingScreen({ navigation }: { navigation: any}) {
     navigation.navigate('StudyInfoScreen' + screenName);
   }
 
-  const onUserPress : ({user}: {user: User}) => void = ({user}: {user: User}) => {
+  const onUserPress = ({user}: {user: User | null}) => {
     setUser(user);
     navigation.navigate('ProfileInfoScreen' + screenName);
   }
@@ -36,12 +36,12 @@ export default function UpcomingScreen({ navigation }: { navigation: any}) {
   }
 
   return (
-    <AppNavigator 
-      name={screenName} 
-      components={[MainPage]} 
-      profileFocusable 
-      studyFocusable 
-      user={user} 
+    <AppNavigator
+      name={screenName}
+      components={[MainPage]}
+      profileFocusable
+      studyFocusable
+      user={user}
       trial={study}
       onUserPress={onUserPress}
       />
