@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import ProfileInfoScreen from '../screens/common/ProfileScreen';
+import { useRoute } from '@react-navigation/native';
+import ProfileScreen from '../screens/common/ProfileScreen';
 import StudyScreen from '../screens/common/StudyScreen';
 import { Trial, User } from '../utils/types';
 
@@ -16,36 +17,39 @@ export default function AppNavigator(
         profileFocusable?: boolean, 
         studyFocusable?: boolean, 
         user?: User | null,
-        onUserPress?: ({user}: {user: User}) => void,
+        onUserPress?: ({user}: {user: User | null}) => void,
         setUser?: React.Dispatch<React.SetStateAction<User | null>>,
         trial?: Trial | null,
         setTrial?: React.Dispatch<React.SetStateAction<User | null>>,
     }) {
     
-  return (
-    <Stack.Navigator screenOptions={{
-        headerShown: false,
-        }}>
-        {components.map((component, index) => {
-            return (
-                <Stack.Screen key={index} name={screenNames[index]}>
-                    {typeof component === 'function' ? component : () => component}
+    const route = useRoute();
+    console.log(route.name);
+
+    return (
+        <Stack.Navigator screenOptions={{
+            headerShown: false,
+            }}>
+            {components.map((component, index) => {
+                return (
+                    <Stack.Screen key={index} name={screenNames[index]}>
+                        {typeof component === 'function' ? component : () => component}
+                    </Stack.Screen>
+                )
+            })
+            }
+            {profileFocusable ? 
+                <Stack.Screen name={"ProfileInfoScreen" + name}>
+                    {user ? () => ProfileScreen({user}) : () => null}
+                </Stack.Screen> 
+                : null
+            }
+            {studyFocusable ?
+                <Stack.Screen name={"StudyInfoScreen" + name}>
+                    {trial ? () => StudyScreen({trial, onUserPress}) : () => null}
                 </Stack.Screen>
-            )
-        })
-        }
-        {profileFocusable ? 
-            <Stack.Screen name={"ProfileInfoScreen" + name}>
-                {user ? () => ProfileInfoScreen({user}) : () => null}
-            </Stack.Screen> 
-            : null
-        }
-        {studyFocusable ?
-            <Stack.Screen name={"StudyInfoScreen" + name}>
-                {trial ? () => StudyScreen({trial, onUserPress}) : () => null}
-            </Stack.Screen>
-            : null
-        }
-    </Stack.Navigator>
+                : null
+            }
+        </Stack.Navigator>
   )
 }

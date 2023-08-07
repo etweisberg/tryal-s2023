@@ -2,45 +2,33 @@ import React, { useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Pressable, StyleSheet } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { View, Text } from 'react-native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { MainStackParamList } from '../../../navigation/types';
 import Header from '../../../components/Header';
 import Form from '../../../components/Form';
 import * as Progress from 'react-native-progress';
 import { Snackbar } from 'react-native-paper';
 import { MyObject } from '../../../components/types';
 import { authErrors } from '../../../utils/errors';
-import { registerSchemas } from '../../../utils/validation';
+import { researchRequestSchemas } from '../../../utils/validation';
 import styles from '../../../styles'
 import { pages } from './data';
 import { serverUrl } from '../../../utils/apiCalls';
 
-export default function RegisterScreen({ navigation }: {navigation: any}) {
+export default function ResearcherAuthScreen({ navigation }: {navigation: any}) {
   // state for form inputs
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [sex, setSex] = useState('');
-  const [gender, setGender] = useState('');
-  const [age, setAge] = useState(19);
-  const [race, setRace] = useState('');
-  const [ethnicity, setEthnicity] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [institution, setInstitution] = useState('');
+  const [scannedID, setScannedID] = useState(null);
+  const [picture, setPicture] = useState(null);
 
   const DATA: MyObject = {
     'Email': [email, setEmail],
-    'Username': [username, setUsername],
-    'Password': [password, setPassword],
-    'Confirm Password': [passwordConfirm, setPasswordConfirm],
+    'Institution': [institution, setInstitution],
     'First Name': [firstName, setFirstName],
     'Last Name': [lastName, setLastName],
-    'Sex': [sex, setSex],
-    'Age': [age, setAge],
-    'Gender': [gender, setGender],
-    'Race': [race, setRace],
-    'Ethnicity': [ethnicity, setEthnicity]
+    'Scanned ID': [scannedID, setScannedID],
+    'Picture': [picture, setPicture],
   }
 
   // state for error message
@@ -49,50 +37,30 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
   // state for page index
   const [index, setIndex] = useState(0);
 
-  // state for checkbox
-  const [checkboxSelected, setCheckboxSelection] = useState(false);
-  function MyCheckbox() {
-    return (
-      <CheckBox
-        onPress={() => {setCheckboxSelection(!checkboxSelected)}}
-        checked={checkboxSelected}
-        checkedColor='#195064'
-        iconType="material-community"
-        checkedIcon="checkbox-marked"
-        uncheckedIcon="checkbox-blank-outline"
-        Component={Text}
-        size={20}
-        title='I would like to receive your newsletter and other promotional information.'
-        containerStyle={{backgroundColor: 'transparent', borderColor: 'transparent', width: '100%', padding: 0, margin: 0}}
-        textStyle={{fontWeight: 'normal', fontSize: 14}}
-      />
-    )
-  }
-
   // Snackbar state and functions
-  // const [visible, setVisible] = React.useState(false);
-  // const [snackbarMsg, setSnackbarMsg] = React.useState('');
-  // const onDismissSnackBar = () => setVisible(false);
-  // function MySnackbar() {
-  //   return (
-  //     <Snackbar
-  //       style={styles.snackbar}
-  //       visible={visible}
-  //       onDismiss={onDismissSnackBar}
-  //       action={{
-  //         label: 'Close',
-  //         onPress: onDismissSnackBar,
-  //         color: 'white'
-  //       }}>
-  //       {snackbarMsg}
-  //     </Snackbar>
-  //   );
-  // }
+  const [visible, setVisible] = React.useState(false);
+  const [snackbarMsg, setSnackbarMsg] = React.useState('');
+  const onDismissSnackBar = () => setVisible(false);
+  function MySnackbar() {
+    return (
+      <Snackbar
+        style={styles.snackbar}
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: 'Close',
+          onPress: onDismissSnackBar,
+          color: 'white'
+        }}>
+        {snackbarMsg}
+      </Snackbar>
+    );
+  }
 
 
   // navigation functions
-  const toLogin = () => {
-    navigation.navigate('Login')
+  const toSettings = () => {
+    navigation.navigate('Settings')
   }
   
   // function to dismiss keyboard
@@ -100,32 +68,29 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
     Keyboard.dismiss();
   };
 
-  // function to handle register
-  const handleRegister = async () => {
+  // function to handle researcher auth
+  const handleResearcherAuth = async () => {
     try {
-      // define inputs not yet defined
-      const homeAddress = '1234 Main St';
-      const seekingCompensation = true;
-      const prefix = 'Mr.';
-      const medConditions = 'None';
-
-      // send request to register
-      const route = serverUrl + '/api/auth/register';
+      const route = serverUrl + '/api/researcher/researcher-request';
       console.log(route);
       const response = await fetch(route, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ firstName, lastName, email, age, homeAddress, password, seekingCompensation, medConditions, prefix }),
-      });
+          },
+          body: JSON.stringify({ firstName, lastName, email, institution }),
+        });
       const result = await response.json();
-      
+
       if (response.status === 201) {
         setIndex(index + 1);
+        // TODO: send email to admin
+        // TODO: send email to researcher
+        // TODO: update researcher status to pending
+        // Update researcher info to include institution
       } else {
-        console.log(response);
-        alert(result.message)
+        console.log(result.message);
+        alert(result.message);
       }
     } catch (error: any) {
       console.log(error)
@@ -138,21 +103,21 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
     // Validate inputs if not on final acceptance page
     if (index < pages.length) {
       const pageInputs = pages[index].inputs.reduce((acc, val) => ({ ...acc, [val]: DATA[val][0] }), {});
-      await registerSchemas[index].validate(pageInputs, { abortEarly: false })
+      await researchRequestSchemas[index].validate(pageInputs, { abortEarly: false })
         .then(() => {
           if (index < pages.length - 1) {
             setIndex(index + 1);
             setError(['']);
-          } else if (index === pages.length - 1) {
-            handleRegister(); // Page will be incremented here
-          } 
+          } else if (index === pages.length) {
+            handleResearcherAuth(); // Page will be incremented in this function
+          }
         })
         .catch((err: any) => {
           setError(err.errors);
-        })
-    // Go to login page if on final acceptance page
+        });
+    // Go to settings if on final acceptance page
     } else {
-      toLogin();
+      toSettings();
     }
   }
 
@@ -162,7 +127,7 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
     if (index !== 0) {
       setIndex(index - 1);
     } else {
-      toLogin();
+      toSettings();
     }
   }
 
@@ -170,9 +135,8 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <Pressable style={{flex: 1, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}} onPress={dismissKeyboard}>
         <Header 
-          title='Sign Up' 
+          title='Verify' 
           leftComponentType='touchable-icon' leftText='chevron-back-outline' onLeftPress={toPrev}
-          rightComponentType='touchable-text' rightText='Log In' onRightPress={toLogin}
           children={
             <Progress.Bar 
               progress={(index + 1)/(pages.length + 1)} 
@@ -200,25 +164,18 @@ export default function RegisterScreen({ navigation }: {navigation: any}) {
               // topChildren={<MySnackbar/>}
             /> : 
             <View style={styles.inputContainer}>
-              <Text style={{fontSize: 24, fontWeight: 'bold'}}>Success!</Text>  
-              <Text>Thank you for signing up!</Text>
+              <Text style={{fontSize: 24, fontWeight: 'bold', padding: 10}}>Success!</Text>  
+              <Text style={{textAlign: 'center'}}>Thank you for submitting your ID and photo! Your information will be reviewed and you will be notified when your account has been approved.</Text>
             </View>
         }
 
-        { 
-          index === pages.length - 1 ? 
-        <View style={styles.checkboxContainer}>
-          <MyCheckbox />
-        </View> : null
-        }
-        
         <Pressable onPress={toNext} style={styles.button}>
           <View style={{ flex: 1, justifyContent: 'center'}}>
             <Text style={{ color: 'white' }}>
               {
                 index < pages.length - 1 ? 'Next' : 
                 index === pages.length - 1 ? 'Submit' :
-                'To Login'
+                'Back to Settings'
               }
             </Text>
           </View>

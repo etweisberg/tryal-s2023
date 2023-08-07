@@ -18,8 +18,8 @@ Form.propTypes = {
 }
 
 export default function Form(
-  { header=null, data={}, topChildren=null, bottomChildren=null}: 
-  { header: string | null, data: any, topChildren: ReactNode, bottomChildren: ReactNode }) {
+  { header=null, data={}, topChildren=null, bottomChildren=null, scrollable=false}: 
+  { header: string | null, data: any, topChildren: ReactNode, bottomChildren: ReactNode , scrollable?: boolean}) {
   return (
     <View style={styles.inputContainer}>
         {topChildren}
@@ -30,7 +30,7 @@ export default function Form(
           <FlatList 
               style={{flexGrow: 1}}
               data={data}
-              scrollEnabled={false}
+              scrollEnabled={scrollable}
               renderItem={({item}) => {
                 return (<View>
                   <TextInput
@@ -41,7 +41,11 @@ export default function Form(
                   placeholder={item.name}
                   value={item.state !== 0 ? item.state : ''}
                   onChangeText={item.setState}
-                  style={[styles.textInput, {borderColor: item.red ? 'red' : '#bdbdbd'}]}
+                  style={[
+                    styles.textInput, 
+                    {borderColor: item.red ? 'red' : '#bdbdbd'},
+                    {height: item.name==='Description' || item.name==='Additional Info' ? 200 : 48}
+                  ]}
                   secureTextEntry={item.name === 'Password' || item.name === 'Confirm Password' ? true : false}
                   />
                   <View style={{width: '100%', height: 15}}>

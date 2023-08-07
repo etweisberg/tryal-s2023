@@ -1,18 +1,31 @@
 import { View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../../../components/Header';
 import styles from '../../../styles';
 import { Searchbar } from 'react-native-paper';
 import { Card, Divider } from 'react-native-paper'
-// import { data } from './data';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BarList, { BarListItem } from '../../../components/BarList';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentUser, getView, setView, logoutUser } from '../../../stores/userReducer';
+import { serverUrl, userLogoutCall } from '../../../utils/apiCalls';
 
-export default function SettingsScreen({ navigation }: { navigation: any} ) {
+export default function SettingsScreen(
+  { navigation }: 
+  { navigation: any } ) {
+    
+  const user = useSelector(getCurrentUser);
+  const view = useSelector(getView);
+  const dispatch = useDispatch();
+  
   const [search, setSearch] = useState<string>('');
   const updateSearch: (text: string) => void = (search: string) => {
     setSearch(search);
   };
+
+  const toProfile = () => {
+    navigation.navigate('MainProfile')
+  }
 
   const toPushNotifs = () => {
     navigation.navigate('PushNotifs')
@@ -22,11 +35,31 @@ export default function SettingsScreen({ navigation }: { navigation: any} ) {
     navigation.navigate('EditProfile')
   }
 
-  const switchTabs = (userType: string) => {
-    if (userType === 'researcher') {
-      navigation.navigate('ParticipantTabs')
+  const switchTabs = () => {
+    if (view=='participant') {
+      if (user?.researcher) {
+        dispatch(setView('researcher'));
+        navigation.navigate('ResearcherTabs', {screen: 'Studies'})
+      } else {
+        navigation.navigate('ResearcherAuth')
+      }
+    } else if (view=='researcher') {
+      dispatch(setView('participant'));
+      navigation.navigate('ParticipantTabs', {screen: 'Explore'})
     } else {
-      navigation.navigate('ResearcherTabs')
+      alert('Something went wrong. Please reload the app.')
+      return;
+    }
+  }
+
+  const getSwitchTitle = () => {
+    if (view=='participant') {
+      return 'Switch to Researcher Profile'
+    } else if (view=='researcher') {
+      return 'Switch to Participant Profile'
+    } else {
+      alert('Something went wrong. Please reload the app.')
+      return '';
     }
   }
 
@@ -38,7 +71,16 @@ export default function SettingsScreen({ navigation }: { navigation: any} ) {
     navigation.navigate('TermsOfService')
   }
 
-  const signOut = () => {
+  const signOut = async () => {
+    dispatch(logoutUser());
+    const response = await userLogoutCall();
+    if (response !== null) {
+      navigation.navigate('Auth');
+    } else {
+      alert('Something went wrong. Please try again.')
+      console.log(response);
+      return;
+    }
   }
 
   const data: BarListItem[] = [
@@ -51,8 +93,8 @@ export default function SettingsScreen({ navigation }: { navigation: any} ) {
         onPress: toEditProfile
     },
     {
-        title: 'Switch to Researcher View',
-        onPress: () => switchTabs('researcher')
+        title: getSwitchTitle(),
+        onPress: switchTabs
     },
     {
         title: 'Privacy Policy',
@@ -65,7 +107,7 @@ export default function SettingsScreen({ navigation }: { navigation: any} ) {
     {
         title: 'Sign Out',
         onPress: signOut
-    },
+    }
   ];
 
   return (
@@ -73,7 +115,7 @@ export default function SettingsScreen({ navigation }: { navigation: any} ) {
       <View style={{width: '100%', paddingTop: 24, paddingBottom: 8, paddingHorizontal: 16, backgroundColor: '#195064'}}>
         <Header
           title='Settings'
-          leftComponentType='touchable-text' leftText='Back' onLeftPress={navigation.goBack}
+          leftComponentType='touchable-text' leftText='Back' onLeftPress={toProfile}
           textColor='white'
           backgroundColor='#195064'/> 
       </View>

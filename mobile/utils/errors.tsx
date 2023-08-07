@@ -12,4 +12,17 @@ export const authErrors : MyObject = {
   'Age': [],
   'Race': [],
   'Ethnicity': [],
+  'Institution': ['Institution required'],
+  'Scanned ID': ['Scanned ID required'],
+  'Picture': ['Picture required'],
+}
+
+export const trialErrors: MyObject = {
+  'Title': ['Title required'],
+  'Description': ['Description required'],
+  'Date': ['Date required'],
+  'Compensation': ['Compensation required'],
+  'Eligible Conditions': ['Eligible conditions required'],
+  'Location': ['Location required'],
+  'Additional Notes': [],
 }

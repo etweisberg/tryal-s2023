@@ -1,33 +1,43 @@
-import { View, Text, ScrollView, Touchable, TouchableOpacity, Pressable } from 'react-native'
-import React from 'react'
+import { View, Text, ScrollView, Touchable, TouchableOpacity, Pressable, RefreshControl } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { Trial, User } from '../../../utils/types'
 import Header from '../../../components/Header'
 import { Chip, Searchbar } from 'react-native-paper'
-import StudyList from '../../../components/StudyList'
 import styles from '../../../styles'
-import { testTrials, testUser1 } from '../../../utils/testObjs'
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/Ionicons'
+import { getUserFromId } from '../../../utils/apiCalls'
 
 
 export default function StudyScreen(
-  {trial, onUserPress=({user}: {user: User}) => null}:
-  {trial: Trial | null, onUserPress?: ({user}: {user: User}) => void  }
+  {trial, onUserPress=({user}: {user: User | null}) => null}:
+  {trial: Trial | null, onUserPress?: ({user}: {user: User | null}) => void  }
   ) {
 
   const navigation = useNavigation();
-  const toPrev = () => {
-    navigation.goBack();
-  }
+
+  const [studyOwner, setStudyOwner] = useState<User | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
   
-  const getUserFromID : (id: string) => User = (id: string) => {
-    return testUser1;
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getOwner();
+    setRefreshing(false);
+  }, []);
+
+  const getOwner = async () => {
+    if (trial) {
+      setStudyOwner(await getUserFromId(trial.researchers[0]));
+      console.log(studyOwner)
+    }
   }
 
-  const onNamePress = (id: (string | undefined)) => {
-    if (id) {
-      onUserPress({user: getUserFromID(id)});
-    }
+  useEffect(() => {
+    getOwner();
+  }, [trial])
+
+  const toPrev = () => {
+    navigation.goBack();
   }
 
   return (
@@ -37,23 +47,32 @@ export default function StudyScreen(
         leftComponentType='touchable-text' leftText='Back' onLeftPress={toPrev}
         />
         
-        <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, width: '100%'}}>
+        <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        style={{flex: 1, width: '100%'}}>
           <View style={{height: 300, width: '100%', backgroundColor: 'gray', borderRadius: 20, justifyContent: 'center', alignItems: 'center'}}>
             <Text>pic here?</Text>
           </View>
           <Text style={{fontSize: 20, fontWeight: 'bold', paddingVertical: 16}}>{trial?.name}</Text>
-          <TouchableOpacity style={{width: '100%'}} onPress={() => onNamePress(trial?.researchers[0])}>
-            <Text style={{fontSize: 16, fontWeight: 'bold', paddingVertical: 16}}>{trial?.researchers}</Text>
+          <TouchableOpacity style={{width: '100%'}} onPress={() => onUserPress({user: studyOwner})}>
+            <Text style={{fontSize: 16, fontWeight: 'bold', paddingVertical: 16}}>
+              {studyOwner?.firstName + " " + studyOwner?.lastName}
+            </Text>
           </TouchableOpacity>
           <Text style={{fontSize: 16, paddingVertical: 4}}>
             <Text style={{fontWeight: 'bold'}}>Description: </Text>
             {trial?.description}
           </Text>
           <Text style={{fontSize: 16, paddingVertical: 4}}>
-            <Text style={{fontWeight: 'bold'}}>Requirements: </Text>
+            <Text style={{fontWeight: 'bold'}}>Requirement(s): </Text>
             {trial?.eligibleConditions.map(
               (item: string, index: number) => 
-                <Chip key={index} style={{marginHorizontal: 4, borderRadius: 10}}>{item}</Chip>
+              <View key={index}>
+                <Chip style={{alignSelf: 'center', height: 30, marginHorizontal: 4, borderRadius: 15}}>{item}</Chip>
+              </View>
             )}
           </Text>
           <Text style={{fontSize: 16, paddingVertical: 4}}>
@@ -78,7 +97,7 @@ export default function StudyScreen(
 
         </ScrollView>
 
-        <View style={{paddingHorizontal: 24, backgroundColor: 'transparent', position: 'absolute', bottom: 0, flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
+        <View style={{backgroundColor: 'transparent', position: 'absolute', bottom: 0, flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
           <TouchableOpacity style={[styles.button, {width: '65%'}]}>
             <Text style={{fontWeight: 'bold', color: 'white'}}>Sign Up!</Text>
           </TouchableOpacity>

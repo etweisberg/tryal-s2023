@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -29,10 +29,14 @@ import EditProfileScreen from '../screens/general/EditProfileScreen';
 
 import { useSelector } from 'react-redux';
 import { RootState } from '../stores';
-import { getCurrentUser } from '../stores/userReducer';
+import { getCurrentUser, getView } from '../stores/userReducer';
 import LoadingScreen from '../screens/general/LoadingScreen';
 import ChatScreen from '../screens/common/ChatScreen';
 import MessageScreen from '../screens/general/MessageScreen';
+import ResearcherAuthScreen from '../screens/authentication/ResearcherAuthScreen';
+import { TouchableOpacity, View, Text } from 'react-native';
+import styles from '../styles';
+import RedirectScreen from '../screens/authentication/RedirectScreen';
 
 
 const ParticipantTab = createBottomTabNavigator<ParticipantTabParamList>();
@@ -42,18 +46,21 @@ const MainStack = createStackNavigator<MainStackParamList>();
 const AuthStack = createStackNavigator<AuthStackParamList>();
 
 
-function ProfileStackScreen({userType}: {userType: string}) {
+function ProfileStackScreen({navigation}: {navigation: any}) {
+  const view = useSelector(getView);
     return (
       <ProfileStack.Navigator screenOptions={{
         headerShown: false
       }}>
         {/* Show Participant Profile if participant, Researcher Profile otherwise */}
-        {userType === "participant" ? (
+        {view === "participant" ? (
           <ProfileStack.Screen name="MainProfile" component={ParticipantProfileScreen} />
         ) : (
           <ProfileStack.Screen name="MainProfile" component={ResearcherProfileScreen} />
         )}
-        <ProfileStack.Screen name="Settings" component={SettingsScreen} />
+        <ProfileStack.Screen name="Settings">
+          {() => <SettingsScreen navigation={navigation}/>}
+        </ProfileStack.Screen>
         <ProfileStack.Screen name="PushNotifs" component={PushNotifsScreen} />
         <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
       </ProfileStack.Navigator>
@@ -72,7 +79,7 @@ function AuthStackScreen() {
 };
   
 
-function ResearcherTabScreen() {
+function ResearcherTabScreen({navigation}: {navigation: any}) {
     return (
       <ResearcherTab.Navigator
       initialRouteName="Studies"
@@ -105,17 +112,19 @@ function ResearcherTabScreen() {
       })}
       >
         <ResearcherTab.Screen name="Studies" component={StudiesScreen}/>
-        <ResearcherTab.Screen name="Upcoming" component={UpcomingScreen}/>
+        <ResearcherTab.Screen name="Upcoming" component={RedirectScreen}/>
         <ResearcherTab.Screen name="Create" component={CreateScreen}/>
         <ResearcherTab.Screen name="Inbox" component={MessageScreen}/>
         <ResearcherTab.Screen name="Profile" >
-          {() => <ProfileStackScreen userType='researcher' />}
-        </ResearcherTab.Screen>   
+          {() => <ProfileStackScreen navigation={navigation} />}
+        </ResearcherTab.Screen>
       </ResearcherTab.Navigator>
     )
 }
 
-function ParticipantTabScreen() {
+function ParticipantTabScreen({navigation}: {navigation: any}) {
+  const user = useSelector(getCurrentUser);
+
     return (
       <ParticipantTab.Navigator
       initialRouteName="Explore"
@@ -150,12 +159,18 @@ function ParticipantTabScreen() {
       })}
       >
         <ParticipantTab.Screen name="Explore" component={ExploreScreen}/>
-        <ParticipantTab.Screen name="Saved" component={SavedScreen}/>
-        <ParticipantTab.Screen name="My Studies" component={MyStudiesScreen}/>
-        <ParticipantTab.Screen name="Inbox" component={MessageScreen}/>
-        <ParticipantTab.Screen name="Profile" >
-          {() => <ProfileStackScreen userType='participant' />}
-        </ParticipantTab.Screen>        
+        <ParticipantTab.Screen name="Saved" component={user ? RedirectScreen : RedirectScreen}/>
+        <ParticipantTab.Screen name="My Studies" component={user ? MyStudiesScreen : RedirectScreen}/>
+        <ParticipantTab.Screen name="Inbox" component={user ? MessageScreen : RedirectScreen}/>
+        <ParticipantTab.Screen name="Profile">
+        {  // Show Screen only if logged in 
+          user ? 
+          () => <ProfileStackScreen navigation={navigation} />
+          :
+          () => <RedirectScreen navigation={navigation}/>
+        }
+        </ParticipantTab.Screen>
+               
       </ParticipantTab.Navigator>
     )
 }
@@ -163,8 +178,7 @@ function ParticipantTabScreen() {
 export default function Navigation() {
   const [loading, setLoading] = useState(false)
   const user = useSelector((state: RootState) => getCurrentUser(state));
-  console.log('user');
-  console.log(user);
+  // console.log("Current user:" + user?.firstName + " " + user?.lastName);
 
   return (
     <NavigationContainer>
@@ -182,8 +196,9 @@ export default function Navigation() {
         
         <MainStack.Screen name="ParticipantTabs" component={ParticipantTabScreen} />
         <MainStack.Screen name="Chat" component={ChatScreen} />
+        <MainStack.Screen name="ResearcherAuth" component={ResearcherAuthScreen} />
 
-        { user && user["admin"] ? (
+        { user && user.researcher ? (
           <MainStack.Screen name="ResearcherTabs" component={ResearcherTabScreen} />
         ) : null }
 

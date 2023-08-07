@@ -2,16 +2,15 @@ import React, { useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Pressable, StyleSheet } from 'react-native';
 import { View, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../../stores/userReducer';
+import { loginUser, logoutUser } from '../../../stores/userReducer';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../../components/Header';
 import Form from '../../../components/Form';
-import { loginSchema } from '../../../utils/validation';
 import { MyObject } from '../../../components/types';
 import { authErrors } from '../../../utils/errors';
-import AppText from '../../../components/appText/AppText';
 import styles from '../../../styles'
-import { User } from '../../../utils/types';
+import { userLoginCall, userLogoutCall } from '../../../utils/apiCalls';
+import { User } from '../../../utils/types'
 
 const pages = [
   {
@@ -32,13 +31,25 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
 
   const dispatch = useDispatch();
 
+  const signOut = async () => {
+    dispatch(logoutUser());
+    const response = await userLogoutCall();
+    if (response !== null) {
+      navigation.navigate('Auth');
+    } else {
+      alert('Something went wrong. Please try again.')
+      console.log(response);
+      return;
+    }
+  }
+
   const toRegister = () => {
     navigation.navigate('Register')
     setError(['']);
   }
 
   const toParticipantTabs = () => {
-    navigation.navigate('ParticipantTabs')
+    navigation.navigate('ParticipantTabs', { screen: 'Explore' })
     setError(['']);
   }
 
@@ -47,50 +58,12 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
   };
 
   const handleLogin = async () => {
-    try {
-      await loginSchema.validate({ email, password }, { abortEarly: false });
-
-      const response = await fetch('http://localhost:4000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: email, password: password }),
-      });
-      const result = await response.json();
-      // console.log(result);
-      if (response.status === 200) {
-        if (result !== null) {
-          const user : User = {
-            _id: result._id,
-            firstName: result.firstName,
-            lastName: result.lastName,
-            email: result.email,
-            password: result.password,
-            verified: result.verified,
-            verificationToken: result.verificationToken,
-            resetPasswordToken: result.resetPasswordToken,
-            resetPasswordTokenExpiryDate: result.resetPasswordTokenExpiryDate,
-            trials: result.trials,
-            trialsOwned: result.trialsOwned,
-            age: result.age,
-            medConditions: result.medConditions,
-            homeAddress: result.homeAddress,
-            seekingCompensation: result.seekingCompensation,
-            researcher: result.researcher,
-            institution: result.institution,
-            admin: result.admin,
-          };
-          dispatch(loginUser(user));
-        }
-      } else if (response.status === 401) {
-        setError(['Invalid username or password']);
-      } else if (response.status === 500) {
-        setError(['Server error']);
-      }
-    } catch (errors: any) {
-      console.error(errors);
-      setError(errors.errors);
+    const user = await userLoginCall(email, password);
+    // if user is type User (as tested by whether or not it has property 
+    // "verificationToken"), navigate to participant tabs
+    if (user !== null && user !== undefined) {
+      dispatch(loginUser(user));
+      navigation.navigate('ParticipantTabs', { screen: 'Explore' })
     }
   };
 
@@ -109,7 +82,7 @@ export default function LoginScreen({ navigation }: { navigation: any}) {
                 })
               })}
               bottomChildren={
-                <TouchableOpacity onPress={toRegister} style={styles.textButton}>
+                <TouchableOpacity onPress={signOut} style={styles.textButton}>
                   <Text style={{ color: '#195064' }}>Forgot your password?</Text>
                 </TouchableOpacity>
               }

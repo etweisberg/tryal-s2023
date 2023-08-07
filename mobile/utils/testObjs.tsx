@@ -58,7 +58,7 @@ export const testUser1: User = {
     savedTrials: ['1','2','3'],
     age: 21,
     medConditions: ['deaf', 'idk'],
-    researcher: true,
+    researcher: false,
     institution: 'University of Pennsylvania',
     homeAddress: '1234 Walnut St',
     seekingCompensation: true, 
