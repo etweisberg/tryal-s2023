@@ -8,7 +8,6 @@ import Header from '../../../components/Header';
 import Form from '../../../components/Form';
 import { MyObject } from '../../../components/types';
 import { authErrors } from '../../../utils/errors';
-import GetFont from '../../../components/fonts/AppText';
 import styles from '../../../styles'
 import { userLoginCall, userLogoutCall } from '../../../utils/apiCalls';
 import { User } from '../../../utils/types'
