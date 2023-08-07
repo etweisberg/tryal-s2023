@@ -4,10 +4,12 @@ import Header from '../../../components/Header'
 import { Searchbar } from 'react-native-paper'
 import StudyList from '../../../components/StudyList'
 import { DataItem } from '../../../components/types'
-import styles from '../../../styles'
+import { styles, font_styles } from '../../../styles_temp'
 import { testTrials } from '../../../utils/testObjs'
 import { Trial, User } from '../../../utils/types'
 import AppNavigator from '../../../components/AppNavigator'
+import AppLoading from 'expo-app-loading'
+import UseFonts from '../../../components/fonts/Fonts'
 import { getCurrentUser } from '../../../stores/userReducer'
 import { useSelector } from 'react-redux'
 import { getTrialFromId } from '../../../utils/apiCalls'
@@ -32,6 +34,7 @@ export default function MyStudiesScreen({ navigation }: {navigation: any}) {
 
   const [user, setUser] = useState<User | null>(null);
   const [study, setStudy] = useState<Trial | null>(null);
+  const [isReady, setIsReady] = useState(false)
 
   // Create states for pending, upcoming
   const [pending, setPending] = useState<Trial[]>([]);
@@ -83,12 +86,27 @@ export default function MyStudiesScreen({ navigation }: {navigation: any}) {
     navigation.navigate('ProfileInfoScreen' + screenName);
   }
 
+  // const loadFonts = async () => {
+  //   await UseFonts()
+  // }
+
+  // if (!isReady) {
+  //   return (
+  //     <AppLoading
+  //     startAsync={loadFonts}
+  //     onFinish={() => setIsReady(true)}
+  //     onError={() => {}}
+  //     />
+  //   )
+  // }
+
   function MainPage() {
     return (
       <View style={styles.container}>
         <Header title='My Studies'/>
         <ScrollView 
           showsVerticalScrollIndicator={false} 
+          style={{flex: 1, width: '100%'}}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }

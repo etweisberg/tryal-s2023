@@ -1,13 +1,13 @@
 import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
-container: {
+export const styles = StyleSheet.create({
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
     width: '100%',
-    // backgroundColor: 'black',
+    backgroundColor: 'white',
   },
   participantContainer: {
     flex: 1,
@@ -81,6 +81,39 @@ container: {
   checkbox: {
     alignSelf: 'center',
   },
+  headerContainer: {
+    width: '100%',
+    height: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    paddingTop: 24,
+    paddingBottom: 8,
+    marginBottom: 8,
+  },
+  headerSideContainer: {
+      flex: 1, 
+      width: '100%', 
+      height: '100%', 
+      justifyContent: 'center'
+  },
+  headerMidContainer: {
+      flex: 2, 
+      width: '100%', 
+      height: '100%', 
+      justifyContent: 'center'
+  }  
 })
 
-export default styles
+export const font_styles = StyleSheet.create({
+  page_header: {
+    textAlign: 'center',
+    fontSize: 28,
+    fontFamily: 'Inconsolata-Bold',
+  }, 
+  section_header: {
+    fontSize: 25, 
+    paddingVertical: 10,
+    fontFamily: 'Inconsolata-Bold',
+  },
+})
