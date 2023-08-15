@@ -13,6 +13,7 @@ import {
   verifyAccount,
   registerInvite,
   updateProfile,
+  getUserByID,
 } from '../controllers/auth.controller';
 import { isAuthenticated } from '../controllers/auth.middleware';
 import 'dotenv/config';
@@ -78,5 +79,7 @@ router.post('/register-invite', registerInvite);
  * A PUT request do update a user's profile. Expects a JSON body with the fields that are to be updated
  */
 router.put('/update-profile/:id', isAuthenticated, updateProfile);
+
+router.get('/:id', getUserById);
 
 export default router;

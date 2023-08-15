@@ -471,6 +471,20 @@ const updateProfile = async (
   }
 };
 
+const getUserByID = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const { id } = req.params;
+  try {
+    const user = await getUserById(id);
+    res.status(StatusCode.OK).send(user);
+  } catch (err) {
+    next(ApiError.internal('Unable to get user'));
+  }
+};
+
 export {
   login,
   logout,
@@ -481,4 +495,5 @@ export {
   resetPassword,
   registerInvite,
   updateProfile,
+  getUserByID,
 };
