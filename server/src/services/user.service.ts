@@ -4,6 +4,7 @@
 import { hash } from 'bcrypt';
 import { User, IUser } from '../models/user.model';
 import { ITrial } from '../models/trial.model';
+import { UserFilter } from '../controllers/auth.controller'
 
 interface UpdateFieldsInterface {
   firstName?: string;
@@ -293,6 +294,11 @@ const addTrialRequestToUser = async (userId: string, trialId: string) => {
   ).exec();
   return user;
 };
+
+const getUsers = async(filter: UserFilter) => {
+  const users = await User.find(filter).exec();
+  return users;
+}
 
 export {
   passwordHashSaltRounds,
