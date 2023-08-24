@@ -16,6 +16,7 @@ import {
   getUserByVerificationToken,
   getUserById,
   updateUser,
+  getUsers,
 } from '../services/user.service';
 import {
   emailResetPasswordLink,
@@ -27,6 +28,17 @@ import {
   removeInviteByToken,
 } from '../services/invite.service';
 import { IInvite } from '../models/invite.model';
+
+interface UserFilter {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  age?: number;
+  medConditions?: string[];
+  homeAddress?: string;
+  institution?: string;
+  seekingCompensation?: boolean;
+}
 
 /**
  * A controller function to login a user and create a session with Passport.
@@ -471,6 +483,20 @@ const updateProfile = async (
   }
 };
 
+const filterUsers = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const filters: UserFilter = req.body;
+  try {
+    const users = await getUsers(filters);
+    res.status(StatusCode.OK).send(users);
+  } catch (err) {
+    next(ApiError.internal('Unable to filter trials'));
+  }
+};
+
 export {
   login,
   logout,
@@ -481,4 +507,6 @@ export {
   resetPassword,
   registerInvite,
   updateProfile,
+  filterUsers,
+  UserFilter,
 };

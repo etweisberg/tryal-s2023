@@ -13,6 +13,7 @@ import {
   verifyAccount,
   registerInvite,
   updateProfile,
+  filterUsers
 } from '../controllers/auth.controller';
 import { isAuthenticated } from '../controllers/auth.middleware';
 import 'dotenv/config';
@@ -78,5 +79,19 @@ router.post('/register-invite', registerInvite);
  * A PUT request do update a user's profile. Expects a JSON body with the fields that are to be updated
  */
 router.put('/update-profile/:id', isAuthenticated, updateProfile);
+
+/**
+ * A POST request to filter users based on the given criteria
+ * Expects a JSON body with the fields for the query
+ * - firstName (string) - The first name of the user
+ * - lastName (string) - The last name of the user
+ * - age (number) - The age of the user
+ * - medConditions (string[]) - The medical conditions of the user
+ * - interests (string[]) - The interests of the user
+ * - homeAddress (string) - The home address of the user
+ * - seekingCompensation (boolean) - Whether the user is seeking compensation
+  */
+router.post('/filter-users', isAuthenticated, filterUsers);
+
 
 export default router;
