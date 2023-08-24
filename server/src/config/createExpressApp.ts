@@ -91,7 +91,7 @@ const createExpressApp = (sessionStore: MongoStore): express.Express => {
   io.use(wrap(passport.session()));
 
   io.use((socket: any, next: any) => {
-    if (socket.request.user) {
+    if (socket.request.session.passport.user) {
       next();
     } else {
       next(new Error('unauthorized'));
